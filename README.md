@@ -5,16 +5,14 @@
 ## Build Setup
 
 ``` bash
-# install dependencies
+# 1.安装中间件
 npm install
 
-# serve with hot reload at localhost:8080
-npm run dev
+# 2.先启动mongodb数据库
+npm run mongodb
 
-# build for production with minification
-npm run build
+# 3.再启动服务,http://locahost:9090
+npm run start
 
-# build for production and view the bundle analyzer report
-后台：http://locahost:9090
 ```
 

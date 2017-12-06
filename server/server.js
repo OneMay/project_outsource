@@ -10,13 +10,13 @@ var mongoose = require('mongoose');
 var app = express();
 //var index = require('./routes/index.js');
 
-app.set('views', path.join(path.resolve(__dirname, '..'), 'dist'))
+app.set('views', path.join(path.resolve(__dirname, '..'), 'client'))
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 var history = require('connect-history-api-fallback');
 
 app.use(history()) // 这里千万要注意，要在static静态资源上面
-app.use(express.static(path.join(path.resolve(__dirname, '..'), 'dist')));
+app.use(express.static(path.join(path.resolve(__dirname, '..'), 'client')));
 app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(logger('dev'))
