@@ -15,22 +15,33 @@
             <h1>注册</h1>
             <form>
                 <p>
-                    <label for="name">账号:</label>
-                    <input type="text" name="name" id="phone" onblur="checkPhone()" placeholder="请输入电话号码">
+                    <label for="phone">账号:</label>
+                    <input type="text" name="phone" id="phone" onblur="checkPhone()" placeholder="请输入电话号码">
                     <span class="PhoneWarning warning" id="PhoneWarning">你输入的电话号码有误，请重新输入！</span>
                 </p>
                 <p>
-                    <label for="password">密码:</label>
-                    <input type="password" id="password" name="password" onblur="checkPassword()" placeholder="密码为6~16位混合字母数字">
+                    <label for="name">姓名:</label>
+                    <input type="text" name="name" id="name" placeholder="请输入姓名" onblur="checkName()">
+                    <span class="nameWarning warning" id="NameWarning">姓名不能为空</span>
+                </p>
+                <p>
+                    <label for="bank">银行卡号:</label>
+                    <input type="text" name="bank" id="bank" placeholder="目前只支持中行、农行、建行、工行、邮政" onblur="checkBank()">
+                    <span class="BankWarning warning" id="BankWarning">你输入的银行卡号有误，请重新输入！</span>
+                </p>
+                <p>
+                    <label for="password">登录密码:</label>
+                    <input type="password" id="password" name="password" onblur="checkPassword()" placeholder="登录密码为6~16位混合字母数字">
                     <span class="PasswordWarning warning" id="PasswordWarning">密码格式有误，请重新输入！</span>
                 </p>
                 <p>
                     <label for="password">确认密码:</label>
-                    <input type="password" id="repassword" name="password" placeholder="密码为6~16位混合字母数字">
+                    <input type="password" id="repassword" name="password" placeholder="登录密码为6~16位混合字母数字">
                     <span class="RePasswordWarning warning" id="RePasswordWarning">两次密码不一致，请核对后输入！</span>
                 </p>
             </form>
             <input type="submit" value="注册" id="registSubmit" onclick="registSubmit()">
+            <span class="msgWarning warning" id="msgWarning">信息不能为空</span>
             <div class="bottom">
                 <p>已拥有账户！点击
                     <a href="login.html">登录</a>

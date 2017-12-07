@@ -11,6 +11,26 @@ function checkPhone() {
     }
 };
 
+function checkName() {
+    if ($regist.find('#name').val() == '') {
+        $regist.find('.nameWarning').css("display", "block");
+        return false;
+    } else {
+        $regist.find('.nameWarning').css("display", "none");
+        return true;
+    }
+};
+
+function checkBank() {
+    if (!($regist.find('#bank').val().length == 19)) {
+        $regist.find('.BankWarning').css("display", "block");
+        return false;
+    } else {
+        $regist.find('.BankWarning').css("display", "none");
+        return true;
+    }
+};
+
 function checkPassword() {
     if (!(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/.test($regist.find('#password').val()))) {
         $regist.find('.PasswordWarning').css("display", "block");
@@ -22,6 +42,10 @@ function checkPassword() {
 }
 
 function registSubmit() {
+    if ($regist.find('#phone').val() == '' || $regist.find('#name').val() == '' || $regist.find('#bank').val() == '' || $regist.find('#password').val() == '' || $regist.find('#repassword').val()) {
+        $regist.find('.msgWarning').css("display", "block");
+        return false;
+    }
     if (!($regist.find('#repassword').val() == $regist.find('#password').val())) {
         $regist.find('.RePasswordWarning').css("display", "block");
         return false;
