@@ -15,9 +15,15 @@ mongoose.connect(mongodbUrl, function(err) {
         server.on('error', onError);
         server.on('listening', onListening);
         console.log('started on port ' + port);
+
     }
 });
-
+//var User = require('../models/adminuser');
+// var user = new User({
+//     username: 'adminuser',
+//     password: 'adminpassword'
+// });
+// user.save();
 //对port进行一些处理，使之能用
 function normalizePort(val) {
     var port = parseInt(val, 10);
