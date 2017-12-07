@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="main" id="regist">
+            <h1>注册</h1>
+            <form>
+                <p>
+                    <label for="name">账号:</label>
+                    <input type="text" name="name" id="phone" onblur="checkPhone()" placeholder="请输入电话号码">
+                    <span class="PhoneWarning warning" id="PhoneWarning">你输入的电话号码有误，请重新输入！</span>
+                </p>
+                <p>
+                    <label for="password">密码:</label>
+                    <input type="password" id="password" name="password" onblur="checkPassword()" placeholder="密码为6~16位混合字母数字">
+                    <span class="PasswordWarning warning" id="PasswordWarning">密码格式有误，请重新输入！</span>
+                </p>
+                <p>
+                    <label for="password">确认密码:</label>
+                    <input type="password" id="repassword" name="password" placeholder="密码为6~16位混合字母数字">
+                    <span class="RePasswordWarning warning" id="RePasswordWarning">两次密码不一致，请核对后输入！</span>
+                </p>
+            </form>
+            <input type="submit" value="注册" id="registSubmit" onclick="registSubmit()">
+            <div class="bottom">
+                <p>已拥有账户！点击
+                    <a href="login.html">登录</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/login.js"></script>
+</body>
+
+</html>
