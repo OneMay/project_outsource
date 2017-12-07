@@ -1,9 +1,9 @@
 window.onload = function() {
     (function cookies() {
         var cookie = document.cookie;
-        var reg = /adminuserInfo=(.+)/;
+        var reg = /adminuserInfo=(.+)}(.+)/;
         if (reg.test(cookie)) {
-            var adminUser = reg.exec(cookie)[1];
+            var adminUser = reg.exec(cookie)[1] + '}';
             var adminUserName = JSON.parse(adminUser).username;
             $('.am-icon-dashboard').html('欢迎系统管理员：' + adminUserName);
         } else {
@@ -30,12 +30,15 @@ window.onload = function() {
     /**
      * 库存
      */
-    document.getElementById('addInventory').onclick = function() {
-        setInventory(1);
+    if (document.getElementById('addInventory') && document.getElementById('subInventory')) {
+        document.getElementById('addInventory').onclick = function() {
+            setInventory(1);
+        }
+        document.getElementById('subInventory').onclick = function() {
+            setInventory(-1);
+        }
     }
-    document.getElementById('subInventory').onclick = function() {
-        setInventory(-1);
-    }
+
 
     function setInventory(num) {
         var sum = parseInt($('#inventory')[0].value);

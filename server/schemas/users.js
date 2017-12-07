@@ -8,10 +8,10 @@ var UserSchema = new Schema({
     goods: [{ type: ObjectId, ref: 'Goods' }],
     password: String,
     phoneNumber: {
-        type: Number,
+        type: String,
         unique: true
     },
-    bankNumber: Number,
+    bankNumber: String,
     invitation_code_from_people: {
         type: String,
         default: null

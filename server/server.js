@@ -48,9 +48,8 @@ app.use(function(req, res, next) {
     // }
     return next();
 })
-
-app.use('/admin', admin);
 app.use('/api', api);
+app.use('/admin', admin);
 if ('development' === app.get('env')) {
     app.set('showStackError', true);
     app.use(logger(':method:url:status'));

@@ -61,13 +61,13 @@ function registSubmit() {
                     password: $regist.find('#password').val(),
                     phoneNumber: $regist.find('#phone').val(),
                     bankNumber: $regist.find('#bank').val(),
-                    invitation_code_from_people: $regist.find('invitation_code').val(),
+                    invitation_code_from_people: $regist.find('#invitation_code').val(),
                 },
                 success: function(messageInfo) {
                     if (messageInfo.code === 200) {
                         alert('注册成功！3s后自动跳转到登录界面...')
                         setTimeout(function() {
-                            window.location.href = "regist";
+                            window.location.href = "regist.html";
                         }, 3000);
                     } else {
                         alert('注册失败，请稍后重试!');
@@ -84,11 +84,11 @@ function loginSubmit() {
         type: "post",
         url: "http://localhost:9090/api/user/login",
         datatype: "json",
-        data: { username: $login.find('#phone').val(), password: $login.find('#password').val() },
+        data: { phoneNumber: $login.find('#phone').val(), password: $login.find('#password').val() },
         success: function(messageInfo) {
             if (messageInfo.code === 200) {
                 alert('登录成功！')
-                window.location.href = "home";
+                    //window.location.href = "home";
             } else {
                 alert('登录失败，请稍后重试!');
             }
