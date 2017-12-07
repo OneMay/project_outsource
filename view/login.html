@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="main" id="login">
+            <h1>登录</h1>
+            <form action="" method="post">
+                <p>
+                    <label for="name">账号:</label>
+                    <input type="text" name="name" placeholder="电话号码" id="phone">
+                </p>
+                <p>
+                    <label for="password">密码:</label>
+                    <input type="password" name="password" placeholder="登录密码" id="password">
+                </p>
+            </form>
+            <p class="remember-forgot">
+                <input type="checkbox" name="remember" id="remember">
+                <label for="remember" class="remember">记住我</label>
+                <a href="#" class="forgot">忘记密码？</a>
+            </p>
+            <input type="submit" value="登录" onclick="loginSubmit()">
+            <div class="bottom">
+                <p>还没有账户？点击
+                    <a href="regist.html">注册</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/login.js"></script>
+</body>
+
+</html>
