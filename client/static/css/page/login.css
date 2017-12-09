@@ -25,9 +25,10 @@
     overflow: hidden;
 }
 
-.main form p label {
+.main form p label:not([name='radio']) {
+    margin-right: 20px;
     float: left;
-    width: 70px;
+    width: 20%;
     height: 39px;
     line-height: 39px;
     text-align: right;
@@ -37,6 +38,7 @@
 
 .main input[type="text"],
 .main input[type="password"] {
+    float: left;
     width: 60%;
     outline: none;
     font-size: 15px;
@@ -101,5 +103,10 @@
     font-size: 15px;
     font-weight: 500;
     color: #f45B4B;
-    display: block
+    display: block;
+    overflow: hidden;
+}
+
+.invitation_code {
+    display: none;
 }

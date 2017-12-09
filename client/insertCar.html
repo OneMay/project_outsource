@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./static/css/page/goods.css" rel="stylesheet">
+    <!-- <script type="text/javascript">
+        //辅助方法--单击购物车中的"+"  "-"  "x"按钮是找到相关商品所在td,以jQuery对象返回  
+        function findStock(btn) {
+            var name = $(btn).parent().siblings().eq(0).html(); //获取商品名字  
+            //注意table默认有行分组,若此处使用 $("#table1>tr:gt(0)")则找不到任何tr  
+            var $trs = $("#table1>tbody>tr:gt(0)");
+            for (var i = 0; i < $trs.length; i++) {
+                var fName = $trs.eq(i).children().eq(0).html();
+                if (name == fName) { //找到匹配的商品  
+                    return $trs.eq(i).children().eq(3);
+                }
+            }
+        }
+
+        //增加"+"功能  
+        function increase(btn) {
+            //获取该商品库存看是否<=0  
+            var $stock = findStock(btn);
+            var stock = $stock.html();
+            if (stock <= 0) {
+                return;
+            }
+            //库存-1    
+            $stock.html(--stock);
+            //购物车数据改变  
+            var $td = $(btn).prev();
+            var num = parseInt($td.val()); //number  
+            //num此时为number类型(在计算时会自动转换为number类型)  
+            $td.val(++num);
+            //获取单价,再加计算前要先转换为number类型  
+            var price = parseInt($(btn).parent().prev().html());
+            $(btn).parent().next().html(num * price);
+
+            //总计功能  
+            total();
+        }
+
+        //减少"-"功能  
+        function decrease(btn) {
+            //该商品数量=1时候不能再减少  
+            var num = parseInt($(btn).next().val());
+            if (num <= 1) {
+                return;
+            }
+            var $stock = findStock(btn);
+            //库存+1  
+            var stock = $stock.html();
+            $stock.html(++stock);
+            //商品数量-1  
+            $(btn).next().val(--num);
+            //从新计算金额  
+            var price = parseInt($(btn).parent().prev().html());
+            $(btn).parent().next().html(price * num);
+
+            //总计功能  
+            total();
+        }
+
+        //"x"删除按钮功能  
+        function del(btn) {
+            //将商品数量归还库存  
+            var $stock = findStock(btn);
+            var stock = parseInt($stock.html());
+            var num = parseInt($(btn).parent().prev().prev().children().eq(1).val());
+            $stock.html(num + stock);
+            //清空改行商品列表  
+            $(btn).parent().parent().remove();
+
+            //总计功能  
+            total();
+        }
+        //总计功能  
+        function total() {
+            //获取所有购物车中的trs  
+            var $trs = $("#goods tr");
+            var amount = 0;
+            for (var i = 0; i < $trs.length; i++) {
+                var money = parseInt($trs.eq(i).children().eq(3).html());
+                amount += money;
+            }
+            //写入总计栏  
+            $("#total").html(amount);
+        }
+    </script> -->
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="main">
+            <div class="content" id="cart">
+                <div>
+                    <div class="boxHead">
+                        <h2>购物清单</h2>
+                    </div>
+                    <div class="boxBody">
+                        <div class="emptyCart" style="display:none">
+                            <div class="emptyCartImg"></div>
+                            <p class="tips">你的购物车居然是空的！</p>
+                            <a href="./goodslist.html" class="toBuy">现在就去购买</a>
+                        </div>
+                        <div class="goodsCart">
+                            <div class="cartList">
+                                <div class="cartListTile">
+                                    <span class="name">商品信息</span>
+                                    <span class="price">单价</span>
+                                    <span class="count">数量</span>
+                                    <span class="sumPrice">小计</span>
+                                    <span class="operation">操作</span>
+                                </div>
+                                <div class="cartGoods">
+                                    <div class="yes">
+                                        <span></span>
+                                    </div>
+                                    <div class="descrip">
+                                        <a href="#"><img src="./static/images/test.png" alt="">放假阿卡数据</a>
+                                    </div>
+                                    <div class="price">
+                                        <span>354积分</span>
+                                    </div>
+                                    <div class="count">
+                                        <div class="box">
+                                            <span class="msCount">-</span>
+                                            <input type="text" value="1" maxlength="2" class="sum">
+                                            <span class="psCount">+</span>
+                                        </div>
+                                    </div>
+                                    <div class="sumPrice">
+                                        <span>345积分</span>
+                                    </div>
+                                    <div class="operation">
+                                        <span>删除</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cartBottom">
+                                <div class="all">
+                                    <span class="allImg"></span>
+                                    <span>全选</span>
+                                </div>
+                                <div class="allBa">
+                                    <div class="changed">
+                                        <p>已选择<span>0</span>件商品</p>
+                                    </div>
+                                    <div class="allprices">
+                                        <p>总金额：<span>153</span></p>
+                                    </div>
+                                    <div class="sure">
+                                        <button>结算</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./static/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="./static/js/page/goods.js"></script>
+</body>
+
+</html>

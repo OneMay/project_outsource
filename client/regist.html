@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>注册</title>
-    <link rel="stylesheet" href="/static/css/page/style.css">
+    <link rel="stylesheet" href="/static/css/page/login.css">
 </head>
 
 <body>
@@ -18,6 +18,11 @@
                     <label for="phone">账号:</label>
                     <input type="text" name="phone" id="phone" onblur="checkPhone()" placeholder="请输入电话号码">
                     <span class="PhoneWarning warning" id="PhoneWarning"></span>
+                </p>
+                <p>
+                    <label for="emil">邮箱:</label>
+                    <input type="text" name="emil" id="emil" onblur="checkEmil()" placeholder="请输入邮箱地址">
+                    <span class="EmilWarning warning" id="EmilWarning"></span>
                 </p>
                 <p>
                     <label for="name">姓名:</label>
@@ -40,7 +45,14 @@
                     <span class="RePasswordWarning warning" id="RePasswordWarning"></span>
                 </p>
                 <p>
-                    <label for="phone">推荐码:</label>
+                    <span class="warning">是否有推荐码？</span>
+                    <label for="yes" name="radio">是</label>
+                    <input type="radio" name="1" id="haveCode" onclick="checkCode()">
+                    <label for="no" name="radio">否</label>
+                    <input type="radio" checked="checked" id="noCode" name="1" onclick="checkCode()">
+                </p>
+                <p class="invitation_code">
+                    <label for="invitation_code">推荐码:</label>
                     <input type="text" name="phone" id="invitation_code" placeholder="请输入推荐码">
                 </p>
             </form>

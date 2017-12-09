@@ -11,6 +11,16 @@ function checkPhone() {
     }
 };
 
+function checkEmil() {
+    if (!(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test($regist.find('#emil').val()))) {
+        $regist.find('.EmilWarning').html("你输入的邮箱格式有误，请重新输入！");
+        return false;
+    } else {
+        $regist.find('.EmilWarning').html("");
+        return true;
+    }
+};
+
 function checkName() {
     if ($regist.find('#name').val() == '') {
         $regist.find('.nameWarning').html("姓名不能为空");
@@ -41,8 +51,17 @@ function checkPassword() {
     }
 }
 
+function checkCode() {
+    if ($regist.find("#haveCode:checked").val()) {
+        $regist.find('.invitation_code').css("display", "block")
+    } else {
+        $regist.find('.invitation_code').css("display", "none")
+    }
+
+}
+
 function registSubmit() {
-    if ($regist.find('#phone').val() == '' || $regist.find('#name').val() == '' || $regist.find('#bank').val() == '' || $regist.find('#password').val() == '' || $regist.find('#repassword').val() == '') {
+    if ($regist.find('#phone').val() == '' || $regist.find('emil').val() == '' || $regist.find('#name').val() == '' || $regist.find('#bank').val() == '' || $regist.find('#password').val() == '' || $regist.find('#repassword').val() == '') {
         $regist.find('.msgWarning').html("信息不能为空");
         return false;
     } else {
@@ -58,6 +77,7 @@ function registSubmit() {
                 dataType: "json",
                 data: {
                     username: $regist.find('#name').val(),
+                    emil: $regist.find('emil').val(),
                     password: $regist.find('#password').val(),
                     phoneNumber: $regist.find('#phone').val(),
                     bankNumber: $regist.find('#bank').val(),
@@ -65,15 +85,19 @@ function registSubmit() {
                 },
                 success: function(messageInfo) {
                     if (messageInfo.code === 200) {
-                        alert('注册成功！3s后自动跳转到登录界面...')
+                        $regist.find('#msgWarning').html('注册成功！3s后自动跳转到登录界面...')
                         setTimeout(function() {
                             window.location.href = "regist.html";
                         }, 3000);
                     } else {
-                        alert('注册失败，请稍后重试!');
+                        $regist.find('#msgWarning').html('注册失败，请稍后重试!');
                     }
                 },
-                error: function(messageInfo) {}
+                error: function(messageInfo) {
+                    if (messageInfo === 400) {
+
+                    }
+                }
             });
         }
     }
@@ -87,12 +111,18 @@ function loginSubmit() {
         data: { phoneNumber: $login.find('#phone').val(), password: $login.find('#password').val() },
         success: function(messageInfo) {
             if (messageInfo.code === 200) {
-                alert('登录成功！')
-                    //window.location.href = "home";
+                $login.find('#loginmsg').html("登录成功");
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 3000);
             } else {
-                alert('登录失败，请稍后重试!');
+                $login.find('#loginmsg').html("账号或密码错误");
             }
         },
-        error: function(messageInfo) {}
+        error: function(messageInfo) {
+            if (messageInfo === 404) {
+
+            }
+        }
     })
 }
