@@ -48,6 +48,11 @@ var UserSchema = new Schema({
     member_mark: { //积分
         type: Number,
         default: 0
+    },
+    email: {
+        type: String,
+        unique: false,
+        default: null
     }
 })
 
