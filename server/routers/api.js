@@ -57,9 +57,9 @@ router.post('/user/register', function(req, res, next) {
     var phoneNumber = req.body.phoneNumber;
     var bankNumber = req.body.bankNumber;
     var invitation_code_from_people = req.body.invitation_code_from_people || '';
-    var reg1 = /tuijianFirst/;
-    var reg2 = /tuijianSecond/;
-    var reg3 = /tuijianinvitation001/;
+    var email = req.body.email || '';
+    var reg1 = /tuijianinvitationFirst/;
+    var reg2 = /tuijianinvitation001/;
     //用户是否为空
     if (!(username && password && phoneNumber && bankNumber)) {
         responseData.code = 400;
@@ -68,7 +68,7 @@ router.post('/user/register', function(req, res, next) {
         return;
     } else {
         if (invitation_code_from_people) {
-            if (reg1.test(invitation_code_from_people) || reg2.test(invitation_code_from_people) || reg3.test(invitation_code_from_people)) {
+            if (reg1.test(invitation_code_from_people) || invitation_code_from_people == "tuijianinvitation001") {
                 //用户是否已经被注册
                 User.findOne({
                     phoneNumber: phoneNumber
@@ -83,6 +83,7 @@ router.post('/user/register', function(req, res, next) {
                     } else {
                         InvitationCode.count().then(function(count) {
                             if (invitation_code_from_people == 'tuijianinvitation001') {
+                                var random = parseInt((Math.random() * 16358200 + 108004550), 10);
                                 //保存用户信息到数据库
                                 var user = new User({
                                     username: username,
@@ -90,70 +91,32 @@ router.post('/user/register', function(req, res, next) {
                                     phoneNumber: phoneNumber,
                                     bankNumber: bankNumber,
                                     invitation_code_from_people: 'tuijianinvitation001',
-                                    invitation_code: 'tuijianFirst' + (count + 1),
-                                    power: 1,
-                                    invitation_people: 80
+                                    invitation_code: 'tuijianinvitationFirst' + random + (count + 1),
+                                    power: 0,
+                                    email: email
                                 });
                                 var invitationCode = new InvitationCode({
-                                    invitation_code: 'tuijianFirst' + (count + 1)
+                                    invitation_code: 'tuijianinvitationFirst' + random + (count + 1)
                                 });
                                 invitationCode.save();
                                 return user.save();
                             } else if (reg1.test(invitation_code_from_people)) {
-                                User.findOne({
-                                    invitation_code: invitation_code_from_people
-                                }).then(function(userFromInfo) {
-                                    if (userFromInfo && userFromInfo.invitated_people < userFromInfo.invitation_people) {
-                                        var _id = userFromInfo._id;
-                                        userFromInfo.invitated_people = userFromInfo.invitated_people + 1;
-                                        delete userFromInfo._id;
-                                        User.update({ _id: _id }, userFromInfo, function(err) {});
-                                        var user = new User({
-                                            username: username,
-                                            password: password,
-                                            phoneNumber: phoneNumber,
-                                            bankNumber: bankNumber,
-                                            invitation_code_from_people: invitation_code_from_people,
-                                            invitation_code: 'tuijianSecond' + (count + 1),
-                                            power: 2,
-                                            invitation_people: 80
-                                        });
-                                        var invitationCode = new InvitationCode({
-                                            invitation_code: 'tuijianSecond' + (count + 1)
-                                        });
-                                        invitationCode.save();
-                                        return user.save();
-                                    } else {
-                                        responseData.code = 400;
-                                        responseData.message = '此推荐码使用的次数已经用完！';
-                                        res.json(responseData);
-                                        return;
-                                    }
-                                })
-                            } else if (reg2.test(invitation_code_from_people)) {
-                                User.findOne({
-                                    invitation_code: invitation_code_from_people
-                                }).then(function(userFromInfo) {
-                                    if (userFromInfo && userFromInfo.invitated_people < userFromInfo.invitation_people) {
-                                        var _id = userFromInfo._id;
-                                        userFromInfo.invitated_people = userFromInfo.invitated_people + 1;
-                                        delete userFromInfo._id;
-                                        User.update({ _id: _id }, userFromInfo, function(err) {});
-                                        var user = new User({
-                                            username: username,
-                                            password: password,
-                                            phoneNumber: phoneNumber,
-                                            bankNumber: bankNumber,
-                                            invitation_code_from_people: invitation_code_from_people
-                                        });
-                                        return user.save();
-                                    } else {
-                                        responseData.code = 400;
-                                        responseData.message = '此推荐码使用的次数已经用完！';
-                                        res.json(responseData);
-                                        return;
-                                    }
-                                })
+                                var random = parseInt((Math.random() * 16358200 + 108004550), 10);
+                                var user = new User({
+                                    username: username,
+                                    password: password,
+                                    phoneNumber: phoneNumber,
+                                    bankNumber: bankNumber,
+                                    invitation_code_from_people: invitation_code_from_people,
+                                    invitation_code: 'tuijianinvitationFirst' + random + (count + 1),
+                                    power: 0,
+                                    email: email
+                                });
+                                var invitationCode = new InvitationCode({
+                                    invitation_code: 'tuijianinvitationFirst' + random + (count + 1)
+                                });
+                                invitationCode.save();
+                                return user.save();
                             }
                         })
                     }
@@ -180,13 +143,23 @@ router.post('/user/register', function(req, res, next) {
                     res.json(responseData);
                     return;
                 } else {
-                    var user = new User({
-                        username: username,
-                        password: password,
-                        phoneNumber: phoneNumber,
-                        bankNumber: bankNumber
-                    });
-                    return user.save();
+                    InvitationCode.count().then(function(count) {
+                        var random = parseInt((Math.random() * 16358200 + 108004550), 10);
+                        var user = new User({
+                            username: username,
+                            password: password,
+                            phoneNumber: phoneNumber,
+                            bankNumber: bankNumber,
+                            email: email,
+                            invitation_code_from_people: 'tuijianinvitation001',
+                            invitation_code: 'tuijianinvitationFirst' + random + (count + 1)
+                        });
+                        var invitationCode = new InvitationCode({
+                            invitation_code: 'tuijianinvitationFirst' + random + (count + 1)
+                        });
+                        invitationCode.save();
+                        return user.save();
+                    })
                 }
             }).then(function(userInfo) {
                 responseData.message = '注册成功';
@@ -269,5 +242,9 @@ router.get('/user/logout', function(req, res) {
     }
 
 })
+
+/**
+ * 获取用户列表
+ */
 
 module.exports = router;

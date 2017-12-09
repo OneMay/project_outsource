@@ -67,7 +67,7 @@ function registSubmit() {
                     if (messageInfo.code === 200) {
                         alert('注册成功！3s后自动跳转到登录界面...')
                         setTimeout(function() {
-                            window.location.href = "regist.html";
+                            //window.location.href = "login.html";
                         }, 3000);
                     } else {
                         alert('注册失败，请稍后重试!');

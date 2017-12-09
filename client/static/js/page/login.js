@@ -4,11 +4,11 @@ window.onload = function() {
     var adminlogpass = document.getElementById('adminlogpass');
     (function cookies() {
         var cookie = document.cookie;
-        var reg = /adminuserInfo=(.+)/;
+        var reg = /adminuserInfo=(.+)}(.+)/;
         if (reg.test(cookie)) {
-            var adminUser = reg.exec(cookie)[1];
-            var adminUserName = JSON.parse(adminUser).username;
-            window.location.href = '/admin/index.html';
+            window.location.href = '/admin/index.html'
+        } else if (/adminuserInfo=(.+)/.test(cookie)) {
+            window.location.href = '/admin/index.html'
         }
     })();
     adminlogin.onclick = adminlog;

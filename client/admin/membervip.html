@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>商品列表</title>
+    <title>高级vip</title>
     <meta name="description" content="这是一个 index 页面">
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -73,7 +73,7 @@
 
                 <div class="sideMenu am-icon-dashboard" style="color:#aeb2b7; margin: 10px 0 0 0;"></div>
                 <div class="sideMenu">
-                    <h3 class="am-icon-flag on"><em></em> <a href="#">会员商城</a></h3>
+                    <h3 class="am-icon-flag"><em></em> <a href="#">会员商城</a></h3>
                     <ul>
                         <li><a href="/admin/productlist.html">商品列表</a></li>
                         <li class="func" dataType='html' dataLink='msn.htm' iconImg='images/msn.gif'><a href="/admin/addproduct.html">添加新商品</a></a>
@@ -84,7 +84,7 @@
                         <li><a href="/admin/orderlist.html">未处理订单</a></li>
                         <li><a href="/admin/orderlist.html">订单列表</a></li>
                     </ul>
-                    <h3 class="am-icon-users"><em></em> <a href="#">会员管理</a></h3>
+                    <h3 class="am-icon-users on"><em></em> <a href="#">会员管理</a></h3>
                     <ul>
                         <li><a href="/admin/member.html">普通vip</a> </li>
                         <li><a href="/admin/membervip.html">高级vip</a> </li>
@@ -108,55 +108,44 @@
                     });
                 </script>
             </div>
+
             <div class=" admin-content">
+
                 <div class="daohang">
+
                 </div>
                 <div class="admin-biaogelist">
+
                     <div class="listbiaoti am-cf">
-                        <ul class="am-icon-flag on"> 栏目名称</ul>
-                        <dl class="am-icon-home" style="float: right;"> 当前位置： 首页 > <a href="#">商品列表</a></dl>
+                        <ul class="am-icon-users"> 会员管理</ul>
+
+                        <dl class="am-icon-home" style="float: right;">当前位置： 首页 > <a href="#">高级vip</a></dl>
+
                         <dl>
-                            <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 商品列表</button>
+                            <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 高级vip</button>
                         </dl>
                     </div>
-                    <!-- <li style="margin-left: -4px;">
-                        <span class="tubiao am-icon-calendar"></span>
-                        <input type="text" class="am-form-field am-input-sm am-input-zm  am-icon-calendar" placeholder="开始日期" data-am-datepicker="{theme: 'success',}" readonly/>
-                    </li> -->
                     <form class="am-form am-g">
                         <table width="100%" class="am-table am-table-bordered am-table-radius am-table-striped">
                             <thead>
                                 <tr class="am-success">
+
                                     <th class="table-id">序号</th>
-                                    <th class="table-title">商品名称</th>
-                                    <th class="table-title">积分</th>
-                                    <th class="table-title">库存</th>
-                                    <!-- <th class="table-author am-hide-sm-only">上架/下架 <i class="am-icon-check am-text-warning"></i> <i class="am-icon-close am-text-primary"></i></th> -->
-                                    <th class="table-date am-hide-sm-only">商品描述</th>
-                                    <th width="163px" class="table-set">操作</th>
+                                    <th class="table-title">会员名称</th>
+                                    <th class="table-type">会员等级</th>
+                                    <th class="table-author am-hide-sm-only">会员积分</th>
+                                    <th class="table-author am-hide-sm-only">电话号码</th>
+                                    <th class="table-date am-hide-sm-only">银行卡号</th>
+                                    <th class="table-date am-hide-sm-only">直接获利人数</th>
+                                    <th class="table-date am-hide-sm-only">间接获利人数</th>
+                                    <th class="table-date am-hide-sm-only" id="number_people">推荐奖</th>
+                                    <th width="130px" class="table-set">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-
-                                <!-- <tr>
-                                    <td>15</td>
-                                    <td><a href="#">Business management</a></td>
-                                    <td>1402</td>
-                                    <td>20</td>
-                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
-                                    <td>
-                                        <div class="am-btn-toolbar">
-                                            <div class="am-btn-group am-btn-group-xs">
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-success am-round"><span class="am-icon-search"></span> </button>
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary am-round"><span class="am-icon-pencil-square-o"></span></button>
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-warning  am-round"><span class="am-icon-copy"></span></button>
-                                                <span class="am-btn am-btn-default am-btn-xs am-text-danger am-round"><span class="am-icon-trash-o"></span></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr> -->
                             </tbody>
                         </table>
+
                         <ul class="am-pagination am-fr">
                             <li><span id="mallPrev">上一页</span></li>
                             <li><span id="mallNext">下一页</span></li>
@@ -164,10 +153,6 @@
                         <hr />
                         <p class="Message">注：.....</p>
                     </form>
-
-
-
-
                     <div class="foods">
                         <ul>
                             版权所有@2015
@@ -176,17 +161,9 @@
                             <a href="" title="返回头部" class="am-icon-btn am-icon-arrow-up"></a>
                         </dl>
                     </div>
-
-
-
-
                 </div>
 
             </div>
-
-
-
-
         </div>
 
         <!--[if lt IE 9]>
@@ -196,12 +173,9 @@
 <script src="/static/assets/js/polyfill/respond.min.js"></script>
 <script src="/static/assets/js/amazeui.legacy.js"></script>
 <![endif]-->
-
         <!--[if (gte IE 9)|!(IE)]><!-->
         <script src="/static/assets/js/amazeui.min.js"></script>
         <!--<![endif]-->
-
-
         <script src="/static/js/page/public.js"></script>
     </body>
 

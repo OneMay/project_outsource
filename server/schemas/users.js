@@ -12,24 +12,40 @@ var UserSchema = new Schema({
         unique: true
     },
     bankNumber: String,
-    invitation_code_from_people: {
+    invitation_code_from_people: { //邀请人的推荐码
         type: String,
         default: null
     },
-    invitation_code: {
+    invitation_code: { //推荐码
         type: String,
         unique: true,
         default: null
     },
-    power: {
-        type: Number,
-        default: 3
-    },
-    invitation_people: {
+    power: { //获得团队奖次数
         type: Number,
         default: 0
     },
-    invitated_people: {
+    isVip: { //高级会员
+        type: Boolean,
+        default: false
+    },
+    invitated_people: { //推荐的人数
+        type: Number,
+        default: 0
+    },
+    previnvitated_people: { //上一次结算推荐的人数
+        type: Number,
+        default: 0
+    },
+    straight: { //直接获利人数
+        type: Number,
+        default: 0
+    },
+    secondhand: { //间接获利人数
+        type: Number,
+        default: 0
+    },
+    member_mark: { //积分
         type: Number,
         default: 0
     }
