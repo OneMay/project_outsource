@@ -5,16 +5,24 @@ var path = require('path');
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
 var adminUser = require('../models/adminuser');
+var Product = require('../models/product');
+var User = require('../models/user');
+var Number_people = require('../models/Number_people');
 //统一返回格式
 var responseData;
 var num = 0;
 router.use(function(req, res, next) {
-    responseData = {
-        code: 200,
-        message: ''
-    }
-    next();
-})
+        responseData = {
+            code: 200,
+            message: ''
+        }
+        next();
+    })
+    //推荐奖励人数：80
+    // var number_people = new Number_people({
+    //     numberPeople: 80
+    // })
+    // number_people.save();
 router.use(function(req, res, next) {
         var originalUrl = ['/admin/user/']
         if (originalUrl.indexOf(req.originalUrl) >= 0) {
@@ -108,142 +116,69 @@ router.get('/user/logout', function(req, res) {
         }
 
     })
-    //上传图片
-router.post('/add/poster', multipartMiddleware, function(req, res, next) {
-    var posterData = req.files.uploadPoster;
-    var filePath = posterData.path || '';
-    var originalFilename = posterData.originalFilename;
+    /**
+     * 会员商城商品录入
+     * 需要字段：
+     * productName: String,
+     * productDescription: String,
+     * productImageUrl: String,
+     * ProductIntegration:Number,
+     * productInventory:Number 
+     */
+router.post('/add/productmall', multipartMiddleware, function(req, res, next) {
+        var productmallPoster = req.files.productmallPoster;
+        var productName = req.body.productName;
+        var productDescription = req.body.productDescription;
+        var ProductIntegration = req.body.ProductIntegration;
+        var productInventory = req.body.inventory;
+        var filePath = productmallPoster.path || '';
+        var originalFilename = productmallPoster.originalFilename;
 
-    if (originalFilename) {
-        fs.readFile(filePath, function(err, data) {
-            var timestamp = Date.now();
-            //var type = posterData.type.split('/')[1];
-            //var poster = timestamp + '.' + type;
-            //var newPath = path.join(__dirname, '../../', 'static/upload/' + poster); //生成服务器的储存地址
-            var newPath = path.join(__dirname, '../../', 'static/upload/' + originalFilename); //生成服务器的储存地址
-            console.log(newPath);
-            fs.writeFile(newPath, data, function(err) {
-                //req.poster = originalFilename;
-                if (err) {
-                    responseData.code = 1;
-                    responseData.message = '上传失败';
-                    res.json(responseData);
-                    return;
-                } else {
-                    responseData.code = 2;
-                    responseData.message = '上传成功';
-                    res.json(responseData);
-                    return;
-                }
-                next();
+        if (originalFilename) {
+            fs.readFile(filePath, function(err, data) {
+                var timestamp = Date.now();
+                //var type = posterData.type.split('/')[1];
+                //var poster = timestamp + '.' + type;
+                //var newPath = path.join(__dirname, '../../', 'static/upload/' + poster); //生成服务器的储存地址
+                var newPath = path.join(__dirname, '../../', 'client/static/upload/images/' + originalFilename); //生成服务器的储存地址
+                console.log(newPath);
+                fs.writeFile(newPath, data, function(err) {
+                    //req.poster = originalFilename;
+                    if (err) {
+                        responseData.code = 500;
+                        responseData.message = '上传失败';
+                        res.json(responseData);
+                        return;
+                    } else {
+                        var productImageUrl = '/static/upload/images/' + originalFilename;
+                        if (productName && productDescription && ProductIntegration && productInventory) {
+                            var product = new Product({
+                                productName: productName,
+                                productDescription: productDescription,
+                                productImageUrl: productImageUrl,
+                                ProductIntegration: ProductIntegration,
+                                productInventory: productInventory
+                            })
+                            product.save();
+                            responseData.code = 200;
+                            responseData.message = '成功';
+                            res.json(responseData);
+                            return;
+                        } else {
+                            responseData.code = 404;
+                            responseData.message = '失败';
+                            res.json(responseData);
+                            return;
+                        }
+                    }
+                    next();
+                })
             })
-        })
-    } else {
-        responseData.code = 3;
-        responseData.message = '上传失败，未选择文件';
-        res.json(responseData);
-        return;
-    }
-})
-router.post('/add/product', function(req, res, next) {
-        var name = req.body.name;
-        var quality = req.body.quality;
-        var technology = req.body.technology;
-        var specifications = req.body.specifications;
-        var packing = req.body.packing;
-        var selenium = req.body.selenium;
-        var describe = req.body.describe;
-        var uploadPoster = req.body.uploadPoster;
-        var poster = '/static/upload/' + uploadPoster;
-
-        if (name == '' || quality == '' || technology == '' || specifications == '' || packing == '' || selenium == '' || describe == '') {
-            responseData.code = 1;
-            responseData.message = '输入字段不能为空！';
+        } else {
+            responseData.code = 404;
+            responseData.message = '上传失败，未选择文件';
             res.json(responseData);
             return;
-        } else {
-            Product.findOne({
-                name: name
-            }).then(function(productInfo) {
-                if (productInfo) {
-                    //保存信息到数据库
-                    var posterList = [];
-                    productInfo.posters.forEach(function(val, index) {
-                        posterList.push(val.poster);
-                    })
-                    if (posterList.indexOf(poster) < 0) {
-
-                        var _id = productInfo._id;
-                        num = 0;
-                        Product.update({ _id: _id }, { $addToSet: { "posters": { poster: poster } } }, function(err) {
-                            if (err) {
-                                console.log('add err');
-                            } else {
-                                console.log('add success');
-                            }
-                        })
-                        Product.findOne({
-                            name: name
-                        }).then(function(productInfo) {
-                            if (productInfo) {
-                                num = 0;
-                                var _id = productInfo._id;
-                                productInfo.name = req.body.name;
-                                productInfo.quality = req.body.quality;
-                                productInfo.technology = req.body.technology;
-                                productInfo.specifications = req.body.specifications;
-                                productInfo.packing = req.body.packing;
-                                productInfo.selenium = req.body.selenium;
-                                productInfo.describe = req.body.describe;
-
-                                delete productInfo._id;
-                                // }
-                                return Product.update({ _id: _id }, productInfo, function(err) {});
-                            }
-                        })
-                    } else {
-                        num = 0;
-                        var _id = productInfo._id;
-                        productInfo.name = req.body.name;
-                        productInfo.quality = req.body.quality;
-                        productInfo.technology = req.body.technology;
-                        productInfo.specifications = req.body.specifications;
-                        productInfo.packing = req.body.packing;
-                        productInfo.selenium = req.body.selenium;
-                        productInfo.describe = req.body.describe;
-                        delete productInfo._id;
-                        return Product.update({ _id: _id }, productInfo, function(err) {});
-                    }
-
-
-                } else {
-                    console.log(name);
-                    num = 1;
-                    //console.log(222);
-                    var product = new Product({
-                        name: req.body.name,
-                        quality: req.body.quality,
-                        technology: req.body.technology,
-                        specifications: req.body.specifications,
-                        packing: req.body.packing,
-                        selenium: req.body.selenium,
-                        describe: req.body.describe,
-                        posters: [{
-                            poster: poster
-                        }]
-                    });
-                    return product.save();
-                }
-            }).then(function(productInfo) {
-                if (num == 0) {
-                    responseData.message = '数据更新成功';
-                    res.json(responseData);
-                }
-                if (num == 1) {
-                    responseData.message = '数据增加成功';
-                    res.json(responseData);
-                }
-            })
         }
     })
     //产品列表
@@ -255,51 +190,514 @@ router.post('/add/product', function(req, res, next) {
      * 2:3-4,skip:2
      * 实现分页
      */
-router.get('/find/productList', function(req, res, next) {
-    var page = parseInt(req.query.page) || 1;
+router.get('/get/mallpageList', function(req, res, next) {
+    console.log(req.query.currentPage)
+    var currentPage = parseInt(req.query.currentPage) || 1;
     var limit = 6;
-    var currentPage = 0;
+    var page = 0;
+    var sum = 0;
     // var count = 6;
     // var index = page * count;
     Product.count().then(function(count) {
-        //计算总页数
-        currentPage = Math.ceil(count / limit);
-        //取值不能超过currentPage
-        page = Math.min(page, currentPage)
-            //取值不能小于1；
-        page = Math.max(page, 1);
-        var skip = (page - 1) * limit;
-        Product.find().limit(limit).skip(skip).then(function(productList) {
-            //console.log(productList);
-            //var results = productList.slice(index,index + count);
-            responseData.message = '查询成功';
+        if (count > 0) {
+            //计算总页数
+            page = Math.ceil(count / limit);
+            //取值不能超过page
+            currentPage = Math.min(currentPage, page)
+                //取值不能小于1；
+            currentPage = Math.max(currentPage, 1);
+            var skip = (currentPage - 1) * limit;
+            Product.find().sort({ '_id': -1 }).limit(limit).skip(skip).then(function(productListInfo) {
+                //console.log(productList);
+                //var results = productList.slice(index,index + count);
+                var productList = [];
+                productListInfo.forEach(function(value, index) {
+                    productList.push({
+                        _id: value._id,
+                        ProductIntegration: value.ProductIntegration,
+                        productDescription: value.productDescription,
+                        productImageUrl: value.productImageUrl,
+                        productInventory: value.productInventory,
+                        productName: value.productName,
+                        number: (currentPage - 1) * 6 + (index + 1)
+                    })
+                    sum = index;
+                })
+
+                responseData.message = '查询成功';
+                if (sum + 1 == productListInfo.length) {
+                    var productList1 = {
+                            productList,
+                            currentPage: currentPage,
+                            page: page,
+                            count: count,
+                            limit: limit
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, productList1);
+                    res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
             var productList1 = {
-                    productList,
-                    currentPage: currentPage,
+                    productList: [],
+                    currentPage: 1,
                     page: page,
-                    count: count,
+                    count: 0,
                     limit: limit
                 }
                 //responseData.productList = productList;
             Object.assign(responseData, productList1);
-            res.json(responseData);
-        })
+            return res.json(responseData);
+        }
     })
 
 })
 
 //删除产品
-router.post('/delete/product', function(req, res, next) {
-        var name = req.body.name;
-        //console.log(name);
-        Product.findOne({
-            name: name
-        }).then(function(product) {
-            if (product) {
-                responseData.message = '删除成功';
-                Product.remove({ name: name }, function(err) {})
-                res.json(responseData);
-                return;
+router.post('/delete/productmall', function(req, res, next) {
+    var _id = req.body._id;
+    //console.log(name);
+    Product.findOne({
+        _id: _id
+    }).then(function(product) {
+        if (product) {
+            responseData.message = '删除成功';
+            Product.remove({ _id: _id }, function(err) {})
+            res.json(responseData);
+            return;
+        } else {
+            responseData.code = 404;
+            responseData.message = '删除失败，为找到此产品！';
+            res.json(responseData);
+            return;
+        }
+    })
+})
+
+/**
+ * 获取普通vip列表
+ */
+
+router.get('/get/userlist', function(req, res, next) {
+        var currentPage = parseInt(req.query.currentPage) || 1;
+        var limit = 6;
+        var page = 0;
+        var sum = 0;
+        var number_people = 0;
+        // var count = 6;
+        // var index = page * count;
+        Number_people.findOne().then(function(numberPeopleInfo) {
+            if (numberPeopleInfo) {
+                number_people = numberPeopleInfo.numberPeople;
+            } else {
+                number_people = 80;
+            }
+        })
+        User.find({ isVip: false }).count().then(function(count) {
+            if (count > 0) {
+                console.log(count)
+                    //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                User.find({ isVip: false }).limit(limit).skip(skip).then(function(userListInfo) {
+                    //console.log(productList);
+                    //var results = productList.slice(index,index + count);
+                    var userList = [];
+                    userListInfo.forEach(function(value, index) {
+                        userList.push({
+                            _id: value._id,
+                            username: value.username,
+                            phoneNumber: value.phoneNumber,
+                            bankNumber: value.bankNumber,
+                            isVip: value.isVip,
+                            invitated_people: value.invitated_people,
+                            straight: value.straight,
+                            secondhand: value.secondhand,
+                            member_mark: value.member_mark,
+                            power: value.power,
+                            previnvitated_people: value.previnvitated_people,
+                            number: (currentPage - 1) * 6 + (index + 1)
+                        })
+                        sum = index;
+                    })
+                    responseData.message = '查询成功';
+                    if (sum + 1 == userListInfo.length) {
+                        var userList1 = {
+                                userList,
+                                currentPage: currentPage,
+                                page: page,
+                                count: count,
+                                limit: limit,
+                                number_people: number_people
+                            }
+                            //responseData.productList = productList;
+                        Object.assign(responseData, userList1);
+                        return res.json(responseData);
+                    }
+                })
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var userList1 = {
+                        userList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit,
+                        number_people: number_people
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, userList1);
+                return res.json(responseData);
+            }
+        })
+    })
+    /**
+     * 获取高级vip列表
+     */
+
+router.get('/get/userViplist', function(req, res, next) {
+        var currentPage = parseInt(req.query.currentPage) || 1;
+        var limit = 6;
+        var page = 0;
+        var sum = 0;
+        var number_people = 0;
+        // var count = 6;
+        // var index = page * count;
+        Number_people.findOne().then(function(numberPeopleInfo) {
+            if (numberPeopleInfo) {
+                number_people = numberPeopleInfo.numberPeople;
+            } else {
+                number_people = 80;
+            }
+        })
+        User.find({ isVip: true }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                User.find({ isVip: true }).limit(limit).skip(skip).then(function(userListInfo) {
+                    //console.log(productList);
+                    //var results = productList.slice(index,index + count);
+                    var userList = [];
+                    userListInfo.forEach(function(value, index) {
+                        userList.push({
+                            _id: value._id,
+                            username: value.username,
+                            phoneNumber: value.phoneNumber,
+                            bankNumber: value.bankNumber,
+                            isVip: value.isVip,
+                            invitated_people: value.invitated_people,
+                            straight: value.straight,
+                            secondhand: value.secondhand,
+                            member_mark: value.member_mark,
+                            power: value.power,
+                            previnvitated_people: value.previnvitated_people,
+                            number: (currentPage - 1) * 6 + (index + 1)
+                        })
+                        sum = index;
+                    })
+                    responseData.message = '查询成功';
+                    if (sum + 1 == userListInfo.length) {
+                        var userList1 = {
+                                userList,
+                                currentPage: currentPage,
+                                page: page,
+                                count: count,
+                                limit: limit,
+                                number_people: number_people
+                            }
+                            //responseData.productList = productList;
+                        Object.assign(responseData, userList1);
+                        return res.json(responseData);
+                    }
+                })
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var userList1 = {
+                        userList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit,
+                        number_people: number_people
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, userList1);
+                return res.json(responseData);
+            }
+        })
+    })
+    /**
+     * 普通vip积分修改
+     */
+router.post('/set/vipmember_mark', function(req, res, next) {
+    var member_mark = parseInt(req.body.member_mark);
+    var _id = req.body._id;
+    var isstraight = req.body.isstraight;
+    User.findOne({
+        _id: _id
+    }).then(function(userInfo) {
+        if (userInfo) {
+            var _id = userInfo._id;
+            userInfo.member_mark = (userInfo.member_mark + member_mark) > 0 ? (userInfo.member_mark + member_mark) : 0;
+            if (isstraight == 'straight') {
+                userInfo.straight = 0;
+                delete userInfo._id;
+                User.update({ _id: _id }, userInfo, function(err) {});
+                responseData.message = '修改积分成功';
+                return res.json(responseData);
+            } else if (isstraight == 'secondhand') {
+                userInfo.secondhand = 0;
+                delete userInfo._id;
+                User.update({ _id: _id }, userInfo, function(err) {});
+                responseData.message = '修改积分成功';
+                return res.json(responseData);
+            } else if (isstraight == 'invitated') {
+                Number_people.findOne().then(function(numberPeopleInfo) {
+                    if (numberPeopleInfo && (parseInt(userInfo.invitated_people) - parseInt(userInfo.previnvitated_people) > numberPeopleInfo.numberPeople)) {
+                        userInfo.previnvitated_people = userInfo.invitated_people;
+                        userInfo.power = userInfo.power + 1;
+                        delete userInfo._id;
+                        User.update({ _id: _id }, userInfo, function(err) {});
+                        responseData.message = '修改积分成功';
+                        return res.json(responseData);
+                    } else {
+                        responseData.code = 404;
+                        responseData.message = '修改积分失败';
+                        return res.json(responseData);
+                    }
+                })
+            } else {
+                responseData.code = 404;
+                responseData.message = '修改积分失败';
+                return res.json(responseData);
+            }
+        } else {
+            responseData.code = 404;
+            responseData.message = '修改积分失败';
+            return res.json(responseData);
+        }
+    })
+})
+
+/**
+ * vip删除
+ */
+router.post('/delete/vip', function(req, res, next) {
+    var _id = req.body._id;
+    User.findOne({
+        _id: _id
+    }).then(function(userInfo) {
+        if (userInfo) {
+            responseData.message = '删除成功';
+            User.remove({ _id: _id }, function(err) {})
+            res.json(responseData);
+            return;
+        } else {
+            responseData.code = 404;
+            responseData.message = '删除失败，没有此会员信息！';
+            res.json(responseData);
+            return;
+        }
+    })
+})
+
+/**
+ *设置为高级会员
+ */
+router.post('/set/viper', function(req, res, next) {
+        var _id = req.body._id;
+        var userGlobal;
+        var finish = false;
+        User.findOne({
+            _id: _id,
+            isVip: false
+        }).then(function(userInfo) {
+            if (userInfo) {
+                userGlobal = userInfo;
+                var _id = userInfo._id;
+                userInfo.isVip = true;
+                delete userInfo._id;
+                User.update({ _id: _id }, userInfo, function(err) {});
+                if (userInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                    User.findOne({
+                        invitation_code: userInfo.invitation_code_from_people
+                    }).then(function(userInfo) {
+                        if (userInfo) {
+                            var _id = userInfo._id;
+                            userInfo.straight = userInfo.straight + 1;
+                            delete userInfo._id;
+                            User.update({ _id: _id }, userInfo, function(err) {});
+                            if (userInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                                User.findOne({
+                                    invitation_code: userInfo.invitation_code_from_people
+                                }).then(function(userInfo) {
+                                    if (userInfo) {
+                                        var _id = userInfo._id;
+                                        userInfo.secondhand = userInfo.secondhand + 1;
+                                        delete userInfo._id;
+                                        User.update({ _id: _id }, userInfo, function(err) {});
+                                    }
+                                })
+                            }
+                        }
+                    }).then(function(userListInfo) {
+                        if (userGlobal) {
+                            var user = userGlobal;
+
+                            function callback(user) {
+                                if (user.invitation_code_from_people != 'tuijianinvitation001') {
+                                    User.findOne({
+                                        invitation_code: user.invitation_code_from_people
+                                    }).then(function(userListInfo) {
+                                        if (userListInfo) {
+                                            var _id = userListInfo._id;
+                                            userListInfo.invitated_people = userListInfo.invitated_people + 1;
+                                            delete userListInfo._id;
+                                            User.update({ _id: _id }, userListInfo, function(err) {});
+                                            if (userListInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                                                callback(userListInfo);
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                            callback(user)
+                        }
+                    }).then(function(userInfo) {
+                        setTimeout(function() {
+                            console.log(2333)
+                            responseData.code = 200;
+                            responseData.message = '设置高级会员成功2';
+                            return res.json(responseData);
+
+                        }, 1000);
+                    })
+                } else {
+                    responseData.code = 200;
+                    responseData.message = '设置高级会员成功';
+                    return res.json(responseData);
+                }
+            } else {
+                responseData.code = 404;
+                responseData.message = '设置高级会员失败';
+                return res.json(responseData);
+            }
+        })
+    })
+    /**
+     *设置为普通会员
+     */
+router.post('/set/tovip', function(req, res, next) {
+    var _id = req.body._id;
+    var userGlobal;
+    var finish = false;
+    User.findOne({
+        _id: _id,
+        isVip: true
+    }).then(function(userInfo) {
+        if (userInfo) {
+            userGlobal = userInfo;
+            var _id = userInfo._id;
+            userInfo.isVip = false;
+            delete userInfo._id;
+            User.update({ _id: _id }, userInfo, function(err) {});
+            if (userInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                User.findOne({
+                    invitation_code: userInfo.invitation_code_from_people
+                }).then(function(userInfo) {
+                    if (userInfo) {
+                        var _id = userInfo._id;
+                        userInfo.straight = userInfo.straight - 1;
+                        delete userInfo._id;
+                        User.update({ _id: _id }, userInfo, function(err) {});
+                        if (userInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                            User.findOne({
+                                invitation_code: userInfo.invitation_code_from_people
+                            }).then(function(userInfo) {
+                                if (userInfo) {
+                                    var _id = userInfo._id;
+                                    userInfo.secondhand = userInfo.secondhand - 1;
+                                    delete userInfo._id;
+                                    User.update({ _id: _id }, userInfo, function(err) {});
+                                }
+                            })
+                        }
+                    }
+                }).then(function(userListInfo) {
+                    if (userGlobal) {
+                        var user = userGlobal;
+
+                        function callback(user) {
+                            if (user.invitation_code_from_people != 'tuijianinvitation001') {
+                                User.findOne({
+                                    invitation_code: user.invitation_code_from_people
+                                }).then(function(userListInfo) {
+                                    if (userListInfo) {
+                                        var _id = userListInfo._id;
+                                        userListInfo.invitated_people = userListInfo.invitated_people - 1;
+                                        delete userListInfo._id;
+                                        User.update({ _id: _id }, userListInfo, function(err) {});
+                                        if (userListInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                                            callback(userListInfo);
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                        callback(user)
+                    }
+                }).then(function(userInfo) {
+                    setTimeout(function() {
+                        console.log(2333)
+                        responseData.code = 200;
+                        responseData.message = '设置普通会员成功2';
+                        return res.json(responseData);
+
+                    }, 1000);
+                })
+            } else {
+                responseData.code = 200;
+                responseData.message = '设置普通会员成功';
+                return res.json(responseData);
+            }
+        } else {
+            responseData.code = 404;
+            responseData.message = '设置普通会员失败';
+            return res.json(responseData);
+        }
+    })
+})
+
+//推荐奖人数设置
+router.post('/set/number_people', function(req, res, next) {
+        var number_people = req.body.number_people;
+        Number_people.findOne().then(function(numberPeopleInfo) {
+            if (numberPeopleInfo) {
+                var _id = numberPeopleInfo._id;
+                numberPeopleInfo.numberPeople = number_people;
+                delete numberPeopleInfo._id;
+                Number_people.update({ _id: _id }, numberPeopleInfo, function(err) {});
+                responseData.code = 200;
+                responseData.message = '修改成功';
+                return res.json(responseData);
+            } else {
+                responseData.code = 404;
+                responseData.message = '修改失败';
+                return res.json(responseData);
             }
         })
     })

@@ -87,7 +87,7 @@ function registSubmit() {
                     if (messageInfo.code === 200) {
                         $regist.find('#msgWarning').html('注册成功！3s后自动跳转到登录界面...')
                         setTimeout(function() {
-                            window.location.href = "regist.html";
+                            //window.location.href = "login.html";
                         }, 3000);
                     } else {
                         $regist.find('#msgWarning').html('注册失败，请稍后重试!');

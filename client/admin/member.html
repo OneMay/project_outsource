@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>会员列表</title>
+    <title>普通vip</title>
     <meta name="description" content="这是一个 index 页面">
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -48,7 +48,7 @@
 
                         <a href="/admin/member.html">会员管理</a>
                         <a href="/admin/orderlist.html">订单管理</a>
-                        <a href="/admin/productlist.html">商品管理</a>
+                        <a href="/admin/productlist.html">会员商城</a>
                         <a href="/admin/number.html">系统设置</a>
                     </li>
                     <!-- <li class="soso">
@@ -73,7 +73,7 @@
 
                 <div class="sideMenu am-icon-dashboard" style="color:#aeb2b7; margin: 10px 0 0 0;"></div>
                 <div class="sideMenu">
-                    <h3 class="am-icon-flag"><em></em> <a href="#">商品管理</a></h3>
+                    <h3 class="am-icon-flag"><em></em> <a href="#">会员商城</a></h3>
                     <ul>
                         <li><a href="/admin/productlist.html">商品列表</a></li>
                         <li class="func" dataType='html' dataLink='msn.htm' iconImg='images/msn.gif'><a href="/admin/addproduct.html">添加新商品</a></a>
@@ -86,14 +86,14 @@
                     </ul>
                     <h3 class="am-icon-users on"><em></em> <a href="#">会员管理</a></h3>
                     <ul>
-                        <li><a href="/admin/member.html">一级会员</a> </li>
-                        <li><a href="/admin/member.html">二级会员</a> </li>
-                        <li><a href="/admin/member.html">普通会员</a> </li>
+                        <li><a href="/admin/member.html">普通vip</a> </li>
+                        <li><a href="/admin/membervip.html">高级vip</a> </li>
                     </ul>
                     <h3 class="am-icon-gears"><em></em> <a href="#">系统设置</a></h3>
                     <ul>
                         <li><a href="/admin/number.html">推荐人数设置</a> </li>
                     </ul>
+                    <h2 class="am-icon-gears"><em></em> <span id="adminlogout">退出</span></h2>
                 </div>
                 <!-- sideMenu End -->
                 <script type="text/javascript">
@@ -114,320 +114,45 @@
                 <div class="daohang">
 
                 </div>
-
-
-                <div class="am-popup am-popup-inner" id="my-popup">
-
-                    <div class="am-popup-hd">
-                        <h4 class="am-popup-title">添加商品一级分类</h4>
-                        <span data-am-modal-close class="am-close">&times;</span>
-                    </div>
-
-                    <div class="am-popup-bd">
-
-
-                        <form class="am-form tjlanmu">
-
-
-                            <div class="am-form-group">
-                                <div class="zuo">栏目名称：</div>
-                                <div class="you">
-                                    <input type="email" class="am-input-sm" id="doc-ipt-email-1" placeholder="请输入标题">
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <div class="zuo">栏目关键词：</div>
-                                <div class="you">
-                                    <input type="password" class="am-input-sm" id="doc-ipt-pwd-1" placeholder="请输入关键词">
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="zuo">栏目描述：</div>
-                                <div class="you">
-                                    <textarea class="" rows="2" id="doc-ta-1"></textarea>
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="zuo">栏目图片：</div>
-                                <div class="you" style="height: 45px;">
-                                    <input type="file" id="doc-ipt-file-1">
-                                    <p class="am-form-help">请选择要上传的文件...</p>
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="zuo">简介：</div>
-                                <div class="you">
-                                    <textarea class="" rows="2" id="doc-ta-1"></textarea>
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="zuo">状态：</div>
-                                <div class="you" style="margin-top: 3px;">
-                                    <label class="am-checkbox-inline">
-            <input type="checkbox" value="option1">
-            显示 </label>
-                                    <label class="am-checkbox-inline">
-            <input type="checkbox" value="option2">
-            隐藏 </label>
-
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="you">
-                                    <p>
-                                        <button type="submit" class="am-btn am-btn-success am-radius">提交</button>
-                                    </p>
-                                </div>
-                            </div>
-                        </form>
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-
-
-
-                </div>
-
-
-
-
-
-                <div class="am-popup am-popup-inner" id="my-popups">
-
-                    <div class="am-popup-hd">
-                        <h4 class="am-popup-title">修改栏目名称</h4>
-                        <span data-am-modal-close class="am-close">&times;</span>
-                    </div>
-
-                    <div class="am-popup-bd">
-
-
-                        <form class="am-form tjlanmu">
-
-
-                            <div class="am-form-group">
-                                <div class="zuo">栏目名称：</div>
-                                <div class="you">
-                                    <input type="email" class="am-input-sm" id="doc-ipt-email-1" placeholder="请输入标题">
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <div class="zuo">栏目关键词：</div>
-                                <div class="you">
-                                    <input type="password" class="am-input-sm" id="doc-ipt-pwd-1" placeholder="请输入关键词">
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="zuo">栏目描述：</div>
-                                <div class="you">
-                                    <textarea class="" rows="2" id="doc-ta-1"></textarea>
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="zuo">栏目图片：</div>
-                                <div class="you" style="height: 45px;">
-                                    <input type="file" id="doc-ipt-file-1">
-                                    <p class="am-form-help">请选择要上传的文件...</p>
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="zuo">简介：</div>
-                                <div class="you">
-                                    <textarea class="" rows="2" id="doc-ta-1"></textarea>
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="zuo">状态：</div>
-                                <div class="you" style="margin-top: 3px;">
-                                    <label class="am-checkbox-inline">
-            <input type="checkbox" value="option1">
-            显示 </label>
-                                    <label class="am-checkbox-inline">
-            <input type="checkbox" value="option2">
-            隐藏 </label>
-
-                                </div>
-                            </div>
-                            <div class="am-form-group am-cf">
-                                <div class="you">
-                                    <p>
-                                        <button type="submit" class="am-btn am-btn-success am-radius">提交</button>
-                                    </p>
-                                </div>
-                            </div>
-                        </form>
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-
-
-
-                </div>
-
-
-
-
-
-
                 <div class="admin-biaogelist">
 
                     <div class="listbiaoti am-cf">
                         <ul class="am-icon-users"> 会员管理</ul>
 
-                        <dl class="am-icon-home" style="float: right;">当前位置： 首页 > <a href="#">商品列表</a></dl>
+                        <dl class="am-icon-home" style="float: right;">当前位置： 首页 > <a href="#">普通vip</a></dl>
 
                         <dl>
-                            <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 手动添加会员</button>
+                            <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 普通vip</button>
                         </dl>
-                        <!--这里打开的是新页面-->
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     <form class="am-form am-g">
                         <table width="100%" class="am-table am-table-bordered am-table-radius am-table-striped">
                             <thead>
                                 <tr class="am-success">
-                                    <th class="table-check"><input type="checkbox" /></th>
 
-                                    <th class="table-id">ID</th>
+                                    <th class="table-id">序号</th>
                                     <th class="table-title">会员名称</th>
                                     <th class="table-type">会员等级</th>
                                     <th class="table-author am-hide-sm-only">会员积分</th>
-                                    <th class="table-author am-hide-sm-only">注册日期</th>
-                                    <th class="table-date am-hide-sm-only">最近消费</th>
+                                    <th class="table-author am-hide-sm-only">电话号码</th>
+                                    <th class="table-date am-hide-sm-only">银行卡号</th>
+                                    <th class="table-date am-hide-sm-only">直接获利人数</th>
+                                    <th class="table-date am-hide-sm-only">间接获利人数</th>
+                                    <th class="table-date am-hide-sm-only" id="number_people">推荐奖</th>
                                     <th width="130px" class="table-set">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><input type="checkbox" /></td>
-
-                                    <td>14</td>
-                                    <td><a href="#">Business management</a></td>
-                                    <td>3件 （消费455个积分）</td>
-                                    <td class="am-hide-sm-only">访问</td>
-                                    <td class="am-hide-sm-only">访问</td>
-                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
-                                    <td>
-
-
-
-                                        <div class="am-btn-toolbar">
-                                            <div class="am-btn-group am-btn-group-xs">
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-success am-round"><span class="am-icon-search" title="查看订单详情"></span> </button>
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" data-am-modal="{target: '#my-popups'}" title="修改订单"><span class="am-icon-pencil-square-o"></span></button>
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-round" title="删除订单"><span class="am-icon-trash-o" ></span></button>
-                                            </div>
-                                        </div>
-
-
-
-
-
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><input type="checkbox" /></td>
-
-                                    <td>15</td>
-                                    <td><a href="#">Business management</a></td>
-                                    <td>default</td>
-                                    <td class="am-hide-sm-only"><i class="am-icon-close am-text-primary"></i></td>
-                                    <td class="am-hide-sm-only">访问</td>
-                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
-                                    <td>
-
-                                        <div class="am-btn-toolbar">
-                                            <div class="am-btn-group am-btn-group-xs">
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-success am-round"><span class="am-icon-search" title="查看订单详情"></span> </button>
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" data-am-modal="{target: '#my-popups'}" title="修改订单"><span class="am-icon-pencil-square-o"></span></button>
-                                                <button class="am-btn am-btn-default am-btn-xs am-text-danger am-round" title="删除订单"><span class="am-icon-trash-o" ></span></button>
-                                            </div>
-                                        </div>
-
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
 
-                        <div class="am-btn-group am-btn-group-xs">
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 删除</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 上架</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 下架</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 移动</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 移动</button>
-                            <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
-                        </div>
-
                         <ul class="am-pagination am-fr">
-                            <li class="am-disabled"><a href="#">«</a></li>
-                            <li class="am-active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#">»</a></li>
+                            <li><span id="mallPrev">上一页</span></li>
+                            <li><span id="mallNext">下一页</span></li>
                         </ul>
-
-
-
-
                         <hr />
-                        <p>注：.....</p>
+                        <p class="Message">注：.....</p>
                     </form>
-
-
-
-
                     <div class="foods">
                         <ul>
                             版权所有@2015
@@ -436,17 +161,9 @@
                             <a href="" title="返回头部" class="am-icon-btn am-icon-arrow-up"></a>
                         </dl>
                     </div>
-
-
-
-
                 </div>
 
             </div>
-
-
-
-
         </div>
 
         <!--[if lt IE 9]>
@@ -456,12 +173,9 @@
 <script src="/static/assets/js/polyfill/respond.min.js"></script>
 <script src="/static/assets/js/amazeui.legacy.js"></script>
 <![endif]-->
-
         <!--[if (gte IE 9)|!(IE)]><!-->
         <script src="/static/assets/js/amazeui.min.js"></script>
         <!--<![endif]-->
-
-
         <script src="/static/js/page/public.js"></script>
     </body>
 

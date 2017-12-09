@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>添加新商品</title>
     <meta name="description" content="这是一个 index 页面">
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -43,7 +43,7 @@
 
                         <a href="/admin/member.html">会员管理</a>
                         <a href="/admin/orderlist.html">订单管理</a>
-                        <a href="/admin/productlist.html">商品管理</a>
+                        <a href="/admin/productlist.html">会员商城</a>
                         <a href="/admin/number.html">系统设置</a>
                     </li>
                     <!-- <li class="soso">
@@ -68,7 +68,7 @@
 
                 <div class="sideMenu am-icon-dashboard" style="color:#aeb2b7; margin: 10px 0 0 0;"></div>
                 <div class="sideMenu">
-                    <h3 class="am-icon-flag on"><em></em> <a href="#">商品管理</a></h3>
+                    <h3 class="am-icon-flag on"><em></em> <a href="#">会员商城</a></h3>
                     <ul>
                         <li><a href="/admin/productlist.html">商品列表</a></li>
                         <li class="func" dataType='html' dataLink='msn.htm' iconImg='images/msn.gif'><a href="/admin/addproduct.html">添加新商品</a></a>
@@ -81,14 +81,14 @@
                     </ul>
                     <h3 class="am-icon-users"><em></em> <a href="#">会员管理</a></h3>
                     <ul>
-                        <li><a href="/admin/member.html">一级会员</a> </li>
-                        <li><a href="/admin/member.html">二级会员</a> </li>
-                        <li><a href="/admin/member.html">普通会员</a> </li>
+                        <li><a href="/admin/member.html">普通vip</a> </li>
+                        <li><a href="/admin/membervip.html">高级vip</a> </li>
                     </ul>
                     <h3 class="am-icon-gears"><em></em> <a href="#">系统设置</a></h3>
                     <ul>
                         <li><a href="/admin/number.html">推荐人数设置</a> </li>
                     </ul>
+                    <h2 class="am-icon-gears"><em></em> <span id="adminlogout">退出</span></h2>
                 </div>
                 <!-- sideMenu End -->
                 <script type="text/javascript">
@@ -118,9 +118,9 @@
                         <ul class="am-icon-flag on"> 栏目名称</ul>
 
                         <dl class="am-icon-home" style="float: right;"> 当前位置： 首页 > <a href="#">添加新商品</a></dl>
-
-
-
+                        <dl>
+                            <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 添加新商品</button>
+                        </dl>
                     </div>
 
                     <div class="fbneirong">
@@ -128,19 +128,19 @@
                             <div class="am-form-group am-cf">
                                 <div class="zuo">商品名称：</div>
                                 <div class="you">
-                                    <input type="email" class="am-input-sm" id="doc-ipt-email-1" placeholder="商品名称">
+                                    <input type="text" class="am-input-sm" id="productName" placeholder="商品名称">
                                 </div>
                             </div>
                             <div class="am-form-group am-cf">
                                 <div class="zuo">描述：</div>
                                 <div class="you">
-                                    <textarea class="" rows="2" id="doc-ta-1"></textarea>
+                                    <textarea class="" rows="2" id="productDescription"></textarea>
                                 </div>
                             </div>
                             <div class="am-form-group am-cf">
                                 <div class="zuo">产品图片：</div>
                                 <div class="you" style="height: 45px;">
-                                    <input type="file" id="doc-ipt-file-1">
+                                    <input type="file" id="productFile" accept=".jpg,.png">
                                     <p class="am-form-help">请选择要上传的文件...</p>
                                 </div>
                             </div>
@@ -149,7 +149,7 @@
                             <div class="am-form-group am-cf">
                                 <div class="zuo">积分：</div>
                                 <div class="you">
-                                    <input type="text" class="am-input-sm" id="doc-ipt-email-1" placeholder="积分">
+                                    <input type="text" class="am-input-sm" id="ProductIntegration" placeholder="积分">
                                 </div>
                             </div>
 
@@ -164,8 +164,8 @@
 
                             <div class="am-form-group am-cf">
                                 <div class="you" style="margin-left: 11%;">
-                                    <button type="submit" class="am-btn am-btn-success am-radius">发布并关闭窗口</button>&nbsp; &raquo; &nbsp; <button type="submit" class="am-btn am-btn-secondary am-radius">发布并继续发布</button>
-
+                                    <span id="productSubmit" class="am-btn am-btn-success am-radius">发布</span>
+                                    <span class="am-form-help" id="productmallMessage" style="display:inline-block;"></span>
                                 </div>
                             </div>
                         </form>
