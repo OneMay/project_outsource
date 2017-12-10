@@ -36,6 +36,7 @@ $(function() {
             console.log(err);
         }
     });
+
     $('#detail').find('.msCount').attr('disabled', false);
     var $count = $('#detail').find('.count')
     $('#detail').find('.psCount').click(function() {
@@ -52,61 +53,61 @@ $(function() {
         }
     });
 
-    $('#detail').find('.insertCar').click(function() {
-        var $name = $('#detail').find('.goodsName').html(data.goodsName);
-        var $integral = $('#detail').find('.integral').html(data.integral);
-        var $stock = $('#detail').find('.stock').html(data.stock);
-
-        //查看库存是否还有<=0  
-        if ($stock = 0) {
-            return;
-        }
-
-        //无论购物车中是否有该商品,库存都要-1  
-
-        //在添加之前确定该商品在购物车中是否存在,若存在,则数量+1,若不存在则创建行  
-        var $trs = $("#goods>tr");
-        for (var i = 0; i < $trs.length; i++) {
-            var $gtds = $trs.eq(i).children();
-            var gName = $gtds.eq(0).html();
-            if (name == gName) { //若存在  
-                var num = parseInt($gtds.eq(2).children().eq(1).val());
-                $gtds.eq(2).children().eq(1).val(++num); //数量+1  
-                //金额从新计算  
-                $gtds.eq(3).html(price * num);
-                return; //后面代码不再执行  
+    $.ajax({
+        url: 'http:localhost:9090/cartlist',
+        type: 'GET',
+        dataType: 'json',
+        cache: false,
+        error: function() {
+            console.log("error");
+        },
+        success: function(data) {
+            var div = " <div class='cartGoods'>" +
+                "<div class='yes'>" +
+                "<span></span>" +
+                "</div>" +
+                "<div class='descrip'>" +
+                "<a href='#'>" + "<img src=" + data[j].imgSrc + ">" + data[j].cartName + "</a>" +
+                "</div>" +
+                "<div class='price'>" +
+                "<span>" + data[j].price + " 积分</span>" +
+                "</div>" +
+                "<div class='count'>" +
+                "<div class='box'>" +
+                "<span class='msCount'>-</span>" +
+                "<input type='text' value='1' maxlength='2' class='sum'>" +
+                "<span class='psCount'>+</span>" +
+                "</div>" +
+                "</div>" +
+                "<div class='sumPrice'>" +
+                "<span>" + data[j].sumprice + "</span>" +
+                "</div>" +
+                "<div class='operation'>" +
+                "<span>删除</span>" +
+                "</div>" +
+                "</div>";
+            for (j = 0; j < data.length; j++) {
+                $("#cart").find('.cartList').append(div);
             }
         }
-        //若不存在,创建后追加  
+    });
 
-
-        //总计功能  
-        total();
+    $('#detail').find('.insertCar').click(function() {
+        var imgSrc = $('#detail').find('#img').attr('src');
+        var goodsName = $('#detail').find('.goodsName').html();
+        var integral = $('#detail').find('.integral').html();
+        $.ajax({
+            url: 'http:localhost:9090/cartlist',
+            type: 'GET',
+            dataType: 'json',
+            data: { imgSrc: imgSrc, goodsName: goodsName, integral: integral },
+            cache: false,
+            error: function() {
+                console.log("error");
+            },
+            success: function() {
+                alert("添加成功")
+            }
+        })
     })
-    var div = " <div class='cartGoods'>" +
-        "<div class='yes'>" +
-        "<span></span>" +
-        "</div>" +
-        "<div class='descrip'>" +
-        "<a href='#'>" + "<img src='. / static / images / test.png '>放假阿卡数据</a>" +
-        "</div>" +
-        "<div class='price'>" +
-        "<span>354 积分</span>" +
-        "</div>" +
-        "<div class='count'>" +
-        "<div class='box'>" +
-        "<span class='msCount'>-</span>" +
-        "<input type='text' value='1' maxlength='2' class='sum'>" +
-        "<span class='psCount'>+</span>" +
-        "</div>" +
-        "</div>" +
-        "<div class='sumPrice'>" +
-        "<span>" + "345 积分 " + "</span>" +
-        "</div>" +
-        "<div class='operation'>" +
-        "<span>删除</span>" +
-        "</div>" +
-        "</div>"
-        //追加到#goods后面  
-    $("#cart").find('.cartList').append(div);
 })
