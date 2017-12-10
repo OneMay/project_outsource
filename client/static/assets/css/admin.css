@@ -753,6 +753,10 @@ gallery.html css
     right: 50px;
 }
 
+.sideMenued {
+    color: #f8675e !important;
+}
+
 .foods dl .am-icon-btn {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
