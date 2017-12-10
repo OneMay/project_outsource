@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 var cookies = require('cookies');
 var User = require('../models/user');
-var InvitationCode = require('../models/invitationcode')
-    //统一返回格式
+var InvitationCode = require('../models/invitationcode');
+var Product = require('../models/product');
+//统一返回格式
 var responseData;
 router.use(function(req, res, next) {
     // res.cookies = new cookies(req, res);
@@ -247,4 +248,106 @@ router.get('/user/logout', function(req, res) {
  * 获取用户列表
  */
 
+
+/**
+ *会员商城产品列表
+ */
+router.get('/get/mallpageList', function(req, res, next) {
+    var page = 0;
+    var sum = 0;
+    // var count = 6;
+    // var index = page * count;
+    Product.count().then(function(count) {
+        if (count > 0) {
+            Product.find().sort({ '_id': -1 }).then(function(productListInfo) {
+                var productList = [];
+                productListInfo.forEach(function(value, index) {
+                    productList.push({
+                        _id: value._id,
+                        ProductIntegration: value.ProductIntegration,
+                        productDescription: value.productDescription,
+                        productImageUrl: value.productImageUrl,
+                        productInventory: value.productInventory,
+                        productName: value.productName,
+                        number: (index + 1)
+                    })
+                    sum = index;
+                })
+
+                responseData.message = '查询成功';
+                if (sum + 1 == productListInfo.length) {
+                    var productList1 = {
+                            productList,
+                            count: count
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, productList1);
+                    res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var productList1 = {
+                    productList: [],
+                    count: 0,
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, productList1);
+            return res.json(responseData);
+        }
+    })
+
+})
+
+/**
+ *单个会员商城产品
+ */
+router.post('/get/mallpageItem', function(req, res, next) {
+    var page = 0;
+    var sum = 0;
+    var _id = req.body._id;
+    // var count = 6;
+    // var index = page * count;
+    Product.findOne({
+        _id: _id
+    }).then(function(productListInfo) {
+        if (productListInfo) {
+            var productList = [];
+            productListInfo.forEach(function(value, index) {
+                productList.push({
+                    _id: value._id,
+                    ProductIntegration: value.ProductIntegration,
+                    productDescription: value.productDescription,
+                    productImageUrl: value.productImageUrl,
+                    productInventory: value.productInventory,
+                    productName: value.productName
+                })
+                sum = index;
+            })
+
+            responseData.message = '查询成功';
+            if (sum + 1 == productListInfo.length) {
+                var productList1 = {
+                        productList
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, productList1);
+                res.json(responseData);
+            }
+        } else {
+            responseData.code = 404;
+            responseData.message = '数据库无记录';
+            var productList = [];
+            var productList1 = {
+                    productList
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, productList1);
+            res.json(responseData);
+        }
+
+    })
+
+})
 module.exports = router;
