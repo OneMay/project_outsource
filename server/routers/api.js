@@ -313,28 +313,15 @@ router.post('/get/mallpageItem', function(req, res, next) {
         _id: _id
     }).then(function(productListInfo) {
         if (productListInfo) {
-            var productList = [];
-            productListInfo.forEach(function(value, index) {
-                productList.push({
-                    _id: value._id,
-                    ProductIntegration: value.ProductIntegration,
-                    productDescription: value.productDescription,
-                    productImageUrl: value.productImageUrl,
-                    productInventory: value.productInventory,
-                    productName: value.productName
-                })
-                sum = index;
-            })
+            var productList = productListInfo;
 
-            responseData.message = '查询成功';
-            if (sum + 1 == productListInfo.length) {
-                var productList1 = {
-                        productList
-                    }
-                    //responseData.productList = productList;
-                Object.assign(responseData, productList1);
-                res.json(responseData);
-            }
+            var productList1 = {
+                    productList
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, productList1);
+            res.json(responseData);
+
         } else {
             responseData.code = 404;
             responseData.message = '数据库无记录';

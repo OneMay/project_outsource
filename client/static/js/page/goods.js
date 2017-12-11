@@ -1,48 +1,59 @@
 $(function() {
+    //商品列表页
     $.ajax({
-        url: 'http:localhost:9090/list',
-        type: 'GET',
-        dataType: 'json',
-        cache: false,
-        error: function() {
-            console.log("error");
-        },
-        success: function(data) {
-            var $goodsList = $(".goodsList");
-            for (i = 0; i < data.length; i++) {
-                $(".goodsList").append("<li>" +
-                    "<a href='#' target='_blank' class='goodsImg'>" + "<img src=" + data[i].imgSrc + ">" + "</a>" +
-                    "<a href='#' target='_blank' class='goodsName'>" + data[i].goodsName + "</a>" +
-                    "<span>" + "<i>" + data[i].integral + "</i>" + "积分</span > " +
-                    " </li>");
-            }
-        }
-    })
+            url: "http://localhost:9090/api/get/mallpageList",
+            type: 'GET',
+            dataType: 'json',
+            success: function(productList) {
+                var $goodsList = $(".goodsList");
+                for (i = 0; i < productList.productList.length; i++) {
+                    $(".goodsList").append("<li>" +
+                        "<a href='goods.html?_Id=" + productList.productList[i]._id + "' target='_blank' class='goodsImg'>" + "<img src=" + productList.productList[i].productImageUrl + ">" + "</a>" +
+                        "<a href='goods.html?_Id=" + productList.productList[i]._id + "' target='_blank' class='goodsName'>" + productList.productList[i].productName + "</a>" +
+                        "<span>" + "<i>" + productList.productList[i].ProductIntegration + "</i>" + "积分</span > " +
+                        " </li>");
+                }
 
-
-
+            },
+            error: function() {
+                console.log(productList.message);
+            },
+        })
+        // 商品详情页
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg); //匹配目标参数
+        if (r != null) {
+            return unescape(r[2]);
+        };
+        return null; //返回参数值
+    }
+    var id = getUrlParam('_Id');
     $.ajax({
-        url: 'http:localhost:9090/goods',
-        type: 'GET',
+        url: "http://localhost:9090/api/get/mallpageItem",
+        type: 'post',
         dataType: 'json',
-        success: function(data) {
-            $('#detail').find('#img').attr("src", +data.imgSrc);
-            $('#detail').find('.goodsName').html(data.goodsName);
-            $('#detail').find('.describe').html(data.describe);
-            $('#detail').find('.integral').html(data.integral);
-            $('#detail').find('.stock').html(data.stock);
+        data: { _id: id },
+        success: function(productListInfo) {
+            $('#detail').find('#img').attr("src", productListInfo.productList.productImageUrl);
+            $('#detail').find('.goodsName').html(productListInfo.productList.productName);
+            $('#detail').find('.describe').html(productListInfo.productList.productDescription);
+            $('#detail').find('.integral').html(productListInfo.productList.ProductIntegration);
+            $('#detail').find('.stock').html(productListInfo.productList.productInventory);
         },
-        error: function(err) {
-            console.log(err);
+        error: function(productList) {
+            console.log(productList)
         }
     });
-
+    //购买数量
     $('#detail').find('.msCount').attr('disabled', false);
+    $('#detail').find('.psCount').attr('disabled', false);
     var $count = $('#detail').find('.count')
     $('#detail').find('.psCount').click(function() {
-        $count.val(Math.abs(parseInt($count.val())) + 1);
-        if (parseInt($count.val()) != 1 || ($count.val() == data.stock)) {
-            $('#detail').find('.msCount').attr('disabled', false);
+        if (parseInt($count.val()) == parseInt($('#detail').find('.stock').html())) {
+            $('#detail').find('.psCount').attr('disabled', true);
+        } else {
+            $count.val(Math.abs(parseInt($count.val())) + 1);
         };
     })
     $('#detail').find('.msCount').click(function() {
@@ -52,62 +63,99 @@ $(function() {
             $count.val(Math.abs(parseInt($count.val())) - 1);
         }
     });
-
-    $.ajax({
-        url: 'http:localhost:9090/cartlist',
-        type: 'GET',
-        dataType: 'json',
-        cache: false,
-        error: function() {
-            console.log("error");
-        },
-        success: function(data) {
-            var div = " <div class='cartGoods'>" +
-                "<div class='yes'>" +
-                "<span></span>" +
-                "</div>" +
-                "<div class='descrip'>" +
-                "<a href='#'>" + "<img src=" + data[j].imgSrc + ">" + data[j].cartName + "</a>" +
-                "</div>" +
-                "<div class='price'>" +
-                "<span>" + data[j].price + " 积分</span>" +
-                "</div>" +
-                "<div class='count'>" +
-                "<div class='box'>" +
-                "<span class='msCount'>-</span>" +
-                "<input type='text' value='1' maxlength='2' class='sum'>" +
-                "<span class='psCount'>+</span>" +
-                "</div>" +
-                "</div>" +
-                "<div class='sumPrice'>" +
-                "<span>" + data[j].sumprice + "</span>" +
-                "</div>" +
-                "<div class='operation'>" +
-                "<span>删除</span>" +
-                "</div>" +
-                "</div>";
-            for (j = 0; j < data.length; j++) {
-                $("#cart").find('.cartList').append(div);
-            }
+    //立即兑换
+    var cookie = document.cookie;
+    var reg = cookie.match(/userInfo=(\S*)}/);
+    var userId = reg[1].match(/_id":"(\S*)","username/)[1];
+    $('#detail').find('.nowBuy').click(function() {
+        if (reg[1]) {
+            $('#detail').find('.peopleMsg').css("display", "block")
+        } else {
+            window.location.href = '/admin/login.html';
         }
     });
-
-    $('#detail').find('.insertCar').click(function() {
-        var imgSrc = $('#detail').find('#img').attr('src');
-        var goodsName = $('#detail').find('.goodsName').html();
-        var integral = $('#detail').find('.integral').html();
+    //确定兑换
+    $('#detail').find('.sure').click(function() {
         $.ajax({
-            url: 'http:localhost:9090/cartlist',
-            type: 'GET',
+            url: "http://localhost:9090/api/set/shoppingCart",
+            type: 'post',
             dataType: 'json',
-            data: { imgSrc: imgSrc, goodsName: goodsName, integral: integral },
-            cache: false,
-            error: function() {
-                console.log("error");
+            data: {
+                _userId: userId,
+                mallObj: {
+                    _mallId: id,
+                    inventory: $count.val(),
+                    consigneeAddress: $('#detail').find('.contactPhone').find('textarea').val(),
+                    consigneePhone: $('#detail').find('.contactPhone').find('input').val(),
+                    consignee: $('#detail').find('.contactName').find('input').val(),
+                    integration: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()),
+                    money: money
+                }
             },
             success: function() {
-                alert("添加成功")
+                alert('chenggong')
+            },
+            error: function(shibai) {
+                console.log(shibai)
             }
         })
     })
+
+    // $.ajax({
+    //     url: 'http:localhost:9090/cartlist',
+    //     type: 'GET',
+    //     dataType: 'json',
+    //     cache: false,
+    //     error: function() {
+    //         console.log("error");
+    //     },
+    //     success: function(data) {
+    //         var div = " <div class='cartGoods'>" +
+    //             "<div class='yes'>" +
+    //             "<span></span>" +
+    //             "</div>" +
+    //             "<div class='descrip'>" +
+    //             "<a href='#'>" + "<img src=" + data[j].imgSrc + ">" + data[j].cartName + "</a>" +
+    //             "</div>" +
+    //             "<div class='price'>" +
+    //             "<span>" + data[j].price + " 积分</span>" +
+    //             "</div>" +
+    //             "<div class='count'>" +
+    //             "<div class='box'>" +
+    //             "<span class='msCount'>-</span>" +
+    //             "<input type='text' value='1' maxlength='2' class='sum'>" +
+    //             "<span class='psCount'>+</span>" +
+    //             "</div>" +
+    //             "</div>" +
+    //             "<div class='sumPrice'>" +
+    //             "<span>" + data[j].sumprice + "</span>" +
+    //             "</div>" +
+    //             "<div class='operation'>" +
+    //             "<span>删除</span>" +
+    //             "</div>" +
+    //             "</div>";
+    //         for (j = 0; j < data.length; j++) {
+    //             $("#cart").find('.cartList').append(div);
+    //         }
+    //     }
+    // });
+
+    // $('#detail').find('.insertCar').click(function() {
+    //     var imgSrc = $('#detail').find('#img').attr('src');
+    //     var goodsName = $('#detail').find('.goodsName').html();
+    //     var integral = $('#detail').find('.integral').html();
+    //     $.ajax({
+    //         url: 'http:localhost:9090/cartlist',
+    //         type: 'GET',
+    //         dataType: 'json',
+    //         data: { imgSrc: imgSrc, goodsName: goodsName, integral: integral },
+    //         cache: false,
+    //         error: function() {
+    //             console.log("error");
+    //         },
+    //         success: function() {
+    //             alert("添加成功")
+    //         }
+    //     })
+    // })
 })

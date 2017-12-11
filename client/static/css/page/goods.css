@@ -17,7 +17,7 @@ a:hover {
 
 #list .goodsList li {
     padding: 0 15px;
-    width: 208px;
+    width: 200.9px;
     height: 289px;
     overflow: hidden;
     float: left;
@@ -186,6 +186,42 @@ a:hover {
     border: 1px solid #fe7c04;
     color: white;
     background: #fe7c04;
+}
+
+#detail .peopleMsg {
+    border-top: 1px solid #ccc;
+    clear: both;
+    display: none;
+}
+
+#detail .peopleMsg .formBox {
+    width: 60%;
+    margin: auto
+}
+
+#detail .peopleMsg .formBox input[type="text"] {
+    width: 370px;
+    height: 30px;
+}
+
+#detail .peopleMsg .sure {
+    margin-top: 30px;
+    cursor: pointer;
+    display: block;
+    width: 184px;
+    height: 45px;
+    line-height: 45px;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+    order: 1px solid #fe7c04;
+    color: #fe7c04;
+    background: #FFE3D0;
 }
 
 #cart .boxHead h2 {
