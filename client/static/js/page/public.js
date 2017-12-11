@@ -415,31 +415,7 @@
  }
 
 
- function deleteItemMall(e) {
-     if (regName[0].test(e.target.className) || regName[1].test(e.target.className) || regName[2].test(e.target.className)) {
-         var reg = /productmall_id(.+)/;
-         var _id = reg.exec(e.target.className)[1] || '';
-         if (_id) {
-             $.ajax({
-                 url: '/admin/delete/productmall',
-                 type: 'POST',
-                 data: {
-                     _id: _id
-                 },
-                 cache: false,
-                 dataType: 'json',
-                 success: function(data) {
-                     if (data.code == 200) {
-                         getPage(1);
-                     }
-                 },
-                 err: function(err) {
-                     console.log(err)
-                 }
-             })
-         }
-     }
- }
+
  //获取高级vip列表
  if (pathname == '/admin/membervip.html') {
      var mallPrev = document.getElementById('mallPrev');
@@ -976,7 +952,7 @@
                  $('#MembersDemeanorMessage').html(message)
                  var formData = new FormData();
                  formData.append('MembersDemeanorTitle', MembersDemeanorTitle);
-                 formData.append('MembersDemeanorTitle', MembersDemeanorTitle);
+                 formData.append('MembersDemeanorFile', MembersDemeanorFile);
                  formData.append('MembersDemeanorContent', MembersDemeanorContent);
                  $.ajax({
                      url: '/admin/add/MembersDemeanor',
@@ -1008,5 +984,107 @@
              message = '内容不能有空！！';
              $('#MembersDemeanorMessage').html(message)
          }
+     }
+ }
+
+ /**
+  * 文章列表
+  */
+ if (pathname == '/admin/MembersDemeanorList.html') {
+     var mallPrev = document.getElementById('mallPrev');
+     var mallNext = document.getElementById('mallNext');
+     mallPrev.onclick = function() {
+         getCurrentPage4(-1);
+     }
+     mallNext.onclick = function() {
+         getCurrentPage4(1);
+     }
+     getPage4(currentPage);
+
+ }
+
+ function getCurrentPage4(num) {
+     if (currentPage + num <= 1) {
+         currentPage = 1;
+         getPage4(currentPage)
+     } else if (currentPage + num >= page) {
+         currentPage = page;
+         getPage4(currentPage)
+     } else {
+         currentPage += num;
+         getPage4(currentPage)
+     }
+
+
+ }
+
+ function getPage4(currentpage) {
+     $.ajax({
+         url: '/admin/get/membersDemeanorList',
+         type: 'GET',
+         data: {
+             currentPage: currentpage
+         },
+         cache: false,
+         dataType: 'json',
+         success: function(data) {
+             page = data.page;
+             if ($('tbody>tr').length > 0) {
+                 $('tbody>tr').remove();
+             }
+             if (data.code == 200) {
+                 data.membersDemeanorList.forEach((value, index) => {
+                     var html = "<tr>" +
+                         "<td>" + value.number + "</td>" +
+                         "<td>" + value.title + "</td>" +
+                         "<td>" + value.time + "</td>" +
+                         '<td>' +
+                         '<div class="am-btn-toolbar">' +
+                         '<div class="am-btn-group am-btn-group-xs">' +
+                         '<span class="am-btn am-btn-default am-btn-xs am-text-danger" title="删除" onclick="deletemembersDemeanor(' + "'" + value._id + "'" + ')">' + '<span class="am-icon-trash-o productmall_id' + value._id + '">' + '</span></span>' +
+                         '</div>' +
+                         '</div>' +
+                         '</td>' +
+                         "</tr>";
+                     $('tbody').append(html);
+                 });
+                 var str = '共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                 $('.Message').html(str);
+             } else {
+                 $('.Message').html(data.message);
+             }
+         },
+         err: function(err) {
+             console.log(err)
+         }
+     })
+ }
+
+ //文章删除
+ function deletemembersDemeanor(id) {
+     if (id) {
+         $.ajax({
+             url: '/admin/delete/membersDemeanoritem',
+             type: 'POST',
+             data: {
+                 _id: id
+             },
+             cache: false,
+             dataType: 'json',
+             success: function(data) {
+                 if (data.code == 200) {
+
+                     getPage4(1)
+
+                 } else {
+                     console.log(data.message)
+                 }
+             },
+             err: function(err) {
+                 console.log(err)
+             }
+         })
+     } else {
+         alert('出错！');
      }
  }

@@ -6,7 +6,7 @@ var MembersDemeanorSchema = new Schema({
     content: String,
     membersDemeanoPhoto: [{
         type: String
-    }]
-
+    }],
+    time: Date
 })
 module.exports = MembersDemeanorSchema;
