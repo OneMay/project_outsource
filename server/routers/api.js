@@ -357,13 +357,13 @@ router.post('/set/shoppingCart', function(req, res, next) {
                 _id: _userId
             }).then(function(userInfo) {
                 if (userInfo) {
-                    if (mallObj.integration && (parseInt(productInfo.ProductIntegration) == parseInt(mallObj.integration))) {
+                    if (mallObj.integration && (parseInt(userInfo.member_mark) >= parseInt(productInfo.ProductIntegration)) && (parseInt(productInfo.ProductIntegration) == parseInt(mallObj.integration))) {
                         var productInfo_id = productInfo._id;
                         productInfo.productInventory = (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory));
                         delete productInfo._id;
                         Product.update({ _id: productInfo_id }, productInfo, function(err) {});
                         var userInfo_id = userInfo._id;
-                        userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(mallObj.integration));
+                        userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(productInfo.ProductIntegration));
                         delete userInfo._id;
                         User.update({ _id: userInfo_id }, userInfo, function(err) {});
                         var order = new Order({
@@ -402,7 +402,7 @@ router.post('/set/shoppingCart', function(req, res, next) {
                             consigneePhone: mallObj.consigneePhone,
                             consigneeAddress: mallObj.consigneeAddress,
                             integration: mallObj.integration,
-                            money: mallObj.money,
+                            money: parseInt(productInfo.ProductIntegration) - parseInt(userInfo.member_mark),
                             isExamine: false,
                             time: moment().format('YYYY-MM-DD HH:mm:ss')
                         })

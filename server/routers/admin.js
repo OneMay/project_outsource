@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
+var moment = require('moment');
 var adminUser = require('../models/adminuser');
 var Product = require('../models/product');
 var User = require('../models/user');
@@ -79,7 +80,11 @@ router.use(function(req, res, next) {
                     }
                 })
             } else {
-                res.cookies.set('adminuserInfo', null);
+                console.log(666)
+                res.cookies.set('adminuserInfo', null, {
+                    'httpOnly': false,
+                    'path': '/admin'
+                });
                 res.redirect(301, '/admin/login.html');
                 return;
             }
@@ -1089,14 +1094,15 @@ router.get('/get/examineList', function(req, res, next) {
 /**
  * 会员风采文章添加
  */
-router.post('/add/MembersDemeanorMessage', multipartMiddleware, function(req, res, next) {
-    var MembersDemeanorTitle = req.files.MembersDemeanorTitle;
-    var MembersDemeanorFile = req.body.MembersDemeanorFile;
+router.post('/add/MembersDemeanor', multipartMiddleware, function(req, res, next) {
+    var MembersDemeanorFile = req.files.MembersDemeanorFile;
+    var MembersDemeanorTitle = req.body.MembersDemeanorTitle;
     var MembersDemeanorContent = req.body.MembersDemeanorContent;
     var filePath = MembersDemeanorFile.path || '';
     var originalFilename = MembersDemeanorFile.originalFilename;
 
     if (originalFilename) {
+        console.log(666)
         fs.readFile(filePath, function(err, data) {
             var timestamp = Date.now();
             //var type = posterData.type.split('/')[1];
@@ -1117,7 +1123,8 @@ router.post('/add/MembersDemeanorMessage', multipartMiddleware, function(req, re
                         var membersDemeanor = new MembersDemeanor({
                             title: MembersDemeanorTitle,
                             content: MembersDemeanorContent,
-                            membersDemeanoPhoto: membersDemeanoPhoto
+                            membersDemeanoPhoto: [membersDemeanoPhoto],
+                            time: moment().format('YYYY-MM-DD HH:mm:ss')
                         })
                         membersDemeanor.save();
                         responseData.code = 200;
@@ -1151,7 +1158,7 @@ router.post('/add/MembersDemeanorMessage', multipartMiddleware, function(req, re
  * 2:3-4,skip:2
  * 实现分页
  */
-router.get('/get/mallpageList', function(req, res, next) {
+router.get('/get/membersDemeanorList', function(req, res, next) {
     console.log(req.query.currentPage)
     var currentPage = parseInt(req.query.currentPage) || 1;
     var limit = 6;
@@ -1159,7 +1166,7 @@ router.get('/get/mallpageList', function(req, res, next) {
     var sum = 0;
     // var count = 6;
     // var index = page * count;
-    Product.count().then(function(count) {
+    MembersDemeanor.count().then(function(count) {
         if (count > 0) {
             //计算总页数
             page = Math.ceil(count / limit);
@@ -1168,49 +1175,48 @@ router.get('/get/mallpageList', function(req, res, next) {
                 //取值不能小于1；
             currentPage = Math.max(currentPage, 1);
             var skip = (currentPage - 1) * limit;
-            Product.find().sort({ '_id': -1 }).limit(limit).skip(skip).then(function(productListInfo) {
+            MembersDemeanor.find().sort({ '_id': -1 }).limit(limit).skip(skip).then(function(membersDemeanorListInfo) {
                 //console.log(productList);
                 //var results = productList.slice(index,index + count);
-                var productList = [];
-                productListInfo.forEach(function(value, index) {
-                    productList.push({
+                var membersDemeanorList = [];
+                membersDemeanorListInfo.forEach(function(value, index) {
+                    membersDemeanorList.push({
                         _id: value._id,
-                        ProductIntegration: value.ProductIntegration,
-                        productDescription: value.productDescription,
-                        productImageUrl: value.productImageUrl,
-                        productInventory: value.productInventory,
-                        productName: value.productName,
+                        title: value.title,
+                        content: value.content,
+                        membersDemeanoPhoto: value.membersDemeanoPhoto,
+                        time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
                         number: (currentPage - 1) * 6 + (index + 1)
                     })
                     sum = index;
                 })
 
                 responseData.message = '查询成功';
-                if (sum + 1 == productListInfo.length) {
-                    var productList1 = {
-                            productList,
+                if (sum + 1 == membersDemeanorListInfo.length) {
+                    var membersDemeanorList1 = {
+                            membersDemeanorList,
                             currentPage: currentPage,
                             page: page,
                             count: count,
                             limit: limit
                         }
                         //responseData.productList = productList;
-                    Object.assign(responseData, productList1);
+                    Object.assign(responseData, membersDemeanorList1);
                     res.json(responseData);
                 }
             })
         } else {
             responseData.code = '404';
             responseData.message = '数据库无记录';
-            var productList1 = {
-                    productList: [],
+            var membersDemeanorList1 = {
+                    membersDemeanorList: [],
                     currentPage: 1,
                     page: page,
                     count: 0,
                     limit: limit
                 }
                 //responseData.productList = productList;
-            Object.assign(responseData, productList1);
+            Object.assign(responseData, membersDemeanorList1);
             return res.json(responseData);
         }
     })
@@ -1218,15 +1224,15 @@ router.get('/get/mallpageList', function(req, res, next) {
 })
 
 //删除产品
-router.post('/delete/productmall', function(req, res, next) {
+router.post('/delete/membersDemeanoritem', function(req, res, next) {
     var _id = req.body._id;
     //console.log(name);
-    Product.findOne({
+    MembersDemeanor.findOne({
         _id: _id
-    }).then(function(product) {
-        if (product) {
+    }).then(function(membersDemeanorInfo) {
+        if (membersDemeanorInfo) {
             responseData.message = '删除成功';
-            Product.remove({ _id: _id }, function(err) {})
+            MembersDemeanor.remove({ _id: _id }, function(err) {})
             res.json(responseData);
             return;
         } else {
