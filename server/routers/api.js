@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var cookies = require('cookies');
+var moment = require('moment');
 var User = require('../models/user');
 var InvitationCode = require('../models/invitationcode');
 var Product = require('../models/product');
+var Order = require('../models/order');
 //统一返回格式
 var responseData;
 router.use(function(req, res, next) {
@@ -27,7 +29,8 @@ router.use(function(req, res, next) {
                             _id: userInfo._id,
                             username: userInfo.username,
                             phoneNumber: userInfo.phoneNumber,
-                            invitation_code: userInfo.invitation_code
+                            invitation_code: userInfo.invitation_code,
+                            member_mark: userInfo.member_mark
                         }), {
                             'httpOnly': false,
                             'path': '/'
@@ -198,7 +201,8 @@ router.post('/user/login', function(req, res, next) {
                         _id: userInfo._id,
                         username: userInfo.username,
                         phoneNumber: userInfo.phoneNumber,
-                        invitation_code: userInfo.invitation_code
+                        invitation_code: userInfo.invitation_code,
+                        member_mark: userInfo.member_mark
                     }
                 }
                 Object.assign(responseData, userInfoL);
@@ -207,7 +211,8 @@ router.post('/user/login', function(req, res, next) {
                     _id: userInfo._id,
                     username: encodeURI(userInfo.username),
                     phoneNumber: userInfo.phoneNumber,
-                    invitation_code: userInfo.invitation_code
+                    invitation_code: userInfo.invitation_code,
+                    member_mark: userInfo.member_mark
                 }), {
                     'httpOnly': false,
                     'path': '/'
@@ -315,13 +320,13 @@ router.post('/get/mallpageItem', function(req, res, next) {
         if (productListInfo) {
             var productList = productListInfo;
 
+            responseData.message = '查询成功';
             var productList1 = {
                     productList
                 }
                 //responseData.productList = productList;
             Object.assign(responseData, productList1);
             res.json(responseData);
-
         } else {
             responseData.code = 404;
             responseData.message = '数据库无记录';
@@ -336,5 +341,132 @@ router.post('/get/mallpageItem', function(req, res, next) {
 
     })
 
+})
+
+/**
+ * 会员商品订购
+ */
+router.post('/set/shoppingCart', function(req, res, next) {
+    var _userId = req.body._userId;
+    var mallObj = req.body.mallObj;
+    Product.findOne({
+        _id: mallObj._mallId
+    }).then(function(productInfo) {
+        if (productInfo) {
+            User.findOne({
+                _id: _userId
+            }).then(function(userInfo) {
+                if (userInfo) {
+                    if (mallObj.integration && (parseInt(productInfo.ProductIntegration) == parseInt(mallObj.integration))) {
+                        var productInfo_id = productInfo._id;
+                        productInfo.productInventory = (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory));
+                        delete productInfo._id;
+                        Product.update({ _id: productInfo_id }, productInfo, function(err) {});
+                        var userInfo_id = userInfo._id;
+                        userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(mallObj.integration));
+                        delete userInfo._id;
+                        User.update({ _id: userInfo_id }, userInfo, function(err) {});
+                        var order = new Order({
+                            _userId: _userId,
+                            _mallId: mallObj._mallId,
+                            mallName: productInfo.productName,
+                            inventory: mallObj.inventory,
+                            consignee: mallObj.consignee,
+                            consigneePhone: mallObj.consigneePhone,
+                            consigneeAddress: mallObj.consigneeAddress,
+                            integration: mallObj.integration,
+                            money: 0,
+                            isExamine: true,
+                            time: moment().format('YYYY-MM-DD HH:mm:ss')
+                        })
+                        order.save();
+                        responseData.code = 200;
+                        responseData.message = '成功';
+                        res.json(responseData);
+                        return;
+                    } else {
+                        var productInfo_id = productInfo._id;
+                        productInfo.productInventory = (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory));
+                        delete productInfo._id;
+                        Product.update({ _id: productInfo_id }, productInfo, function(err) {});
+                        var userInfo_id = userInfo._id;
+                        userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(mallObj.integration)) || 0;
+                        delete userInfo._id;
+                        User.update({ _id: userInfo_id }, userInfo, function(err) {});
+                        var order = new Order({
+                            _userId: _userId,
+                            _mallId: mallObj._mallId,
+                            mallName: productInfo.productName,
+                            inventory: mallObj.inventory,
+                            consignee: mallObj.consignee,
+                            consigneePhone: mallObj.consigneePhone,
+                            consigneeAddress: mallObj.consigneeAddress,
+                            integration: mallObj.integration,
+                            money: mallObj.money,
+                            isExamine: false,
+                            time: moment().format('YYYY-MM-DD HH:mm:ss')
+                        })
+                        order.save();
+                        responseData.code = 200;
+                        responseData.message = '成功';
+                        res.json(responseData);
+                        return;
+                    }
+                } else {
+                    responseData.code = 404;
+                    responseData.message = '无此用户信息';
+                    res.json(responseData);
+                    return;
+                }
+            })
+        } else {
+            responseData.code = 404;
+            responseData.message = '无此商品信息';
+            res.json(responseData);
+            return;
+        }
+    })
+})
+
+/**
+ * 用户订单查看
+ */
+router.post('/get/orderList', function(req, res, next) {
+    var _id = req.body._userId || '233';
+    var sum = 0;
+    User.findOne({
+        _id: _id
+    }).then(function(userInfo) {
+        if (userInfo) {
+            Order.find({
+                _userId: _id
+            }).then(function(orderListInfo) {
+                if (orderListInfo) {
+                    var orderList = orderListInfo;
+
+                    responseData.message = '查询成功';
+                    var orderList1 = {
+                        orderList
+                    }
+                    Object.assign(responseData, orderList1);
+                    return res.json(responseData);
+
+                } else {
+                    var orderList = [];
+                    responseData.code = 404;
+                    responseData.message = '数据库无此用户订单记录';
+                    var orderList1 = {
+                        orderList
+                    }
+                    Object.assign(responseData, orderList1);
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = 404;
+            responseData.message = '数据库无此用户';
+            return res.json(responseData)
+        }
+    })
 })
 module.exports = router;

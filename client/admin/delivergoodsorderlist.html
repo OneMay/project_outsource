@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>会员商城成功订单列表</title>
+    <title>会员商城未发货订单</title>
     <meta name="description" content="这是一个 index 页面">
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -40,7 +40,7 @@
                         <button class="am-btn am-btn-primary am-dropdown-toggle am-btn-xs am-radius am-icon-bell-o" data-am-dropdown-toggle> 消息管理<span class="am-badge am-badge-danger am-round">6</span></button>
                         <ul class="am-dropdown-content">
                             <li class="am-dropdown-header">所有消息都在这里</li>
-                            <li><a href="#">会员商城成功订单列表 <span class="am-badge am-badge-danger am-round">556</span></a></li>
+                            <li><a href="#">会员商城未审核订单 <span class="am-badge am-badge-danger am-round">556</span></a></li>
                         </ul>
                     </li>
 
@@ -82,8 +82,8 @@
                     <h3 class="am-icon-cart-plus on"><em></em> <a href="#"> 订单管理</a></h3>
                     <ul>
                         <li><a href="/admin/examineorderlist.html">会员商城未审核订单</a></li>
-                        <li><a href="/admin/delivergoodsorderlist.html">会员商城未发货订单</a></li>
-                        <li><a href="/admin/orderlist.html" class="sideMenued">会员商城成功订单列表</a></li>
+                        <li><a href="/admin/delivergoodsorderlist.html" class="sideMenued">会员商城未发货订单</a></li>
+                        <li><a href="/admin/orderlist.html">会员商城成功订单列表</a></li>
                     </ul>
                     <h3 class="am-icon-users"><em></em> <a href="#">会员管理</a></h3>
                     <ul>
@@ -120,10 +120,10 @@
                     <div class="listbiaoti am-cf">
                         <ul class="am-icon-flag on"> 订单管理</ul>
 
-                        <dl class="am-icon-home" style="float: right;">当前位置： 首页 > <a href="#">会员商城会员商城成功订单列表未审核订单</a></dl>
+                        <dl class="am-icon-home" style="float: right;">当前位置： 首页 > <a href="#">会员商城未发货订单</a></dl>
 
                         <dl>
-                            <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 会员商城成功订单列表</button>
+                            <button type="button" class="am-btn am-btn-danger am-round am-btn-xs am-icon-plus"> 会员商城未发货订单</button>
                         </dl>
                     </div>
                     <form class="am-form am-g">
@@ -131,16 +131,14 @@
                             <thead>
                                 <tr class="am-success">
                                     <th class="table-id">序号</th>
-                                    <th class="table-author am-hide-sm-only">电话</th>
-                                    <th class="table-author am-hide-sm-only">姓名</th>
-                                    <th class="table-author am-hide-sm-only">会员等级</th>
-                                    <th class="table-title">商品名称</th>
-                                    <th class="table-type">购买数量</th>
-                                    <th class="table-date am-hide-sm-only">购买日期</th>
                                     <th class="table-author am-hide-sm-only">收货人电话</th>
                                     <th class="table-author am-hide-sm-only">收货人姓名</th>
                                     <th class="table-author am-hide-sm-only">收货人地址</th>
-                                    <!-- <th width="130px" class="table-set">操作</th> -->
+                                    <th class="table-title">商品名称</th>
+                                    <th class="table-type">购买数量</th>
+                                    <th class="table-date am-hide-sm-only">购买日期</th>
+
+                                    <th width="130px" class="table-set">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -152,16 +150,13 @@
                                     <td>3件 （消费455个积分）</td>
                                     <td class="am-hide-sm-only">访问</td>
                                     <td class="am-hide-sm-only">访问</td>
-                                    <td class="am-hide-sm-only">2014年9月4日 7:28:47</td>
-                                    <td class="am-hide-sm-only">访问</td>
-                                    <td class="am-hide-sm-only">访问</td>
-                                    <!-- <td>
+                                    <td>
                                         <div class="am-btn-toolbar">
                                             <div class="am-btn-group am-btn-group-xs">
-                                                <span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="审核通过"><span class="am-icon-pencil-square-o"></span></span>
+                                                <span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="设为已发货"><span class="am-icon-pencil-square-o"></span></span>
                                             </div>
                                         </div>
-                                    </td> -->
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

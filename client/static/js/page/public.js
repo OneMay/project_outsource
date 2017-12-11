@@ -234,11 +234,15 @@
  if (pathname == '/admin/member.html') {
      var mallPrev = document.getElementById('mallPrev');
      var mallNext = document.getElementById('mallNext');
+     var peoplevip = document.getElementById('peoplevip')
      mallPrev.onclick = function() {
          getCurrentPage2(-1);
      }
      mallNext.onclick = function() {
          getCurrentPage2(1);
+     }
+     peoplevip.onclick = function() {
+         getPage2(1)
      }
      getPage2(currentPage);
 
@@ -260,11 +264,17 @@
  }
 
  function getPage2(currentpage) {
+     var vippeople = document.getElementById('inventory').value;
+     var phoneNumber = '';
+     if (vippeople) {
+         phoneNumber = vippeople
+     }
      $.ajax({
          url: '/admin/get/userlist',
-         type: 'GET',
+         type: 'post',
          data: {
-             currentPage: currentpage
+             currentPage: currentpage,
+             phoneNumber: phoneNumber
          },
          cache: false,
          dataType: 'json',
@@ -274,45 +284,121 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
-                 data.userList.forEach(function(value, index) {
-                     var html = '<tr>' +
-                         '<td>' + value.number + '</td>' +
-                         '<td>' + value.username + '</td>' +
-                         '<td>普通会员</td>' +
-                         '<td class="am-hide-sm-only">' + value.member_mark + '</td>' +
-                         '<td class="am-hide-sm-only">' + value.phoneNumber + '</td>' +
-                         '<td class="am-hide-sm-only">' + value.bankNumber + '</td>' +
-                         '<td class="am-hide-sm-only">' + value.straight + '人，积分兑换：<br/>' +
-                         '<span class="subInventory">-</span>' +
-                         '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value1" id="inventory" value="0" readonly>' +
-                         '<span class="addInventory">+</span><br/>' +
-                         '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformstraight(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.straight + "'" + ')">确定</span>' +
-                         '</td>' +
-                         '<td class="am-hide-sm-only">' + value.secondhand + '人，积分兑换：<br/>' +
-                         '<span class="subInventory2">-</span>' +
-                         '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value2" id="inventory" value="0" readonly>' +
-                         '<span class="addInventory2">+</span><br/>' +
-                         '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformsecondhand(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.secondhand + "'" + ')">确定</span>' +
-                         '</td>' +
-                         '<td class="am-hide-sm-only">已奖励次数：<span style="color:#187794;font-size:20px;">' + value.power + '</span>次，' + '总人数-上一次人数：<span style="color:#dd514c;font-size:20px;">' + value.invitated_people + '</span>-<span style="color: #5eb95e;font-size:20px;">' + value.previnvitated_people + '</span>=' + '<span style="color:#510656;font-size:20px;">' + (value.invitated_people - value.previnvitated_people) + '</span></td>' +
-                         '<td>' +
-                         '<div class="am-btn-toolbar">' +
-                         '<div class="am-btn-group am-btn-group-xs">' +
-                         '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="设置为高级vip" onclick="setToViper(' + "'" + value._id + "'" + ')"><span class="am-icon-pencil-square-o"></span></span>' +
-                         '<span class="am-btn am-btn-default am-btn-xs am-text-danger am-round" title="删除" onclick="deleteVip(' + "'" + value._id + "'" + ')"><span class="am-icon-trash-o" ></span></span>' +
-                         '</div>' +
-                         '</div>' +
-                         '</td>' +
+                 if (data.userList.length > 1) {
+                     var dom = '<tr class="am-success">' +
+                         '<th class="table-id">序号</th>' +
+                         '<th class="table-title">会员名称</th>' +
+                         '<th class="table-type">会员等级</th>' +
+                         '<th class="table-author am-hide-sm-only">会员积分</th>' +
+                         '<th class="table-author am-hide-sm-only">电话号码</th>' +
+                         '<th class="table-date am-hide-sm-only">银行卡号</th>' +
+                         '<th class="table-date am-hide-sm-only">商城花费</th>' +
+                         '<th class="table-date am-hide-sm-only">直接获利人数</th>' +
+                         '<th class="table-date am-hide-sm-only">间接获利人数</th>' +
+                         '<th class="table-date am-hide-sm-only" id="number_people">推荐奖</th>' +
+                         '<th width="130px" class="table-set">操作</th>' +
                          '</tr>';
-                     $('tbody').append(html);
-                 });
-                 sub();
-                 add();
-                 sub2();
-                 add2();
-                 var str = '总人数：<span style="color:#187794;font-size:20px;">' + data.count + '</span>人，共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
-                 $('.Message').html(str);
-                 $('#number_people').html('推荐奖（大于' + data.number_people + '人）');
+                     $('thead').html(dom)
+                     data.userList.forEach(function(value, index) {
+                         var html = '<tr>' +
+                             '<td>' + value.number + '</td>' +
+                             '<td>' + value.username + '</td>' +
+                             '<td>普通会员</td>' +
+                             '<td class="am-hide-sm-only">' + value.member_mark + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.phoneNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.bankNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.usedmoney + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.straight + '人，积分兑换：<br/>' +
+                             '<span class="subInventory">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value1" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory">+</span><br/>' +
+                             '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformstraight(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.straight + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td class="am-hide-sm-only">' + value.secondhand + '人，积分兑换：<br/>' +
+                             '<span class="subInventory2">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value2" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory2">+</span><br/>' +
+                             '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformsecondhand(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.secondhand + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td class="am-hide-sm-only">已奖励次数：<span style="color:#187794;font-size:20px;">' + value.power + '</span>次，' + '总人数-上一次人数：<span style="color:#dd514c;font-size:20px;">' + value.invitated_people + '</span>-<span style="color: #5eb95e;font-size:20px;">' + value.previnvitated_people + '</span>=' + '<span style="color:#510656;font-size:20px;">' + (value.invitated_people - value.previnvitated_people) + '</span></td>' +
+                             '<td>' +
+                             '<div class="am-btn-toolbar">' +
+                             '<div class="am-btn-group am-btn-group-xs">' +
+                             '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="设置为高级vip" onclick="setToViper(' + "'" + value._id + "'" + ')"><span class="am-icon-pencil-square-o"></span></span>' +
+                             '<span class="am-btn am-btn-default am-btn-xs am-text-danger am-round" title="删除" onclick="deleteVip(' + "'" + value._id + "'" + ')"><span class="am-icon-trash-o" ></span></span>' +
+                             '</div>' +
+                             '</div>' +
+                             '</td>' +
+                             '</tr>';
+                         $('tbody').append(html);
+
+                     });
+                     sub();
+                     add();
+                     sub2();
+                     add2();
+                     var str = '总人数：<span style="color:#187794;font-size:20px;">' + data.count + '</span>人，共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                     $('.Message').html(str);
+                     $('#number_people').html('推荐奖（大于' + data.number_people + '人）');
+                 } else {
+                     var dom = '<tr class="am-success">' +
+                         '<th class="table-id">序号</th>' +
+                         '<th class="table-title">会员名称</th>' +
+                         '<th class="table-type">会员等级</th>' +
+                         '<th class="table-author am-hide-sm-only">会员积分</th>' +
+                         '<th class="table-author am-hide-sm-only">电话号码</th>' +
+                         '<th class="table-date am-hide-sm-only">银行卡号</th>' +
+                         '<th class="table-date am-hide-sm-only">直接获利人数</th>' +
+                         '<th class="table-date am-hide-sm-only">间接获利人数</th>' +
+                         '<th class="table-date am-hide-sm-only2">推荐人电话</th>' +
+                         '<th class="table-date am-hide-sm-only3 ">推荐人的推荐人电话</th>' +
+                         '<th class="table-date am-hide-sm-only" id="number_people">推荐奖</th>' +
+                         '<th width="130px" class="table-set">操作</th>' +
+                         '</tr>';
+                     $('thead').html(dom)
+                     data.userList.forEach(function(value, index) {
+                         var html = '<tr>' +
+                             '<td>' + value.number + '</td>' +
+                             '<td>' + value.username + '</td>' +
+                             '<td>普通会员</td>' +
+                             '<td class="am-hide-sm-only">' + value.member_mark + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.phoneNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.bankNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.straight + '人，积分兑换：<br/>' +
+                             '<span class="subInventory">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value1" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory">+</span><br/>' +
+                             '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformstraight(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.straight + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td class="am-hide-sm-only">' + value.secondhand + '人，积分兑换：<br/>' +
+                             '<span class="subInventory2">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value2" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory2">+</span><br/>' +
+                             '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformsecondhand(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.secondhand + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td class="am-hide-sm-only">' + value.lastphoneNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.lasterphoneNumber + '</td>' +
+                             '<td class="am-hide-sm-only">已奖励次数：<span style="color:#187794;font-size:20px;">' + value.power + '</span>次，' + '总人数-上一次人数：<span style="color:#dd514c;font-size:20px;">' + value.invitated_people + '</span>-<span style="color: #5eb95e;font-size:20px;">' + value.previnvitated_people + '</span>=' + '<span style="color:#510656;font-size:20px;">' + (value.invitated_people - value.previnvitated_people) + '</span></td>' +
+                             '<td>' +
+                             '<div class="am-btn-toolbar">' +
+                             '<div class="am-btn-group am-btn-group-xs">' +
+                             '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="设置为高级vip" onclick="setToViper(' + "'" + value._id + "'" + ')"><span class="am-icon-pencil-square-o"></span></span>' +
+                             '<span class="am-btn am-btn-default am-btn-xs am-text-danger am-round" title="删除" onclick="deleteVip(' + "'" + value._id + "'" + ')"><span class="am-icon-trash-o" ></span></span>' +
+                             '</div>' +
+                             '</div>' +
+                             '</td>' +
+                             '</tr>';
+                         $('tbody').append(html);
+                     });
+                     sub();
+                     add();
+                     sub2();
+                     add2();
+                     var str = '总人数：<span style="color:#187794;font-size:20px;">' + data.count + '</span>人，共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                     $('.Message').html(str);
+                     $('#number_people').html('推荐奖（大于' + data.number_people + '人）');
+                 }
+
              } else {
                  sub();
                  add();
@@ -358,11 +444,15 @@
  if (pathname == '/admin/membervip.html') {
      var mallPrev = document.getElementById('mallPrev');
      var mallNext = document.getElementById('mallNext');
+     var peoplevip = document.getElementById('peoplevip')
      mallPrev.onclick = function() {
          getCurrentPage3(-1);
      }
      mallNext.onclick = function() {
          getCurrentPage3(1);
+     }
+     peoplevip.onclick = function() {
+         getPage3(1)
      }
      getPage3(currentPage);
 
@@ -384,11 +474,17 @@
  }
 
  function getPage3(currentpage) {
+     var vippeople = document.getElementById('inventory').value;
+     var phoneNumber = '';
+     if (vippeople) {
+         phoneNumber = vippeople
+     }
      $.ajax({
          url: '/admin/get/userViplist',
-         type: 'GET',
+         type: 'POST',
          data: {
-             currentPage: currentpage
+             currentPage: currentpage,
+             phoneNumber: phoneNumber
          },
          cache: false,
          dataType: 'json',
@@ -399,51 +495,130 @@
              }
              if (data.code == 200) {
                  number_people = data.number_people;
-                 data.userList.forEach(function(value, index) {
-                     var html = '<tr>' +
-                         '<td>' + value.number + '</td>' +
-                         '<td>' + value.username + '</td>' +
-                         '<td>高级会员</td>' +
-                         '<td class="am-hide-sm-only">' + value.member_mark + '</td>' +
-                         '<td class="am-hide-sm-only">' + value.phoneNumber + '</td>' +
-                         '<td class="am-hide-sm-only">' + value.bankNumber + '</td>' +
-                         '<td class="am-hide-sm-only">' + value.straight + '人，积分兑换：<br/>' +
-                         '<span class="subInventory">-</span>' +
-                         '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value1" id="inventory" value="0" readonly>' +
-                         '<span class="addInventory">+</span><br/>' +
-                         '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformstraight(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.straight + "'" + ')">确定</span>' +
-                         '</td>' +
-                         '<td class="am-hide-sm-only">' + value.secondhand + '人，积分兑换：<br/>' +
-                         '<span class="subInventory2">-</span>' +
-                         '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value2" id="inventory" value="0" readonly>' +
-                         '<span class="addInventory2">+</span><br/>' +
-                         '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformsecondhand(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.secondhand + "'" + ')">确定</span>' +
-                         '</td>' +
-                         '<td class="am-hide-sm-only">已奖励次数：<span style="color:#187794;font-size:20px;">' + value.power + '</span>次，' + '总人数-上一次人数：<span style="color:#dd514c;font-size:20px;">' + value.invitated_people + '</span>-<span style="color: #5eb95e;font-size:20px;">' + value.previnvitated_people + '</span>=' + '<span style="color:#510656;font-size:20px;">' + (value.invitated_people - value.previnvitated_people) + '</span><br/>' +
-                         '积分兑换：' + '<span class="subInventory3">-</span>' +
-                         '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value3" id="inventory" value="0" readonly>' +
-                         '<span class="addInventory3">+</span>' +
-                         '&nbsp&nbsp<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setTuanDuiJF(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + (value.invitated_people - value.previnvitated_people) + "'" + ')">确定</span>' +
-                         '</td>' +
-                         '<td>' +
-                         '<div class="am-btn-toolbar">' +
-                         '<div class="am-btn-group am-btn-group-xs">' +
-                         '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="调整为普通vip" onclick="setToVip(' + "'" + value._id + "'" + ')"><span class="am-icon-pencil-square-o"></span></span>' +
-                         '</div>' +
-                         '</div>' +
-                         '</td>' +
+                 if (data.userList.length > 1) {
+                     var dom = '<tr class="am-success">' +
+                         '<th class="table-id">序号</th>' +
+                         '<th class="table-title">会员名称</th>' +
+                         '<th class="table-type">会员等级</th>' +
+                         '<th class="table-author am-hide-sm-only">会员积分</th>' +
+                         '<th class="table-author am-hide-sm-only">电话号码</th>' +
+                         '<th class="table-date am-hide-sm-only">银行卡号</th>' +
+                         '<th class="table-date am-hide-sm-only">直接获利人数</th>' +
+                         '<th class="table-date am-hide-sm-only">间接获利人数</th>' +
+                         '<th class="table-date am-hide-sm-only" id="number_people">推荐奖</th>' +
+                         '<th width="130px" class="table-set">操作</th>' +
                          '</tr>';
-                     $('tbody').append(html);
-                 });
-                 sub();
-                 add();
-                 sub2();
-                 add2();
-                 sub3();
-                 add3();
-                 var str = '总人数：<span style="color:#187794;font-size:20px;">' + data.count + '</span>人，共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
-                 $('.Message').html(str);
-                 $('#number_people').html('推荐奖（大于' + data.number_people + '人）');
+                     $('thead').html(dom)
+                     data.userList.forEach(function(value, index) {
+                         var html = '<tr>' +
+                             '<td>' + value.number + '</td>' +
+                             '<td>' + value.username + '</td>' +
+                             '<td>高级会员</td>' +
+                             '<td class="am-hide-sm-only">' + value.member_mark + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.phoneNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.bankNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.straight + '人，积分兑换：<br/>' +
+                             '<span class="subInventory">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value1" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory">+</span><br/>' +
+                             '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformstraight(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.straight + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td class="am-hide-sm-only">' + value.secondhand + '人，积分兑换：<br/>' +
+                             '<span class="subInventory2">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value2" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory2">+</span><br/>' +
+                             '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformsecondhand(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.secondhand + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td class="am-hide-sm-only">已奖励次数：<span style="color:#187794;font-size:20px;">' + value.power + '</span>次，' + '总人数-上一次人数：<span style="color:#dd514c;font-size:20px;">' + value.invitated_people + '</span>-<span style="color: #5eb95e;font-size:20px;">' + value.previnvitated_people + '</span>=' + '<span style="color:#510656;font-size:20px;">' + (value.invitated_people - value.previnvitated_people) + '</span><br/>' +
+                             '积分兑换：' + '<span class="subInventory3">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value3" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory3">+</span>' +
+                             '&nbsp&nbsp<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setTuanDuiJF(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + (value.invitated_people - value.previnvitated_people) + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td>' +
+                             '<div class="am-btn-toolbar">' +
+                             '<div class="am-btn-group am-btn-group-xs">' +
+                             '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="调整为普通vip" onclick="setToVip(' + "'" + value._id + "'" + ')"><span class="am-icon-pencil-square-o"></span></span>' +
+                             '</div>' +
+                             '</div>' +
+                             '</td>' +
+                             '</tr>';
+                         $('tbody').append(html);
+                     });
+                     sub();
+                     add();
+                     sub2();
+                     add2();
+                     sub3();
+                     add3();
+                     var str = '总人数：<span style="color:#187794;font-size:20px;">' + data.count + '</span>人，共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                     $('.Message').html(str);
+                     $('#number_people').html('推荐奖（大于' + data.number_people + '人）');
+                 } else {
+                     var dom = '<tr class="am-success">' +
+                         '<th class="table-id">序号</th>' +
+                         '<th class="table-title">会员名称</th>' +
+                         '<th class="table-type">会员等级</th>' +
+                         '<th class="table-author am-hide-sm-only">会员积分</th>' +
+                         '<th class="table-author am-hide-sm-only">电话号码</th>' +
+                         '<th class="table-date am-hide-sm-only">银行卡号</th>' +
+                         '<th class="table-date am-hide-sm-only">直接获利人数</th>' +
+                         '<th class="table-date am-hide-sm-only">间接获利人数</th>' +
+                         '<th class="table-date am-hide-sm-only2">推荐人电话</th>' +
+                         '<th class="table-date am-hide-sm-only3 ">推荐人的推荐人电话</th>' +
+                         '<th class="table-date am-hide-sm-only" id="number_people">推荐奖</th>' +
+                         '<th width="130px" class="table-set">操作</th>' +
+                         '</tr>';
+                     $('thead').html(dom)
+                     data.userList.forEach(function(value, index) {
+                         var html = '<tr>' +
+                             '<td>' + value.number + '</td>' +
+                             '<td>' + value.username + '</td>' +
+                             '<td>高级会员</td>' +
+                             '<td class="am-hide-sm-only">' + value.member_mark + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.phoneNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.bankNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.straight + '人，积分兑换：<br/>' +
+                             '<span class="subInventory">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value1" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory">+</span><br/>' +
+                             '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformstraight(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.straight + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td class="am-hide-sm-only">' + value.secondhand + '人，积分兑换：<br/>' +
+                             '<span class="subInventory2">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value2" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory2">+</span><br/>' +
+                             '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setToJFformsecondhand(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + value.secondhand + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td class="am-hide-sm-only">' + value.lastphoneNumber + '</td>' +
+                             '<td class="am-hide-sm-only">' + value.lasterphoneNumber + '</td>' +
+                             '<td class="am-hide-sm-only">已奖励次数：<span style="color:#187794;font-size:20px;">' + value.power + '</span>次，' + '总人数-上一次人数：<span style="color:#dd514c;font-size:20px;">' + value.invitated_people + '</span>-<span style="color: #5eb95e;font-size:20px;">' + value.previnvitated_people + '</span>=' + '<span style="color:#510656;font-size:20px;">' + (value.invitated_people - value.previnvitated_people) + '</span><br/>' +
+                             '积分兑换：' + '<span class="subInventory3">-</span>' +
+                             '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value3" id="inventory" value="0" readonly>' +
+                             '<span class="addInventory3">+</span>' +
+                             '&nbsp&nbsp<span  class="userSubmit am-btn am-btn-success am-radius"onclick="setTuanDuiJF(' + "'" + value._id + "'" + ",'" + index + "'" + ",'" + (value.invitated_people - value.previnvitated_people) + "'" + ')">确定</span>' +
+                             '</td>' +
+                             '<td>' +
+                             '<div class="am-btn-toolbar">' +
+                             '<div class="am-btn-group am-btn-group-xs">' +
+                             '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="调整为普通vip" onclick="setToVip(' + "'" + value._id + "'" + ')"><span class="am-icon-pencil-square-o"></span></span>' +
+                             '</div>' +
+                             '</div>' +
+                             '</td>' +
+                             '</tr>';
+                         $('tbody').append(html);
+                     });
+                     sub();
+                     add();
+                     sub2();
+                     add2();
+                     sub3();
+                     add3();
+                     var str = '总人数：<span style="color:#187794;font-size:20px;">' + data.count + '</span>人，共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                     $('.Message').html(str);
+                     $('#number_people').html('推荐奖（大于' + data.number_people + '人）');
+                 }
+
              } else {
                  sub();
                  add();
@@ -780,6 +955,58 @@
                      }
                  }
              })
+         }
+     }
+ }
+
+ /**
+  * 添加文章
+  */
+ var MembersDemeanorSubmit = document.getElementById('MembersDemeanorSubmit');
+ if (MembersDemeanorSubmit) {
+     MembersDemeanorSubmit.onclick = function() {
+         var MembersDemeanorTitle = document.getElementById('MembersDemeanorTitle').value;
+         var MembersDemeanorContent = document.getElementById('MembersDemeanorContent').value;
+         var MembersDemeanorFile = document.getElementById('MembersDemeanorFile').files[0];
+         var message;
+         if (MembersDemeanorTitle && MembersDemeanorContent && MembersDemeanorFile) {
+             var imgreg = /.+((\.jpg$)|(\.png$))/gi;
+             if (imgreg.test(MembersDemeanorFile.name)) {
+                 message = '正在上传...';
+                 $('#MembersDemeanorMessage').html(message)
+                 var formData = new FormData();
+                 formData.append('MembersDemeanorTitle', MembersDemeanorTitle);
+                 formData.append('MembersDemeanorTitle', MembersDemeanorTitle);
+                 formData.append('MembersDemeanorContent', MembersDemeanorContent);
+                 $.ajax({
+                     url: '/admin/add/MembersDemeanor',
+                     type: 'POST',
+                     cache: false,
+                     data: formData,
+                     processData: false,
+                     contentType: false,
+                     success: function(data) {
+                         message = data.message;
+                         $('#MembersDemeanorMessage').html(message);
+                         if (data.code == 200) {
+                             setTimeout(function() {
+                                 window.location.reload();
+                             }, 1000)
+                         }
+                     },
+                     err: function(err) {
+                         console.log(err)
+                         message = '失败';
+                         $('#MembersDemeanorMessage').html(message)
+                     }
+                 });
+             } else {
+                 message = '图片格式不正确';
+                 $('#MembersDemeanorMessage').html(message)
+             }
+         } else {
+             message = '内容不能有空！！';
+             $('#MembersDemeanorMessage').html(message)
          }
      }
  }

@@ -65,40 +65,50 @@ $(function() {
     });
     //立即兑换
     var cookie = document.cookie;
-    var reg = cookie.match(/userInfo=(\S*)}/);
-    var userId = reg[1].match(/_id":"(\S*)","username/)[1];
+    var userId, reg, member_mark, money;
+    if (cookie) {
+        reg = cookie.match(/userInfo=(\S*)}/);
+        member_mark = reg[0].match(/member_mark":(\S*)}/)[1];
+        userId = reg[1] ? reg[1].match(/_id":"(\S*)","username/)[1] : '';
+    }
+
     $('#detail').find('.nowBuy').click(function() {
-        if (reg[1]) {
+        if (cookie && reg[1]) {
             $('#detail').find('.peopleMsg').css("display", "block")
         } else {
-            window.location.href = '/admin/login.html';
+            window.location.href = 'login.html';
         }
     });
     //确定兑换
     $('#detail').find('.sure').click(function() {
-        $.ajax({
-            url: "http://localhost:9090/api/set/shoppingCart",
-            type: 'post',
-            dataType: 'json',
-            data: {
-                _userId: userId,
-                mallObj: {
-                    _mallId: id,
-                    inventory: $count.val(),
-                    consigneeAddress: $('#detail').find('.contactPhone').find('textarea').val(),
-                    consigneePhone: $('#detail').find('.contactPhone').find('input').val(),
-                    consignee: $('#detail').find('.contactName').find('input').val(),
-                    integration: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()),
-                    money: money
+        if ($('#detail').find('#textarea').val() == '' || $('#detail').find('.phonenumber').val() == '' || $('#detail').find('.youname').val() == '') {
+            alert("收货信息不能为空");
+            return false;
+        } else {
+            $.ajax({
+                url: "http://localhost:9090/api/set/shoppingCart",
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    _userId: userId,
+                    mallObj: {
+                        _mallId: id,
+                        inventory: $count.val(),
+                        consigneeAddress: $('#detail').find('#textarea').val(),
+                        consigneePhone: $('#detail').find('.phonenumber').val(),
+                        consignee: $('#detail').find('.youname').val(),
+                        integration: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()),
+                        money: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()) - member_mark
+                    }
+                },
+                success: function() {
+                    alert('chenggong')
+                },
+                error: function() {
+                    console.log(shibai)
                 }
-            },
-            success: function() {
-                alert('chenggong')
-            },
-            error: function(shibai) {
-                console.log(shibai)
-            }
-        })
+            })
+        }
     })
 
     // $.ajax({
