@@ -9,6 +9,7 @@ var Product = require('../models/product');
 var User = require('../models/user');
 var Number_people = require('../models/Number_people');
 var Order = require('../models/order');
+var MembersDemeanor = require('../models/Members_demeanor');
 //统一返回格式
 var responseData;
 var num = 0;
@@ -59,8 +60,8 @@ Date.prototype.Format = function(fmt) {
     return fmt;
 }
 router.use(function(req, res, next) {
-        var originalUrl = ['/admin/user/']
-        if (originalUrl.indexOf(req.originalUrl) >= 0) {
+        var originalUrl = ['/get/mallpageList']
+        if (originalUrl.indexOf(req._parsedUrl.pathname) >= 0) {
             if (req.session.adminuser_id) {
                 adminUser.findOne({
                     _id: req.session.adminuser_id
@@ -316,14 +317,13 @@ router.post('/delete/productmall', function(req, res, next) {
  * 获取普通vip列表
  */
 
-router.get('/get/userlist', function(req, res, next) {
-        var currentPage = parseInt(req.query.currentPage) || 1;
+router.post('/get/userlist', function(req, res, next) {
+        var currentPage = parseInt(req.body.currentPage) || 1;
+        var phoneNumber = req.body.phoneNumber;
         var limit = 6;
         var page = 0;
         var sum = 0;
         var number_people = 0;
-        // var count = 6;
-        // var index = page * count;
         Number_people.findOne().then(function(numberPeopleInfo) {
             if (numberPeopleInfo) {
                 number_people = numberPeopleInfo.numberPeople;
@@ -331,81 +331,220 @@ router.get('/get/userlist', function(req, res, next) {
                 number_people = 80;
             }
         })
-        User.find({ isVip: false }).count().then(function(count) {
-            if (count > 0) {
-                console.log(count)
-                    //计算总页数
-                page = Math.ceil(count / limit);
-                //取值不能超过page
-                currentPage = Math.min(currentPage, page)
-                    //取值不能小于1；
-                currentPage = Math.max(currentPage, 1);
-                var skip = (currentPage - 1) * limit;
-                User.find({ isVip: false }).limit(limit).skip(skip).then(function(userListInfo) {
-                    //console.log(productList);
-                    //var results = productList.slice(index,index + count);
-                    var userList = [];
-                    userListInfo.forEach(function(value, index) {
-                        userList.push({
-                            _id: value._id,
-                            username: value.username,
-                            phoneNumber: value.phoneNumber,
-                            bankNumber: value.bankNumber,
-                            isVip: value.isVip,
-                            invitated_people: value.invitated_people,
-                            straight: value.straight,
-                            secondhand: value.secondhand,
-                            member_mark: value.member_mark,
-                            power: value.power,
-                            previnvitated_people: value.previnvitated_people,
-                            number: (currentPage - 1) * 6 + (index + 1)
+        if (!phoneNumber) {
+            User.find({ isVip: false }).count().then(function(count) {
+                if (count > 0) {
+                    console.log(count)
+                        //计算总页数
+                    page = Math.ceil(count / limit);
+                    //取值不能超过page
+                    currentPage = Math.min(currentPage, page)
+                        //取值不能小于1；
+                    currentPage = Math.max(currentPage, 1);
+                    var skip = (currentPage - 1) * limit;
+                    User.find({ isVip: false }).limit(limit).skip(skip).then(function(userListInfo) {
+                        //console.log(productList);
+                        //var results = productList.slice(index,index + count);
+                        var userList = [];
+                        userListInfo.forEach(function(value, index) {
+                            userList.push({
+                                _id: value._id,
+                                username: value.username,
+                                phoneNumber: value.phoneNumber,
+                                bankNumber: value.bankNumber,
+                                isVip: value.isVip,
+                                invitated_people: value.invitated_people,
+                                straight: value.straight,
+                                secondhand: value.secondhand,
+                                member_mark: value.member_mark,
+                                power: value.power,
+                                previnvitated_people: value.previnvitated_people,
+                                usedmoney: value.usedmoney,
+                                number: (currentPage - 1) * 6 + (index + 1)
+                            })
+                            sum = index;
                         })
-                        sum = index;
+                        responseData.message = '查询成功';
+                        if (sum + 1 == userListInfo.length) {
+                            var userList1 = {
+                                    userList,
+                                    currentPage: currentPage,
+                                    page: page,
+                                    count: count,
+                                    limit: limit,
+                                    number_people: number_people
+                                }
+                                //responseData.productList = productList;
+                            Object.assign(responseData, userList1);
+                            return res.json(responseData);
+                        }
                     })
-                    responseData.message = '查询成功';
-                    if (sum + 1 == userListInfo.length) {
-                        var userList1 = {
-                                userList,
-                                currentPage: currentPage,
-                                page: page,
-                                count: count,
-                                limit: limit,
-                                number_people: number_people
+                } else {
+                    responseData.code = '404';
+                    responseData.message = '数据库无记录';
+                    var userList1 = {
+                            userList: [],
+                            currentPage: 1,
+                            page: page,
+                            count: 0,
+                            limit: limit,
+                            number_people: number_people
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, userList1);
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            User.find({ phoneNumber: phoneNumber, isVip: false }).count().then(function(count) {
+                if (count > 0) {
+                    console.log(count)
+                        //计算总页数
+                    page = Math.ceil(count / limit);
+                    //取值不能超过page
+                    currentPage = Math.min(currentPage, page)
+                        //取值不能小于1；
+                    currentPage = Math.max(currentPage, 1);
+                    var skip = (currentPage - 1) * limit;
+                    User.find({ phoneNumber: phoneNumber, isVip: false }).limit(limit).skip(skip).then(function(userListInfo) {
+                        var userList = [];
+                        var value = userListInfo[0];
+                        if (userListInfo[0].invitation_code_from_people != 'tuijianinvitation001') {
+                            User.findOne({ invitation_code: userListInfo[0].invitation_code_from_people }).then(function(userInfo) {
+                                if (userInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                                    User.findOne({ invitation_code: userInfo.invitation_code_from_people }).then(function(users) {
+                                        userList.push({
+                                            _id: value._id,
+                                            username: value.username,
+                                            phoneNumber: value.phoneNumber,
+                                            bankNumber: value.bankNumber,
+                                            isVip: value.isVip,
+                                            invitated_people: value.invitated_people,
+                                            straight: value.straight,
+                                            secondhand: value.secondhand,
+                                            member_mark: value.member_mark,
+                                            power: value.power,
+                                            previnvitated_people: value.previnvitated_people,
+                                            number: (currentPage - 1) * 6 + (1),
+                                            lastphoneNumber: userInfo.phoneNumber,
+                                            lasterphoneNumber: users.phoneNumber
+                                        })
+                                        sum = 1
+                                        responseData.message = '查询成功';
+                                        if (sum == userListInfo.length) {
+                                            var userList1 = {
+                                                    userList,
+                                                    currentPage: currentPage,
+                                                    page: page,
+                                                    count: count,
+                                                    limit: limit,
+                                                    number_people: number_people
+                                                }
+                                                //responseData.productList = productList;
+                                            Object.assign(responseData, userList1);
+                                            return res.json(responseData);
+                                        }
+                                    })
+                                } else {
+                                    userList.push({
+                                        _id: value._id,
+                                        username: value.username,
+                                        phoneNumber: value.phoneNumber,
+                                        bankNumber: value.bankNumber,
+                                        isVip: value.isVip,
+                                        invitated_people: value.invitated_people,
+                                        straight: value.straight,
+                                        secondhand: value.secondhand,
+                                        member_mark: value.member_mark,
+                                        power: value.power,
+                                        previnvitated_people: value.previnvitated_people,
+                                        number: (currentPage - 1) * 6 + (1),
+                                        lastphoneNumber: userInfo.phoneNumber,
+                                        lasterphoneNumber: ''
+                                    })
+                                    sum = 1
+                                    responseData.message = '查询成功';
+                                    if (sum == userListInfo.length) {
+                                        var userList1 = {
+                                                userList,
+                                                currentPage: currentPage,
+                                                page: page,
+                                                count: count,
+                                                limit: limit,
+                                                number_people: number_people
+                                            }
+                                            //responseData.productList = productList;
+                                        Object.assign(responseData, userList1);
+                                        return res.json(responseData);
+                                    }
+                                }
+                            })
+                        } else {
+                            userList.push({
+                                _id: value._id,
+                                username: value.username,
+                                phoneNumber: value.phoneNumber,
+                                bankNumber: value.bankNumber,
+                                isVip: value.isVip,
+                                invitated_people: value.invitated_people,
+                                straight: value.straight,
+                                secondhand: value.secondhand,
+                                member_mark: value.member_mark,
+                                power: value.power,
+                                previnvitated_people: value.previnvitated_people,
+                                number: (currentPage - 1) * 6 + (1),
+                                lastphoneNumber: '',
+                                lasterphoneNumber: ''
+                            })
+                            sum = 1
+                            responseData.message = '查询成功';
+                            console.log(value)
+                            if (sum == userListInfo.length) {
+                                var userList1 = {
+                                        userList,
+                                        currentPage: currentPage,
+                                        page: page,
+                                        count: count,
+                                        limit: limit,
+                                        number_people: number_people
+                                    }
+                                    //responseData.productList = productList;
+                                Object.assign(responseData, userList1);
+                                return res.json(responseData);
                             }
-                            //responseData.productList = productList;
-                        Object.assign(responseData, userList1);
-                        return res.json(responseData);
-                    }
-                })
-            } else {
-                responseData.code = '404';
-                responseData.message = '数据库无记录';
-                var userList1 = {
-                        userList: [],
-                        currentPage: 1,
-                        page: page,
-                        count: 0,
-                        limit: limit,
-                        number_people: number_people
-                    }
-                    //responseData.productList = productList;
-                Object.assign(responseData, userList1);
-                return res.json(responseData);
-            }
-        })
+                        }
+                        //console.log(productList);
+                        //var results = productList.slice(index,index + count);
+                    })
+                } else {
+                    responseData.code = '404';
+                    responseData.message = '数据库无记录';
+                    var userList1 = {
+                            userList: [],
+                            currentPage: 1,
+                            page: page,
+                            count: 0,
+                            limit: limit,
+                            number_people: number_people
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, userList1);
+                    return res.json(responseData);
+                }
+            })
+        }
     })
     /**
      * 获取高级vip列表
      */
 
-router.get('/get/userViplist', function(req, res, next) {
-        var currentPage = parseInt(req.query.currentPage) || 1;
+router.post('/get/userViplist', function(req, res, next) {
+        var currentPage = parseInt(req.body.currentPage) || 1;
+        var phoneNumber = req.body.phoneNumber;
         var limit = 6;
         var page = 0;
         var sum = 0;
         var number_people = 0;
-        // var count = 6;
-        // var index = page * count;
         Number_people.findOne().then(function(numberPeopleInfo) {
             if (numberPeopleInfo) {
                 number_people = numberPeopleInfo.numberPeople;
@@ -413,67 +552,207 @@ router.get('/get/userViplist', function(req, res, next) {
                 number_people = 80;
             }
         })
-        User.find({ isVip: true }).count().then(function(count) {
-            if (count > 0) {
-                //计算总页数
-                page = Math.ceil(count / limit);
-                //取值不能超过page
-                currentPage = Math.min(currentPage, page)
-                    //取值不能小于1；
-                currentPage = Math.max(currentPage, 1);
-                var skip = (currentPage - 1) * limit;
-                User.find({ isVip: true }).limit(limit).skip(skip).then(function(userListInfo) {
-                    //console.log(productList);
-                    //var results = productList.slice(index,index + count);
-                    var userList = [];
-                    userListInfo.forEach(function(value, index) {
-                        userList.push({
-                            _id: value._id,
-                            username: value.username,
-                            phoneNumber: value.phoneNumber,
-                            bankNumber: value.bankNumber,
-                            isVip: value.isVip,
-                            invitated_people: value.invitated_people,
-                            straight: value.straight,
-                            secondhand: value.secondhand,
-                            member_mark: value.member_mark,
-                            power: value.power,
-                            previnvitated_people: value.previnvitated_people,
-                            number: (currentPage - 1) * 6 + (index + 1)
+        if (!phoneNumber) {
+            User.find({ isVip: true }).count().then(function(count) {
+                if (count > 0) {
+                    console.log(count)
+                        //计算总页数
+                    page = Math.ceil(count / limit);
+                    //取值不能超过page
+                    currentPage = Math.min(currentPage, page)
+                        //取值不能小于1；
+                    currentPage = Math.max(currentPage, 1);
+                    var skip = (currentPage - 1) * limit;
+                    User.find({ isVip: true }).limit(limit).skip(skip).then(function(userListInfo) {
+                        //console.log(productList);
+                        //var results = productList.slice(index,index + count);
+                        var userList = [];
+                        userListInfo.forEach(function(value, index) {
+                            userList.push({
+                                _id: value._id,
+                                username: value.username,
+                                phoneNumber: value.phoneNumber,
+                                bankNumber: value.bankNumber,
+                                isVip: value.isVip,
+                                invitated_people: value.invitated_people,
+                                straight: value.straight,
+                                secondhand: value.secondhand,
+                                member_mark: value.member_mark,
+                                power: value.power,
+                                previnvitated_people: value.previnvitated_people,
+                                number: (currentPage - 1) * 6 + (index + 1)
+                            })
+                            sum = index;
                         })
-                        sum = index;
+                        responseData.message = '查询成功';
+                        if (sum + 1 == userListInfo.length) {
+                            var userList1 = {
+                                    userList,
+                                    currentPage: currentPage,
+                                    page: page,
+                                    count: count,
+                                    limit: limit,
+                                    number_people: number_people
+                                }
+                                //responseData.productList = productList;
+                            Object.assign(responseData, userList1);
+                            return res.json(responseData);
+                        }
                     })
-                    responseData.message = '查询成功';
-                    if (sum + 1 == userListInfo.length) {
-                        var userList1 = {
-                                userList,
-                                currentPage: currentPage,
-                                page: page,
-                                count: count,
-                                limit: limit,
-                                number_people: number_people
+                } else {
+                    responseData.code = '404';
+                    responseData.message = '数据库无记录';
+                    var userList1 = {
+                            userList: [],
+                            currentPage: 1,
+                            page: page,
+                            count: 0,
+                            limit: limit,
+                            number_people: number_people
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, userList1);
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            User.find({ phoneNumber: phoneNumber, isVip: true }).count().then(function(count) {
+                if (count > 0) {
+                    console.log(count)
+                        //计算总页数
+                    page = Math.ceil(count / limit);
+                    //取值不能超过page
+                    currentPage = Math.min(currentPage, page)
+                        //取值不能小于1；
+                    currentPage = Math.max(currentPage, 1);
+                    var skip = (currentPage - 1) * limit;
+                    User.find({ phoneNumber: phoneNumber, isVip: true }).limit(limit).skip(skip).then(function(userListInfo) {
+                        var userList = [];
+                        var value = userListInfo[0];
+                        if (userListInfo[0].invitation_code_from_people != 'tuijianinvitation001') {
+                            User.findOne({ invitation_code: userListInfo[0].invitation_code_from_people }).then(function(userInfo) {
+                                if (userInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                                    User.findOne({ invitation_code: userInfo.invitation_code_from_people }).then(function(users) {
+                                        userList.push({
+                                            _id: value._id,
+                                            username: value.username,
+                                            phoneNumber: value.phoneNumber,
+                                            bankNumber: value.bankNumber,
+                                            isVip: value.isVip,
+                                            invitated_people: value.invitated_people,
+                                            straight: value.straight,
+                                            secondhand: value.secondhand,
+                                            member_mark: value.member_mark,
+                                            power: value.power,
+                                            previnvitated_people: value.previnvitated_people,
+                                            number: (currentPage - 1) * 6 + (1),
+                                            lastphoneNumber: userInfo.phoneNumber,
+                                            lasterphoneNumber: users.phoneNumber
+                                        })
+                                        sum = 1
+                                        responseData.message = '查询成功';
+                                        if (sum == userListInfo.length) {
+                                            var userList1 = {
+                                                    userList,
+                                                    currentPage: currentPage,
+                                                    page: page,
+                                                    count: count,
+                                                    limit: limit,
+                                                    number_people: number_people
+                                                }
+                                                //responseData.productList = productList;
+                                            Object.assign(responseData, userList1);
+                                            return res.json(responseData);
+                                        }
+                                    })
+                                } else {
+                                    userList.push({
+                                        _id: value._id,
+                                        username: value.username,
+                                        phoneNumber: value.phoneNumber,
+                                        bankNumber: value.bankNumber,
+                                        isVip: value.isVip,
+                                        invitated_people: value.invitated_people,
+                                        straight: value.straight,
+                                        secondhand: value.secondhand,
+                                        member_mark: value.member_mark,
+                                        power: value.power,
+                                        previnvitated_people: value.previnvitated_people,
+                                        number: (currentPage - 1) * 6 + (1),
+                                        lastphoneNumber: userInfo.phoneNumber,
+                                        lasterphoneNumber: ''
+                                    })
+                                    sum = 1
+                                    responseData.message = '查询成功';
+                                    if (sum == userListInfo.length) {
+                                        var userList1 = {
+                                                userList,
+                                                currentPage: currentPage,
+                                                page: page,
+                                                count: count,
+                                                limit: limit,
+                                                number_people: number_people
+                                            }
+                                            //responseData.productList = productList;
+                                        Object.assign(responseData, userList1);
+                                        return res.json(responseData);
+                                    }
+                                }
+                            })
+                        } else {
+                            userList.push({
+                                _id: value._id,
+                                username: value.username,
+                                phoneNumber: value.phoneNumber,
+                                bankNumber: value.bankNumber,
+                                isVip: value.isVip,
+                                invitated_people: value.invitated_people,
+                                straight: value.straight,
+                                secondhand: value.secondhand,
+                                member_mark: value.member_mark,
+                                power: value.power,
+                                previnvitated_people: value.previnvitated_people,
+                                number: (currentPage - 1) * 6 + (1),
+                                lastphoneNumber: '',
+                                lasterphoneNumber: ''
+                            })
+                            sum = 1
+                            responseData.message = '查询成功';
+                            console.log(value)
+                            if (sum == userListInfo.length) {
+                                var userList1 = {
+                                        userList,
+                                        currentPage: currentPage,
+                                        page: page,
+                                        count: count,
+                                        limit: limit,
+                                        number_people: number_people
+                                    }
+                                    //responseData.productList = productList;
+                                Object.assign(responseData, userList1);
+                                return res.json(responseData);
                             }
-                            //responseData.productList = productList;
-                        Object.assign(responseData, userList1);
-                        return res.json(responseData);
-                    }
-                })
-            } else {
-                responseData.code = '404';
-                responseData.message = '数据库无记录';
-                var userList1 = {
-                        userList: [],
-                        currentPage: 1,
-                        page: page,
-                        count: 0,
-                        limit: limit,
-                        number_people: number_people
-                    }
-                    //responseData.productList = productList;
-                Object.assign(responseData, userList1);
-                return res.json(responseData);
-            }
-        })
+                        }
+                        //console.log(productList);
+                        //var results = productList.slice(index,index + count);
+                    })
+                } else {
+                    responseData.code = '404';
+                    responseData.message = '数据库无记录';
+                    var userList1 = {
+                            userList: [],
+                            currentPage: 1,
+                            page: page,
+                            count: 0,
+                            limit: limit,
+                            number_people: number_people
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, userList1);
+                    return res.json(responseData);
+                }
+            })
+        }
     })
     /**
      * 普通vip积分修改
@@ -741,72 +1020,225 @@ router.post('/set/number_people', function(req, res, next) {
  * 会员商城未审核订单
  */
 router.get('/get/examineList', function(req, res, next) {
-        var currentPage = parseInt(req.query.currentPage) || 1;
-        var limit = 6;
-        var page = 0;
-        var sum = 0;
-        Order.find({ isExamine: false }).count().then(function(count) {
-            if (count > 0) {
-                //计算总页数
-                page = Math.ceil(count / limit);
-                //取值不能超过page
-                currentPage = Math.min(currentPage, page)
-                    //取值不能小于1；
-                currentPage = Math.max(currentPage, 1);
-                var skip = (currentPage - 1) * limit;
-                Order.find({ isExamine: false }).limit(limit).skip(skip).then(function(orderListInfo) {
-                    //console.log(productList);
-                    //var results = productList.slice(index,index + count);
-                    var orderList = [];
-                    orderListInfo.forEach(function(value, index) {
-                        User.findOne({
-                            _id: value._userId
-                        }).then(function(userInfo) {
-                            orderList.push({
-                                _id: value._id,
-                                username: userInfo.username,
-                                phoneNumber: userInfo.phoneNumber,
-                                isVip: value.isVip || '普通会员',
-                                mallName: value.mallName,
-                                money: value.money,
-                                inventory: value.inventory,
-                                time: value.time,
-                                number: (currentPage - 1) * 6 + (index + 1)
-                            })
-                            sum = index;
+    var currentPage = parseInt(req.query.currentPage) || 1;
+    var limit = 6;
+    var page = 0;
+    var sum = 0;
+    Order.find({ isExamine: false }).count().then(function(count) {
+        if (count > 0) {
+            //计算总页数
+            page = Math.ceil(count / limit);
+            //取值不能超过page
+            currentPage = Math.min(currentPage, page)
+                //取值不能小于1；
+            currentPage = Math.max(currentPage, 1);
+            var skip = (currentPage - 1) * limit;
+            Order.find({ isExamine: false }).limit(limit).skip(skip).then(function(orderListInfo) {
+                //console.log(productList);
+                //var results = productList.slice(index,index + count);
+                var orderList = [];
+                orderListInfo.forEach(function(value, index) {
+                    User.findOne({
+                        _id: value._userId
+                    }).then(function(userInfo) {
+                        orderList.push({
+                            _id: value._id,
+                            username: userInfo.username,
+                            phoneNumber: userInfo.phoneNumber,
+                            isVip: value.isVip || '普通会员',
+                            mallName: value.mallName,
+                            money: value.money,
+                            inventory: value.inventory,
+                            time: value.time,
+                            number: (currentPage - 1) * 6 + (index + 1)
                         })
+                        sum = index;
                     })
-                    responseData.message = '查询成功';
-                    if (sum + 1 == orderListInfo.length) {
-                        var orderList1 = {
-                                userList,
-                                currentPage: currentPage,
-                                page: page,
-                                count: count,
-                                limit: limit
-                            }
-                            //responseData.productList = productList;
-                        Object.assign(responseData, orderList1);
-                        return res.json(responseData);
-                    }
                 })
-            } else {
-                responseData.code = '404';
-                responseData.message = '数据库无记录';
-                var orderList1 = {
-                        orderList: [],
-                        currentPage: 1,
-                        page: page,
-                        count: 0,
-                        limit: limit
-                    }
-                    //responseData.productList = productList;
-                Object.assign(responseData, orderList1);
-                return res.json(responseData);
-            }
-        })
+                responseData.message = '查询成功';
+                if (sum + 1 == orderListInfo.length) {
+                    var orderList1 = {
+                            userList,
+                            currentPage: currentPage,
+                            page: page,
+                            count: count,
+                            limit: limit
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, orderList1);
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var orderList1 = {
+                    orderList: [],
+                    currentPage: 1,
+                    page: page,
+                    count: 0,
+                    limit: limit
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, orderList1);
+            return res.json(responseData);
+        }
     })
-    //增加静止温度数据
+})
+
+/**
+ * 会员风采文章添加
+ */
+router.post('/add/MembersDemeanorMessage', multipartMiddleware, function(req, res, next) {
+    var MembersDemeanorTitle = req.files.MembersDemeanorTitle;
+    var MembersDemeanorFile = req.body.MembersDemeanorFile;
+    var MembersDemeanorContent = req.body.MembersDemeanorContent;
+    var filePath = MembersDemeanorFile.path || '';
+    var originalFilename = MembersDemeanorFile.originalFilename;
+
+    if (originalFilename) {
+        fs.readFile(filePath, function(err, data) {
+            var timestamp = Date.now();
+            //var type = posterData.type.split('/')[1];
+            //var poster = timestamp + '.' + type;
+            //var newPath = path.join(__dirname, '../../', 'static/upload/' + poster); //生成服务器的储存地址
+            var newPath = path.join(__dirname, '../../', 'client/static/upload/images/' + originalFilename); //生成服务器的储存地址
+            console.log(newPath);
+            fs.writeFile(newPath, data, function(err) {
+                //req.poster = originalFilename;
+                if (err) {
+                    responseData.code = 500;
+                    responseData.message = '上传失败';
+                    res.json(responseData);
+                    return;
+                } else {
+                    var membersDemeanoPhoto = '/static/upload/images/' + originalFilename;
+                    if (MembersDemeanorTitle && MembersDemeanorContent) {
+                        var membersDemeanor = new MembersDemeanor({
+                            title: MembersDemeanorTitle,
+                            content: MembersDemeanorContent,
+                            membersDemeanoPhoto: membersDemeanoPhoto
+                        })
+                        membersDemeanor.save();
+                        responseData.code = 200;
+                        responseData.message = '成功';
+                        res.json(responseData);
+                        return;
+                    } else {
+                        responseData.code = 404;
+                        responseData.message = '失败';
+                        res.json(responseData);
+                        return;
+                    }
+                }
+                next();
+            })
+        })
+    } else {
+        responseData.code = 404;
+        responseData.message = '上传失败，未选择文件';
+        res.json(responseData);
+        return;
+    }
+})
+
+//文章列表
+/**
+ * 通过limit(Number)限制每次取到的数据条数，
+ * skip():忽略数据的条数
+ * 每页显示2条
+ * 1:1-2,skip:0->(当前页-1)*limit
+ * 2:3-4,skip:2
+ * 实现分页
+ */
+router.get('/get/mallpageList', function(req, res, next) {
+    console.log(req.query.currentPage)
+    var currentPage = parseInt(req.query.currentPage) || 1;
+    var limit = 6;
+    var page = 0;
+    var sum = 0;
+    // var count = 6;
+    // var index = page * count;
+    Product.count().then(function(count) {
+        if (count > 0) {
+            //计算总页数
+            page = Math.ceil(count / limit);
+            //取值不能超过page
+            currentPage = Math.min(currentPage, page)
+                //取值不能小于1；
+            currentPage = Math.max(currentPage, 1);
+            var skip = (currentPage - 1) * limit;
+            Product.find().sort({ '_id': -1 }).limit(limit).skip(skip).then(function(productListInfo) {
+                //console.log(productList);
+                //var results = productList.slice(index,index + count);
+                var productList = [];
+                productListInfo.forEach(function(value, index) {
+                    productList.push({
+                        _id: value._id,
+                        ProductIntegration: value.ProductIntegration,
+                        productDescription: value.productDescription,
+                        productImageUrl: value.productImageUrl,
+                        productInventory: value.productInventory,
+                        productName: value.productName,
+                        number: (currentPage - 1) * 6 + (index + 1)
+                    })
+                    sum = index;
+                })
+
+                responseData.message = '查询成功';
+                if (sum + 1 == productListInfo.length) {
+                    var productList1 = {
+                            productList,
+                            currentPage: currentPage,
+                            page: page,
+                            count: count,
+                            limit: limit
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, productList1);
+                    res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var productList1 = {
+                    productList: [],
+                    currentPage: 1,
+                    page: page,
+                    count: 0,
+                    limit: limit
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, productList1);
+            return res.json(responseData);
+        }
+    })
+
+})
+
+//删除产品
+router.post('/delete/productmall', function(req, res, next) {
+    var _id = req.body._id;
+    //console.log(name);
+    Product.findOne({
+        _id: _id
+    }).then(function(product) {
+        if (product) {
+            responseData.message = '删除成功';
+            Product.remove({ _id: _id }, function(err) {})
+            res.json(responseData);
+            return;
+        } else {
+            responseData.code = 404;
+            responseData.message = '删除失败，为找到此产品！';
+            res.json(responseData);
+            return;
+        }
+    })
+})
+
+//增加静止温度数据
 router.post('/add/staticTemperature', function(req, res, next) {
     var date = req.body.date;
     //console.log(date);

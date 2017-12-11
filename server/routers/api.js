@@ -29,7 +29,8 @@ router.use(function(req, res, next) {
                             _id: userInfo._id,
                             username: userInfo.username,
                             phoneNumber: userInfo.phoneNumber,
-                            invitation_code: userInfo.invitation_code
+                            invitation_code: userInfo.invitation_code,
+                            member_mark: userInfo.member_mark
                         }), {
                             'httpOnly': false,
                             'path': '/'
@@ -200,7 +201,8 @@ router.post('/user/login', function(req, res, next) {
                         _id: userInfo._id,
                         username: userInfo.username,
                         phoneNumber: userInfo.phoneNumber,
-                        invitation_code: userInfo.invitation_code
+                        invitation_code: userInfo.invitation_code,
+                        member_mark: userInfo.member_mark
                     }
                 }
                 Object.assign(responseData, userInfoL);
@@ -209,7 +211,8 @@ router.post('/user/login', function(req, res, next) {
                     _id: userInfo._id,
                     username: encodeURI(userInfo.username),
                     phoneNumber: userInfo.phoneNumber,
-                    invitation_code: userInfo.invitation_code
+                    invitation_code: userInfo.invitation_code,
+                    member_mark: userInfo.member_mark
                 }), {
                     'httpOnly': false,
                     'path': '/'

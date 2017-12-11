@@ -53,6 +53,10 @@ var UserSchema = new Schema({
         type: String,
         unique: false,
         default: null
+    },
+    usedmoney: {
+        type: Number,
+        default: 0
     }
 })
 
