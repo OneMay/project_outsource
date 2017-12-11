@@ -230,28 +230,62 @@ router.post('/user/login', function(req, res, next) {
  */
 
 router.get('/user/logout', function(req, res) {
-    if (req.headers.cookie) {
-        responseData.message = "退出成功！";
-        responseData.redirectUrl = '/';
-        res.cookies.set('userInfo', null, {
-            'httpOnly': false,
-            'path': '/'
-        });
-        delete req.session.user_id;
-        res.json(responseData);
-        return;
-    } else {
-        responseData.code = 500;
-        responseData.message = "退出失败！";
-        res.json(responseData);
-        return;
-    }
+        if (req.headers.cookie) {
+            responseData.message = "退出成功！";
+            responseData.redirectUrl = '/';
+            res.cookies.set('userInfo', null, {
+                'httpOnly': false,
+                'path': '/'
+            });
+            delete req.session.user_id;
+            res.json(responseData);
+            return;
+        } else {
+            responseData.code = 500;
+            responseData.message = "退出失败！";
+            res.json(responseData);
+            return;
+        }
 
-})
-
-/**
- * 获取用户列表
- */
+    })
+    //获取积分
+router.post('/user/member_mark', function(req, res, next) {
+        var _id = req.body._id;
+        if (_id) {
+            User.findOne({
+                _id: _id
+            }).then(function(userInfo) {
+                if (userInfo) {
+                    var userInfoL = {
+                        userInfo: {
+                            _id: userInfo._id,
+                            username: userInfo.username,
+                            member_mark: userInfo.member_mark
+                        }
+                    }
+                    Object.assign(responseData, userInfoL);
+                    responseData.code = 200;
+                    responseData.message = "成功";
+                    res.json(responseData);
+                } else {
+                    var userInfoL = {
+                        userInfo: {}
+                    }
+                    Object.assign(responseData, userInfoL);
+                    responseData.code = 404;
+                    responseData.message = "失败";
+                    res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = 404;
+            responseData.message = "失败";
+            res.json(responseData);
+        }
+    })
+    /**
+     * 获取用户列表
+     */
 
 
 /**
