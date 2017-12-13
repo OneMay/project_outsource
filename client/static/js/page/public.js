@@ -284,7 +284,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
-                 if (data.userList.length > 1) {
+                 if (!phoneNumber) {
                      var dom = '<tr class="am-success">' +
                          '<th class="table-id">序号</th>' +
                          '<th class="table-title">会员名称</th>' +
@@ -471,7 +471,7 @@
              }
              if (data.code == 200) {
                  number_people = data.number_people;
-                 if (data.userList.length > 1) {
+                 if (!phoneNumber) {
                      var dom = '<tr class="am-success">' +
                          '<th class="table-id">序号</th>' +
                          '<th class="table-title">会员名称</th>' +
