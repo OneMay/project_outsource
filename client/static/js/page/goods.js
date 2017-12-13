@@ -81,6 +81,16 @@ $(function() {
     });
     //确定兑换
     $('#detail').find('.sure').click(function() {
+        var mallObj = {
+            _mallId: id,
+            inventory: $count.val(),
+            consigneeAddress: $('#detail').find('#textarea').val(),
+            consigneePhone: $('#detail').find('.phonenumber').val(),
+            consignee: $('#detail').find('.youname').val(),
+            integration: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()),
+            money: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()) - member_mark
+        }
+
         if ($('#detail').find('#textarea').val() == '' || $('#detail').find('.phonenumber').val() == '' || $('#detail').find('.youname').val() == '') {
             alert("收货信息不能为空");
             return false;
@@ -91,15 +101,8 @@ $(function() {
                 dataType: 'json',
                 data: {
                     _userId: userId,
-                    mallObj: {
-                        _mallId: id,
-                        inventory: $count.val(),
-                        consigneeAddress: $('#detail').find('#textarea').val(),
-                        consigneePhone: $('#detail').find('.phonenumber').val(),
-                        consignee: $('#detail').find('.youname').val(),
-                        integration: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()),
-                        money: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()) - member_mark
-                    }
+                    mallObj: JSON.stringify(mallObj)
+
                 },
                 success: function() {
                     alert('chenggong')
