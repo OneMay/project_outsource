@@ -1088,3 +1088,373 @@
          alert('出错！');
      }
  }
+
+ //会员商城未审核订单
+ if (pathname == '/admin/examineorderlist.html') {
+     var mallPrev = document.getElementById('mallPrev');
+     var mallNext = document.getElementById('mallNext');
+     mallPrev.onclick = function() {
+         getCurrentPage5(-1);
+     }
+     mallNext.onclick = function() {
+         getCurrentPage5(1);
+     }
+     getPage5(currentPage);
+
+ }
+
+ function getCurrentPage5(num) {
+     if (currentPage + num <= 1) {
+         currentPage = 1;
+         getPage5(currentPage)
+     } else if (currentPage + num >= page) {
+         currentPage = page;
+         getPage5(currentPage)
+     } else {
+         currentPage += num;
+         getPage5(currentPage)
+     }
+
+
+ }
+
+ function getPage5(currentpage) {
+     $.ajax({
+         url: '/admin/get/examineList',
+         type: 'GET',
+         data: {
+             currentPage: currentpage
+         },
+         cache: false,
+         dataType: 'json',
+         success: function(data) {
+             page = data.page;
+             if ($('tbody>tr').length > 0) {
+                 $('tbody>tr').remove();
+             }
+             if (data.code == 200) {
+                 data.orderList.forEach((value, index) => {
+                     var html = "<tr>" +
+                         "<td>" + value.number + "</td>" +
+                         "<td>" + value.phoneNumber + "</td>" +
+                         "<td>" + value.username + "</td>" +
+                         "<td>" + value.isVip + "</td>" +
+                         "<td>" + value.mallName + "</td>" +
+                         "<td>" + value.inventory + "</td>" +
+                         "<td>" + value.time + "</td>" +
+                         "<td>" + value.money + "</td>" +
+                         '<td>' +
+                         '<div class="am-btn-toolbar">' +
+                         '<div class="am-btn-group am-btn-group-xs">' +
+                         '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="审核通过" onclick="setToDeliver(' + "'" + value._id + "'" + ')">' + '<span class="am-icon-pencil-square-o"></span></span>' +
+                         '<span class="am-btn am-btn-default am-btn-xs am-text-danger am-round" title="审核不通过" onclick="setToFail(' + "'" + value._id + "'" + ')"><span class="am-icon-trash-o" ></span></span>' +
+                         '</div>' +
+                         '</div>' +
+                         '</td>' +
+                         "</tr>";
+                     $('tbody').append(html);
+                 });
+                 var str = '共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                 $('.Message').html(str);
+             } else {
+                 $('.Message').html(data.message);
+             }
+         },
+         err: function(err) {
+             console.log(err)
+         }
+     })
+ }
+ //审核通过
+ function setToDeliver(id) {
+     if (id) {
+         $.ajax({
+             url: '/admin/set/setToDeliver',
+             type: 'POST',
+             data: {
+                 _id: id
+             },
+             cache: false,
+             dataType: 'json',
+             success: function(data) {
+                 console.log(data.code)
+                 if (data.code == 200) {
+                     getPage5(1)
+                 } else {
+                     alert(data.message)
+                 }
+             },
+             err: function(err) {
+                 console.log(err)
+             }
+         })
+     } else {
+         alert('出错')
+     }
+ }
+ //审核不通过
+ function setToFail(id) {
+     if (id) {
+         $.ajax({
+             url: '/admin/set/setToFail',
+             type: 'POST',
+             data: {
+                 _id: id
+             },
+             cache: false,
+             dataType: 'json',
+             success: function(data) {
+                 if (data.code == 200) {
+                     getPage5(1)
+                 } else {
+                     alert(data.message)
+                 }
+             },
+             err: function(err) {
+                 console.log(err)
+             }
+         })
+     } else {
+         alert('出错')
+     }
+ }
+ //会员商城未发货订单
+ if (pathname == '/admin/delivergoodsorderlist.html') {
+     var mallPrev = document.getElementById('mallPrev');
+     var mallNext = document.getElementById('mallNext');
+     mallPrev.onclick = function() {
+         getCurrentPage6(-1);
+     }
+     mallNext.onclick = function() {
+         getCurrentPage6(1);
+     }
+     getPage6(currentPage);
+
+ }
+
+ function getCurrentPage6(num) {
+     if (currentPage + num <= 1) {
+         currentPage = 1;
+         getPage6(currentPage)
+     } else if (currentPage + num >= page) {
+         currentPage = page;
+         getPage6(currentPage)
+     } else {
+         currentPage += num;
+         getPage6(currentPage)
+     }
+
+
+ }
+
+ function getPage6(currentpage) {
+     $.ajax({
+         url: '/admin/get/deliverList',
+         type: 'GET',
+         data: {
+             currentPage: currentpage
+         },
+         cache: false,
+         dataType: 'json',
+         success: function(data) {
+             page = data.page;
+             if ($('tbody>tr').length > 0) {
+                 $('tbody>tr').remove();
+             }
+             if (data.code == 200) {
+                 data.orderList.forEach((value, index) => {
+                     var html = "<tr>" +
+                         "<td>" + value.number + "</td>" +
+                         "<td>" + value.phoneNumber + "</td>" +
+                         "<td>" + value.consigneePhone + "</td>" +
+                         "<td>" + value.consignee + "</td>" +
+                         "<td>" + value.consigneeAddress + "</td>" +
+                         "<td>" + value.mallName + "</td>" +
+                         "<td>" + value.inventory + "</td>" +
+                         "<td>" + value.time + "</td>" +
+                         '<td>' +
+                         '<div class="am-btn-toolbar">' +
+                         '<div class="am-btn-group am-btn-group-xs">' +
+                         '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="已发货" onclick="delivergood(' + "'" + value._id + "'" + ')">' + '<span class="am-icon-pencil-square-o"></span></span>' +
+                         '</div>' +
+                         '</div>' +
+                         '</td>' +
+                         "</tr>";
+                     $('tbody').append(html);
+                 });
+                 var str = '共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                 $('.Message').html(str);
+             } else {
+                 $('.Message').html(data.message);
+             }
+         },
+         err: function(err) {
+             console.log(err)
+         }
+     })
+ }
+ //发货
+ function delivergood(id) {
+     if (id) {
+         $.ajax({
+             url: '/admin/set/delivergoods',
+             type: 'POST',
+             data: {
+                 _id: id
+             },
+             cache: false,
+             dataType: 'json',
+             success: function(data) {
+                 if (data.code == 200) {
+                     getPage6(1)
+                 } else {
+                     alert(data.message)
+                 }
+             },
+             err: function(err) {
+                 console.log(err)
+             }
+         })
+     } else {
+         alert('出错')
+     }
+ }
+ //会员商城未通过订单
+ if (pathname == '/admin/examineerror.html') {
+     var mallPrev = document.getElementById('mallPrev');
+     var mallNext = document.getElementById('mallNext');
+     mallPrev.onclick = function() {
+         getCurrentPage7(-1);
+     }
+     mallNext.onclick = function() {
+         getCurrentPage7(1);
+     }
+     getPage7(currentPage);
+
+ }
+
+ function getCurrentPage7(num) {
+     if (currentPage + num <= 1) {
+         currentPage = 1;
+         getPage7(currentPage)
+     } else if (currentPage + num >= page) {
+         currentPage = page;
+         getPage7(currentPage)
+     } else {
+         currentPage += num;
+         getPage7(currentPage)
+     }
+
+
+ }
+
+ function getPage7(currentpage) {
+     $.ajax({
+         url: '/admin/get/orderErrorList',
+         type: 'GET',
+         data: {
+             currentPage: currentpage
+         },
+         cache: false,
+         dataType: 'json',
+         success: function(data) {
+             page = data.page;
+             if ($('tbody>tr').length > 0) {
+                 $('tbody>tr').remove();
+             }
+             if (data.code == 200) {
+                 data.orderList.forEach((value, index) => {
+                     var html = "<tr>" +
+                         "<td>" + value.number + "</td>" +
+                         "<td>" + value.phoneNumber + "</td>" +
+                         "<td>" + value.username + "</td>" +
+                         "<td>" + value.isVip + "</td>" +
+                         "<td>" + value.mallName + "</td>" +
+                         "<td>" + value.inventory + "</td>" +
+                         "<td>" + value.time + "</td>" +
+                         "<td>" + value.money + "</td>" +
+                         "</tr>";
+                     $('tbody').append(html);
+                 });
+                 var str = '共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                 $('.Message').html(str);
+             } else {
+                 $('.Message').html(data.message);
+             }
+         },
+         err: function(err) {
+             console.log(err)
+         }
+     })
+ }
+
+ //会员商城成功订单
+ if (pathname == '/admin/orderlist.html') {
+     var mallPrev = document.getElementById('mallPrev');
+     var mallNext = document.getElementById('mallNext');
+     mallPrev.onclick = function() {
+         getCurrentPage8(-1);
+     }
+     mallNext.onclick = function() {
+         getCurrentPage8(1);
+     }
+     getPage8(currentPage);
+
+ }
+
+ function getCurrentPage8(num) {
+     if (currentPage + num <= 1) {
+         currentPage = 1;
+         getPage8(currentPage)
+     } else if (currentPage + num >= page) {
+         currentPage = page;
+         getPage8(currentPage)
+     } else {
+         currentPage += num;
+         getPage8(currentPage)
+     }
+
+
+ }
+
+ function getPage8(currentpage) {
+     $.ajax({
+         url: '/admin/get/orderSuccessList',
+         type: 'GET',
+         data: {
+             currentPage: currentpage
+         },
+         cache: false,
+         dataType: 'json',
+         success: function(data) {
+             page = data.page;
+             if ($('tbody>tr').length > 0) {
+                 $('tbody>tr').remove();
+             }
+             if (data.code == 200) {
+                 data.orderList.forEach((value, index) => {
+                     var html = "<tr>" +
+                         "<td>" + value.number + "</td>" +
+                         "<td>" + value.phoneNumber + "</td>" +
+                         "<td>" + value.username + "</td>" +
+                         "<td>" + value.isVip + "</td>" +
+                         "<td>" + value.mallName + "</td>" +
+                         "<td>" + value.inventory + "</td>" +
+                         "<td>" + value.time + "</td>" +
+                         "<td>" + value.consigneePhone + "</td>" +
+                         "<td>" + value.consignee + "</td>" +
+                         "<td>" + value.consigneeAddress + "</td>" +
+                         "</tr>";
+                     $('tbody').append(html);
+                 });
+                 var str = '共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                 $('.Message').html(str);
+             } else {
+                 $('.Message').html(data.message);
+             }
+         },
+         err: function(err) {
+             console.log(err)
+         }
+     })
+ }

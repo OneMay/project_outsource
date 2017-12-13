@@ -21,6 +21,10 @@ var OrderListSchema = new Schema({
         type: Boolean,
         default: false
     },
+    fail: { //失败
+        type: Boolean,
+        default: false
+    },
     mallName: String,
     time: Date
 })

@@ -68,7 +68,6 @@ router.use(function(req, res, next) {
                     _id: req.session.adminuser_id
                 }).then(function(userInfo) {
                     if (userInfo) {
-                        console.log(userInfo)
                         res.cookies.set('adminuserInfo', JSON.stringify({
                             _id: userInfo._id,
                             username: userInfo.username
@@ -80,7 +79,6 @@ router.use(function(req, res, next) {
                     }
                 })
             } else {
-                console.log(666)
                 res.cookies.set('adminuserInfo', null, {
                     'httpOnly': false,
                     'path': '/admin'
@@ -182,7 +180,6 @@ router.post('/add/productmall', multipartMiddleware, function(req, res, next) {
                 //var poster = timestamp + '.' + type;
                 //var newPath = path.join(__dirname, '../../', 'static/upload/' + poster); //生成服务器的储存地址
                 var newPath = path.join(__dirname, '../../', 'client/static/upload/images/' + originalFilename); //生成服务器的储存地址
-                console.log(newPath);
                 fs.writeFile(newPath, data, function(err) {
                     //req.poster = originalFilename;
                     if (err) {
@@ -232,7 +229,6 @@ router.post('/add/productmall', multipartMiddleware, function(req, res, next) {
      * 实现分页
      */
 router.get('/get/mallpageList', function(req, res, next) {
-    console.log(req.query.currentPage)
     var currentPage = parseInt(req.query.currentPage) || 1;
     var limit = 6;
     var page = 0;
@@ -339,8 +335,7 @@ router.post('/get/userlist', function(req, res, next) {
         if (!phoneNumber) {
             User.find({ isVip: false }).count().then(function(count) {
                 if (count > 0) {
-                    console.log(count)
-                        //计算总页数
+                    //计算总页数
                     page = Math.ceil(count / limit);
                     //取值不能超过page
                     currentPage = Math.min(currentPage, page)
@@ -403,8 +398,7 @@ router.post('/get/userlist', function(req, res, next) {
         } else {
             User.find({ phoneNumber: phoneNumber, isVip: false }).count().then(function(count) {
                 if (count > 0) {
-                    console.log(count)
-                        //计算总页数
+                    //计算总页数
                     page = Math.ceil(count / limit);
                     //取值不能超过page
                     currentPage = Math.min(currentPage, page)
@@ -503,7 +497,6 @@ router.post('/get/userlist', function(req, res, next) {
                             })
                             sum = 1
                             responseData.message = '查询成功';
-                            console.log(value)
                             if (sum == userListInfo.length) {
                                 var userList1 = {
                                         userList,
@@ -560,8 +553,7 @@ router.post('/get/userViplist', function(req, res, next) {
         if (!phoneNumber) {
             User.find({ isVip: true }).count().then(function(count) {
                 if (count > 0) {
-                    console.log(count)
-                        //计算总页数
+                    //计算总页数
                     page = Math.ceil(count / limit);
                     //取值不能超过page
                     currentPage = Math.min(currentPage, page)
@@ -623,8 +615,7 @@ router.post('/get/userViplist', function(req, res, next) {
         } else {
             User.find({ phoneNumber: phoneNumber, isVip: true }).count().then(function(count) {
                 if (count > 0) {
-                    console.log(count)
-                        //计算总页数
+                    //计算总页数
                     page = Math.ceil(count / limit);
                     //取值不能超过page
                     currentPage = Math.min(currentPage, page)
@@ -723,7 +714,6 @@ router.post('/get/userViplist', function(req, res, next) {
                             })
                             sum = 1
                             responseData.message = '查询成功';
-                            console.log(value)
                             if (sum == userListInfo.length) {
                                 var userList1 = {
                                         userList,
@@ -898,7 +888,6 @@ router.post('/set/viper', function(req, res, next) {
                         }
                     }).then(function(userInfo) {
                         setTimeout(function() {
-                            console.log(2333)
                             responseData.code = 200;
                             responseData.message = '设置高级会员成功2';
                             return res.json(responseData);
@@ -981,7 +970,6 @@ router.post('/set/tovip', function(req, res, next) {
                     }
                 }).then(function(userInfo) {
                     setTimeout(function() {
-                        console.log(2333)
                         responseData.code = 200;
                         responseData.message = '设置普通会员成功2';
                         return res.json(responseData);
@@ -1025,75 +1013,371 @@ router.post('/set/number_people', function(req, res, next) {
  * 会员商城未审核订单
  */
 router.get('/get/examineList', function(req, res, next) {
-    var currentPage = parseInt(req.query.currentPage) || 1;
-    var limit = 6;
-    var page = 0;
-    var sum = 0;
-    Order.find({ isExamine: false }).count().then(function(count) {
-        if (count > 0) {
-            //计算总页数
-            page = Math.ceil(count / limit);
-            //取值不能超过page
-            currentPage = Math.min(currentPage, page)
-                //取值不能小于1；
-            currentPage = Math.max(currentPage, 1);
-            var skip = (currentPage - 1) * limit;
-            Order.find({ isExamine: false }).limit(limit).skip(skip).then(function(orderListInfo) {
-                //console.log(productList);
-                //var results = productList.slice(index,index + count);
-                var orderList = [];
-                orderListInfo.forEach(function(value, index) {
-                    User.findOne({
-                        _id: value._userId
-                    }).then(function(userInfo) {
-                        orderList.push({
-                            _id: value._id,
-                            username: userInfo.username,
-                            phoneNumber: userInfo.phoneNumber,
-                            isVip: value.isVip || '普通会员',
-                            mallName: value.mallName,
-                            money: value.money,
-                            inventory: value.inventory,
-                            time: value.time,
-                            number: (currentPage - 1) * 6 + (index + 1)
+        var currentPage = parseInt(req.query.currentPage) || 1;
+        var limit = 6;
+        var page = 0;
+        var sum = 0;
+        Order.find({ isExamine: false, fail: false }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                Order.find({ isExamine: false, fail: false }).limit(limit).skip(skip).then(function(orderListInfo) {
+                    //console.log(productList);
+                    //var results = productList.slice(index,index + count);
+                    var orderList = [];
+                    orderListInfo.forEach(function(value, index) {
+                        var ind = index;
+                        User.findOne({
+                            _id: value._userId
+                        }).then(function(userInfo) {
+                            orderList.push({
+                                _id: value._id,
+                                username: userInfo.username,
+                                phoneNumber: userInfo.phoneNumber,
+                                isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                                mallName: value.mallName,
+                                money: value.money,
+                                inventory: value.inventory,
+                                time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                                number: (currentPage - 1) * 6 + (ind + 1)
+                            })
+                            sum = index;
+                            responseData.message = '查询成功';
+                            if (count == orderList.length) {
+                                var orderList1 = {
+                                        orderList,
+                                        currentPage: currentPage,
+                                        page: page,
+                                        count: count,
+                                        limit: limit
+                                    }
+                                    //responseData.productList = productList;
+                                Object.assign(responseData, orderList1);
+                                return res.json(responseData);
+                            }
                         })
-                        sum = index;
                     })
                 })
-                responseData.message = '查询成功';
-                if (sum + 1 == orderListInfo.length) {
-                    var orderList1 = {
-                            userList,
-                            currentPage: currentPage,
-                            page: page,
-                            count: count,
-                            limit: limit
-                        }
-                        //responseData.productList = productList;
-                    Object.assign(responseData, orderList1);
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var orderList1 = {
+                        orderList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, orderList1);
+                return res.json(responseData);
+            }
+        })
+    })
+    //会员商城审核通过
+router.post('/set/setToDeliver', function(req, res, next) {
+        var _id = req.body._id;
+        if (_id) {
+            Order.findOne({
+                _id: _id
+            }).then(function(orderInfo) {
+                if (orderInfo) {
+                    var _id = orderInfo._id;
+                    orderInfo.isExamine = true;
+                    delete orderInfo._id;
+                    Order.update({ _id: _id }, orderInfo, function(err) {});
+                    responseData.code = 200;
+                    responseData.message = '修改成功';
+                    return res.json(responseData);
+                } else {
+                    responseData.code = 404;
+                    responseData.message = '修改失败';
                     return res.json(responseData);
                 }
             })
         } else {
-            responseData.code = '404';
-            responseData.message = '数据库无记录';
-            var orderList1 = {
-                    orderList: [],
-                    currentPage: 1,
-                    page: page,
-                    count: 0,
-                    limit: limit
-                }
-                //responseData.productList = productList;
-            Object.assign(responseData, orderList1);
+            responseData.code = 404;
+            responseData.message = '修改失败';
             return res.json(responseData);
         }
     })
-})
-
-/**
- * 会员风采文章添加
- */
+    //会员商城审核不通过
+router.post('/set/setToFail', function(req, res, next) {
+        var _id = req.body._id;
+        if (_id) {
+            Order.findOne({
+                _id: _id
+            }).then(function(orderInfo) {
+                if (orderInfo) {
+                    var _id = orderInfo._id;
+                    orderInfo.fail = true;
+                    delete orderInfo._id;
+                    Order.update({ _id: _id }, orderInfo, function(err) {});
+                    responseData.code = 200;
+                    responseData.message = '修改成功';
+                    return res.json(responseData);
+                } else {
+                    responseData.code = 404;
+                    responseData.message = '修改失败';
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = 404;
+            responseData.message = '修改失败';
+            return res.json(responseData);
+        }
+    })
+    /**
+     * 会员商城未发货订单
+     */
+router.get('/get/deliverList', function(req, res, next) {
+        var currentPage = parseInt(req.query.currentPage) || 1;
+        var limit = 6;
+        var page = 0;
+        var sum = 0;
+        Order.find({ isExamine: true, Deliver_goods: false }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                Order.find({ isExamine: true, Deliver_goods: false }).limit(limit).skip(skip).then(function(orderListInfo) {
+                    //console.log(productList);
+                    //var results = productList.slice(index,index + count);
+                    var orderList = [];
+                    orderListInfo.forEach(function(value, index) {
+                        var ind = index;
+                        User.findOne({
+                            _id: value._userId
+                        }).then(function(userInfo) {
+                            orderList.push({
+                                _id: value._id,
+                                username: userInfo.username,
+                                phoneNumber: userInfo.phoneNumber,
+                                isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                                mallName: value.mallName,
+                                money: value.money,
+                                inventory: value.inventory,
+                                consignee: value.consignee,
+                                consigneePhone: value.consigneePhone,
+                                consigneeAddress: value.consigneeAddress,
+                                time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                                number: (currentPage - 1) * 6 + (ind + 1)
+                            })
+                            sum = index;
+                            responseData.message = '查询成功';
+                            if (count == orderList.length) {
+                                var orderList1 = {
+                                        orderList,
+                                        currentPage: currentPage,
+                                        page: page,
+                                        count: count,
+                                        limit: limit
+                                    }
+                                    //responseData.productList = productList;
+                                Object.assign(responseData, orderList1);
+                                return res.json(responseData);
+                            }
+                        })
+                    })
+                })
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var orderList1 = {
+                        orderList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, orderList1);
+                return res.json(responseData);
+            }
+        })
+    })
+    //会员商城发货
+router.post('/set/delivergoods', function(req, res, next) {
+        var _id = req.body._id;
+        if (_id) {
+            Order.findOne({
+                _id: _id
+            }).then(function(orderInfo) {
+                if (orderInfo) {
+                    var _id = orderInfo._id;
+                    orderInfo.Deliver_goods = true;
+                    delete orderInfo._id;
+                    Order.update({ _id: _id }, orderInfo, function(err) {});
+                    responseData.code = 200;
+                    responseData.message = '修改成功';
+                    return res.json(responseData);
+                } else {
+                    responseData.code = 404;
+                    responseData.message = '修改失败';
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = 404;
+            responseData.message = '修改失败';
+            return res.json(responseData);
+        }
+    })
+    //商城未通过列表
+router.get('/get/orderErrorList', function(req, res, next) {
+        var currentPage = parseInt(req.query.currentPage) || 1;
+        var limit = 6;
+        var page = 0;
+        var sum = 0;
+        Order.find({ isExamine: false, fail: true }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                Order.find({ isExamine: false, fail: true }).limit(limit).skip(skip).then(function(orderListInfo) {
+                    //console.log(productList);
+                    //var results = productList.slice(index,index + count);
+                    var orderList = [];
+                    orderListInfo.forEach(function(value, index) {
+                        var ind = index;
+                        User.findOne({
+                            _id: value._userId
+                        }).then(function(userInfo) {
+                            orderList.push({
+                                _id: value._id,
+                                username: userInfo.username,
+                                phoneNumber: userInfo.phoneNumber,
+                                isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                                mallName: value.mallName,
+                                money: value.money,
+                                inventory: value.inventory,
+                                consignee: value.consignee,
+                                consigneePhone: value.consigneePhone,
+                                consigneeAddress: value.consigneeAddress,
+                                time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                                number: (currentPage - 1) * 6 + (ind + 1)
+                            })
+                            sum = index;
+                            responseData.message = '查询成功';
+                            if (count == orderList.length) {
+                                var orderList1 = {
+                                        orderList,
+                                        currentPage: currentPage,
+                                        page: page,
+                                        count: count,
+                                        limit: limit
+                                    }
+                                    //responseData.productList = productList;
+                                Object.assign(responseData, orderList1);
+                                return res.json(responseData);
+                            }
+                        })
+                    })
+                })
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var orderList1 = {
+                        orderList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, orderList1);
+                return res.json(responseData);
+            }
+        })
+    })
+    //商城成功列表
+router.get('/get/orderSuccessList', function(req, res, next) {
+        var currentPage = parseInt(req.query.currentPage) || 1;
+        var limit = 6;
+        var page = 0;
+        var sum = 0;
+        Order.find({ isExamine: true, fail: false, Deliver_goods: true }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                Order.find({ isExamine: true, fail: false, Deliver_goods: true }).limit(limit).skip(skip).then(function(orderListInfo) {
+                    //console.log(productList);
+                    //var results = productList.slice(index,index + count);
+                    var orderList = [];
+                    orderListInfo.forEach(function(value, index) {
+                        var ind = index;
+                        User.findOne({
+                            _id: value._userId
+                        }).then(function(userInfo) {
+                            orderList.push({
+                                _id: value._id,
+                                username: userInfo.username,
+                                phoneNumber: userInfo.phoneNumber,
+                                isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                                mallName: value.mallName,
+                                money: value.money,
+                                inventory: value.inventory,
+                                consignee: value.consignee,
+                                consigneePhone: value.consigneePhone,
+                                consigneeAddress: value.consigneeAddress,
+                                time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                                number: (currentPage - 1) * 6 + (ind + 1)
+                            })
+                            sum = ind;
+                            responseData.message = '查询成功';
+                            if (count == orderList.length) {
+                                var orderList1 = {
+                                        orderList,
+                                        currentPage: currentPage,
+                                        page: page,
+                                        count: count,
+                                        limit: limit
+                                    }
+                                    //responseData.productList = productList;
+                                Object.assign(responseData, orderList1);
+                                return res.json(responseData);
+                            }
+                        })
+                    })
+                })
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var orderList1 = {
+                        orderList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, orderList1);
+                return res.json(responseData);
+            }
+        })
+    })
+    /**
+     * 会员风采文章添加
+     */
 router.post('/add/MembersDemeanor', multipartMiddleware, function(req, res, next) {
     var MembersDemeanorFile = req.files.MembersDemeanorFile;
     var MembersDemeanorTitle = req.body.MembersDemeanorTitle;
@@ -1102,14 +1386,12 @@ router.post('/add/MembersDemeanor', multipartMiddleware, function(req, res, next
     var originalFilename = MembersDemeanorFile.originalFilename;
 
     if (originalFilename) {
-        console.log(666)
         fs.readFile(filePath, function(err, data) {
             var timestamp = Date.now();
             //var type = posterData.type.split('/')[1];
             //var poster = timestamp + '.' + type;
             //var newPath = path.join(__dirname, '../../', 'static/upload/' + poster); //生成服务器的储存地址
             var newPath = path.join(__dirname, '../../', 'client/static/upload/images/' + originalFilename); //生成服务器的储存地址
-            console.log(newPath);
             fs.writeFile(newPath, data, function(err) {
                 //req.poster = originalFilename;
                 if (err) {
@@ -1159,7 +1441,6 @@ router.post('/add/MembersDemeanor', multipartMiddleware, function(req, res, next
  * 实现分页
  */
 router.get('/get/membersDemeanorList', function(req, res, next) {
-    console.log(req.query.currentPage)
     var currentPage = parseInt(req.query.currentPage) || 1;
     var limit = 6;
     var page = 0;
@@ -1223,7 +1504,7 @@ router.get('/get/membersDemeanorList', function(req, res, next) {
 
 })
 
-//删除产品
+//删除文章
 router.post('/delete/membersDemeanoritem', function(req, res, next) {
     var _id = req.body._id;
     //console.log(name);
