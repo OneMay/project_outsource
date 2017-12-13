@@ -382,7 +382,8 @@ router.post('/get/mallpageItem', function(req, res, next) {
  */
 router.post('/set/shoppingCart', function(req, res, next) {
     var _userId = req.body._userId;
-    var mallObj = req.body.mallObj;
+    var mallObj = JSON.parse(req.body.mallObj);
+    console.log(mallObj._mallId)
     Product.findOne({
         _id: mallObj._mallId
     }).then(function(productInfo) {
@@ -436,7 +437,7 @@ router.post('/set/shoppingCart', function(req, res, next) {
                             consigneePhone: mallObj.consigneePhone,
                             consigneeAddress: mallObj.consigneeAddress,
                             integration: mallObj.integration,
-                            money: parseInt(productInfo.ProductIntegration) - parseInt(userInfo.member_mark),
+                            money: parseInt(productInfo.ProductIntegration) * parseInt(mallObj.inventory) - parseInt(userInfo.member_mark),
                             isExamine: false,
                             time: moment().format('YYYY-MM-DD HH:mm:ss')
                         })

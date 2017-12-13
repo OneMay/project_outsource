@@ -81,6 +81,22 @@ $(function() {
     });
     //确定兑换
     $('#detail').find('.sure').click(function() {
+        $.ajax({
+            url: "http://localhost:9090/api/user/member_mark",
+            type: 'post',
+            dataType: 'json',
+            data: {
+                _id: userId,
+            },
+            success: function(userInfo) {
+                member_mark = userInfo.userInfo.member_mark;
+                console.log(chengg)
+            },
+            error: function() {
+                console.log(shibai)
+            }
+        })
+        alert(member_mark)
         var mallObj = {
             _mallId: id,
             inventory: $count.val(),
@@ -102,7 +118,6 @@ $(function() {
                 data: {
                     _userId: userId,
                     mallObj: JSON.stringify(mallObj)
-
                 },
                 success: function() {
                     alert('chenggong')
