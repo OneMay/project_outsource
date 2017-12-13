@@ -50,7 +50,7 @@ $(function() {
     $('#detail').find('.psCount').attr('disabled', false);
     var $count = $('#detail').find('.count')
     $('#detail').find('.psCount').click(function() {
-        if (parseInt($count.val()) == parseInt($('#detail').find('.stock').html())) {
+        if (parseInt($count.val()) == parseInt($('#detail').find('.stock').html()) || parseInt($('#detail').find('.stock').html()) < 1) {
             $('#detail').find('.psCount').attr('disabled', true);
         } else {
             $count.val(Math.abs(parseInt($count.val())) + 1);
@@ -73,10 +73,14 @@ $(function() {
     }
 
     $('#detail').find('.nowBuy').click(function() {
-        if (cookie && reg[1]) {
-            $('#detail').find('.peopleMsg').css("display", "block")
+        if (parseInt($('#detail').find('.stock').html()) < 1) {
+            $('#detail').find('.warning').html("库存不足");
         } else {
-            window.location.href = 'login.html';
+            if (cookie && reg[1]) {
+                $('#detail').find('.peopleMsg').css("display", "block")
+            } else {
+                window.location.href = 'login.html';
+            }
         }
     });
     //确定兑换
@@ -90,13 +94,12 @@ $(function() {
             },
             success: function(userInfo) {
                 member_mark = userInfo.userInfo.member_mark;
-                console.log(chengg)
+                console.log("rtwer")
             },
             error: function() {
                 console.log(shibai)
             }
         })
-        alert(member_mark)
         var mallObj = {
             _mallId: id,
             inventory: $count.val(),
@@ -111,21 +114,26 @@ $(function() {
             alert("收货信息不能为空");
             return false;
         } else {
-            $.ajax({
-                url: "http://localhost:9090/api/set/shoppingCart",
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    _userId: userId,
-                    mallObj: JSON.stringify(mallObj)
-                },
-                success: function() {
-                    alert('chenggong')
-                },
-                error: function() {
-                    console.log(shibai)
-                }
-            })
+            if (money < 0) {
+                $.ajax({
+                    url: "http://localhost:9090/api/set/shoppingCart",
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        _userId: userId,
+                        mallObj: JSON.stringify(mallObj)
+                    },
+                    success: function() {
+                        alert('chenggong')
+                    },
+                    error: function() {
+                        console.log(shibai)
+                    }
+                })
+            } else {
+                $('#detail').find('.chongzhi').html("你的积分不足，最少需要充值" + mallObj.money);
+                $('#detail').find('.erweima').show(300);
+            }
         }
     })
 
@@ -186,4 +194,7 @@ $(function() {
     //         }
     //     })
     // })
+})
+$('#detail').find('.out').click(function() {
+    $('#detail').find('.erweima').hide(300);
 })

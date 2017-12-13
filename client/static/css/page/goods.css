@@ -11,6 +11,17 @@ a:hover {
     text-decoration: underline;
 }
 
+.chongzhi,
+.warning {
+    font-size: 21px;
+    font-weight: bold;
+    color: #f45B4B;
+    display: block;
+    overflow: hidden;
+    margin-left: 70px;
+    margin-top: 20px;
+}
+
 #list .goodsList {
     border-left: 1px solid #f4f3f3;
 }
@@ -451,4 +462,47 @@ a:hover {
 #cart .allBa .allprices p span {
     font-size: 20px;
     color: #ff0000;
+}
+
+#detail .erweima {
+    padding: 20px;
+    top: -500px;
+    position: relative;
+    display: none;
+    width: 500px;
+    height: 500px;
+    margin: auto;
+    background: rgba(144, 144, 144, 0.7);
+    text-align: center;
+}
+
+#detail .chongzhi {
+    margin-left: 0;
+}
+
+#detail .erweima img {
+    margin: 20px auto;
+    width: 300px;
+    height: 300px;
+    display: block;
+}
+
+#detail .out {
+    cursor: pointer;
+    display: block;
+    width: 184px;
+    height: 45px;
+    line-height: 45px;
+    font-weight: bold;
+    font-size: 16px;
+    margin: auto;
+    text-align: center;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+    border: 1px solid #fe7c04;
+    color: #fe7c04;
+    background: #FFE3D0;
 }
