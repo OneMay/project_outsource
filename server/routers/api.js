@@ -383,22 +383,21 @@ router.post('/get/mallpageItem', function(req, res, next) {
 router.post('/set/shoppingCart', function(req, res, next) {
     var _userId = req.body._userId;
     var mallObj = JSON.parse(req.body.mallObj);
-    console.log(mallObj._mallId)
     Product.findOne({
         _id: mallObj._mallId
     }).then(function(productInfo) {
-        if (productInfo) {
+        if (productInfo && productInfo.productInventory > 0 && productInfo.productInventory >= mallObj.inventory) {
             User.findOne({
                 _id: _userId
             }).then(function(userInfo) {
                 if (userInfo) {
                     if (mallObj.integration && (parseInt(userInfo.member_mark) >= parseInt(productInfo.ProductIntegration)) && (parseInt(productInfo.ProductIntegration) == parseInt(mallObj.integration))) {
                         var productInfo_id = productInfo._id;
-                        productInfo.productInventory = (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory));
+                        productInfo.productInventory = (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory)) > 0 ? (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory)) : 0;
                         delete productInfo._id;
                         Product.update({ _id: productInfo_id }, productInfo, function(err) {});
                         var userInfo_id = userInfo._id;
-                        userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(productInfo.ProductIntegration));
+                        userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(productInfo.ProductIntegration)) > 0 ? (parseInt(userInfo.member_mark) - parseInt(productInfo.ProductIntegration)) : 0;
                         delete userInfo._id;
                         User.update({ _id: userInfo_id }, userInfo, function(err) {});
                         var order = new Order({
@@ -421,11 +420,11 @@ router.post('/set/shoppingCart', function(req, res, next) {
                         return;
                     } else {
                         var productInfo_id = productInfo._id;
-                        productInfo.productInventory = (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory));
+                        productInfo.productInventory = (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory)) > 0 ? (parseInt(productInfo.productInventory) - parseInt(mallObj.inventory)) : 0;
                         delete productInfo._id;
                         Product.update({ _id: productInfo_id }, productInfo, function(err) {});
                         var userInfo_id = userInfo._id;
-                        userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(mallObj.integration)) || 0;
+                        userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(mallObj.integration)) > 0 ? (parseInt(userInfo.member_mark) - parseInt(mallObj.integration)) : 0;
                         delete userInfo._id;
                         User.update({ _id: userInfo_id }, userInfo, function(err) {});
                         var order = new Order({
@@ -456,7 +455,7 @@ router.post('/set/shoppingCart', function(req, res, next) {
             })
         } else {
             responseData.code = 404;
-            responseData.message = '无此商品信息';
+            responseData.message = '无此商品信息或者库存不足';
             res.json(responseData);
             return;
         }
