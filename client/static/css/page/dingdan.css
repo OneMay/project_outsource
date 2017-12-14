@@ -72,99 +72,30 @@
     border-bottom-color: rgba(0, 0, 0, .08);
 }
 
-#cart .cartGoods span,
+#cart .cartGoods span {
+    display: inline-block;
+    width: 142px;
+    height: 50px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 #cart .cartListTile span {
     display: inline-block;
     width: 140px;
-    text-align: center
+    text-align: center;
 }
 
 #cart .cartGoods {
-    height: 100px;
     position: relative;
     top: -35px;
-    border-bottom: 1px solid #ccc;
-}
-
-#cart .cartGoods>div {
-    height: 100;
-    float: left;
-}
-
-#cart .cartGoods .descrip {
-    width: 43.5%;
-}
-
-#cart .cartGoods .descrip a {
-    line-height: 60px;
-    color: #888;
-    text-decoration: none;
+    z-index: 1;
+    line-height: 50px;
+    height: 50px;
     font-size: 15px;
-}
-
-#cart .cartGoods .descrip img {
-    margin: 20px 30px 0 30px;
-    width: 60px;
-    height: 60px;
-    border: 1px solid #ccc;
-    vertical-align: middle;
-}
-
-#cart .cartGoods .price,
-#cart .cartGoods .sumPrice,
-#cart .cartGoods .operation {
-    text-align: right;
-    width: 130px;
-    line-height: 100px;
-}
-
-#cart .cartGoods span {
-    font-size: 12px;
-}
-
-#cart .cartGoods .box {
-    border: 1px solid #ccc;
-    margin-top: 32px;
-    margin-left: 80px;
-    height: 28px;
-}
-
-#cart .cartGoods .count .sum {
-    float: left;
-    display: block;
-    width: 30px;
-    height: 26px;
-    line-height: 26px;
-    outline: 0 none;
-    border-left: 1px solid #cccccc;
-    border-right: 1px solid #cccccc;
-    border-top: none;
-    border-bottom: none;
-    text-align: center;
-}
-
-#cart .msCount,
-#cart .psCount {
-    display: inline-block;
-    width: 14px;
-    text-align: center;
-    font-size: 14px;
-    height: 26px;
-    line-height: 26px;
-    cursor: pointer;
-    float: left;
-}
-
-#cart .allImg {
-    float: left;
-    background-image: url(../../images/login_ico.png);
-    background-position: -2px -169px;
-    display: block;
-    width: 20px;
-    height: 20px;
-    border-radius: 100%;
-    border: 1px solid #ccc;
-    margin: 0 20px 0 20px;
+    border-bottom: 1px solid #ccc;
 }
 
 #cart .cartBottom {
