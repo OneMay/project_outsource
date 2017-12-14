@@ -1133,7 +1133,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
-                sort(data);
+                 sort(data);
                  data.orderList.forEach((value, index) => {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
@@ -1263,7 +1263,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
-                sort(data);
+                 sort(data);
                  data.orderList.forEach((value, index) => {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
@@ -1365,7 +1365,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
-                sort(data);
+                 sort(data);
                  data.orderList.forEach((value, index) => {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
