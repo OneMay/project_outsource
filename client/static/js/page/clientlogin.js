@@ -77,7 +77,7 @@ function registSubmit() {
                 dataType: "json",
                 data: {
                     username: $regist.find('#name').val(),
-                    emil: $regist.find('emil').val(),
+                    email: $regist.find('#emil').val(),
                     password: $regist.find('#password').val(),
                     phoneNumber: $regist.find('#phone').val(),
                     bankNumber: $regist.find('#bank').val(),
@@ -113,7 +113,7 @@ function loginSubmit() {
             if (messageInfo.code === 200) {
                 $login.find('#loginmsg').html("登录成功");
                 setTimeout(() => {
-                    window.location.href = "index.html";
+                    window.location.href = "home.html";
                 }, 3000);
             } else {
                 $login.find('#loginmsg').html("账号或密码错误");
@@ -125,4 +125,5 @@ function loginSubmit() {
             }
         }
     })
+
 }

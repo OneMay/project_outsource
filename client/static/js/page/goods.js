@@ -68,7 +68,6 @@ $(function() {
     var userId, reg, member_mark, money;
     if (cookie) {
         reg = cookie.match(/userInfo=(\S*)}/);
-        member_mark = reg[0].match(/member_mark":(\S*)}/)[1];
         userId = reg[1] ? reg[1].match(/_id":"(\S*)","username/)[1] : '';
     }
 
@@ -80,6 +79,9 @@ $(function() {
                 $('#detail').find('.peopleMsg').css("display", "block")
             } else {
                 window.location.href = 'login.html';
+                setTimeout(() => {
+                    window.location.href = reload();
+                }, 3000);
             }
         }
     });
@@ -95,46 +97,78 @@ $(function() {
             success: function(userInfo) {
                 member_mark = userInfo.userInfo.member_mark;
                 console.log("rtwer")
+                var mallObj = {
+                    _mallId: id,
+                    inventory: $count.val(),
+                    consigneeAddress: $('#detail').find('#textarea').val(),
+                    consigneePhone: $('#detail').find('.phonenumber').val(),
+                    consignee: $('#detail').find('.youname').val(),
+                    integration: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()),
+                    money: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()) - parseInt(member_mark)
+                }
+                money = parseInt($count.val()) * parseInt($('#detail').find('.integral').html()) - parseInt(member_mark);
+                if ($('#detail').find('#textarea').val() == '' || $('#detail').find('.phonenumber').val() == '' || $('#detail').find('.youname').val() == '') {
+                    alert("收货信息不能为空");
+                    return false;
+                } else {
+                    if (money < 0) {
+                        $.ajax({
+                            url: "http://localhost:9090/api/set/shoppingCart",
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                _userId: userId,
+                                mallObj: JSON.stringify(mallObj)
+                            },
+                            success: function() {
+                                $('#detail').find('.warningMsg').html("兑换成功");
+                                setTimeout(() => {
+                                    window.location.reload()
+                                }, 2000);
+                            },
+                            error: function() {
+                                console.log(shibai)
+                            }
+                        })
+                    } else {
+                        $('#detail').find('.chongzhi').html("你的积分不足,需要充值" + money + "分");
+                        $('#detail').find('.erweima').show(300);
+                        $('#detail').find('.czcg').click(function() {
+                            $('#detail').find('.erweima').hide(300);
+                            $.ajax({
+                                url: "http://localhost:9090/api/set/shoppingCart",
+                                type: 'post',
+                                dataType: 'json',
+                                data: {
+                                    _userId: userId,
+                                    mallObj: JSON.stringify(mallObj)
+                                },
+                                success: function() {
+                                    $('#detail').find('.warningMsg').html("兑换成功");
+                                    setTimeout(() => {
+                                        window.location.reload()
+                                    }, 2000);
+                                },
+                                error: function() {
+                                    console.log(shibai)
+                                }
+                            })
+                            $('#detail').find('.warningMsg').html("请等待后台审核处理，处理完成后将会在订单里面显示信息");
+                            setTimeout(() => {
+                                window.location.reload()
+                            }, 2000);
+                        })
+                        $('#detail').find('.out').click(function() {
+                            $('#detail').find('.erweima').hide(300);
+                        })
+                    }
+                }
             },
             error: function() {
                 console.log(shibai)
             }
         })
-        var mallObj = {
-            _mallId: id,
-            inventory: $count.val(),
-            consigneeAddress: $('#detail').find('#textarea').val(),
-            consigneePhone: $('#detail').find('.phonenumber').val(),
-            consignee: $('#detail').find('.youname').val(),
-            integration: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()),
-            money: parseInt($count.val()) * parseInt($('#detail').find('.integral').html()) - member_mark
-        }
 
-        if ($('#detail').find('#textarea').val() == '' || $('#detail').find('.phonenumber').val() == '' || $('#detail').find('.youname').val() == '') {
-            alert("收货信息不能为空");
-            return false;
-        } else {
-            if (money < 0) {
-                $.ajax({
-                    url: "http://localhost:9090/api/set/shoppingCart",
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        _userId: userId,
-                        mallObj: JSON.stringify(mallObj)
-                    },
-                    success: function() {
-                        alert('chenggong')
-                    },
-                    error: function() {
-                        console.log(shibai)
-                    }
-                })
-            } else {
-                $('#detail').find('.chongzhi').html("你的积分不足，最少需要充值" + mallObj.money);
-                $('#detail').find('.erweima').show(300);
-            }
-        }
     })
 
     // $.ajax({
@@ -194,7 +228,4 @@ $(function() {
     //         }
     //     })
     // })
-})
-$('#detail').find('.out').click(function() {
-    $('#detail').find('.erweima').hide(300);
 })
