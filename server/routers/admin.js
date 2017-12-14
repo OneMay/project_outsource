@@ -1048,7 +1048,7 @@ router.get('/get/examineList', function(req, res, next) {
                             })
                             sum = index;
                             responseData.message = '查询成功';
-                            if (count == orderList.length) {
+                            if (orderListInfo.length == orderList.length) {
                                 var orderList1 = {
                                         orderList,
                                         currentPage: currentPage,
@@ -1175,7 +1175,7 @@ router.get('/get/deliverList', function(req, res, next) {
                             })
                             sum = index;
                             responseData.message = '查询成功';
-                            if (count == orderList.length) {
+                            if (orderListInfo.length == orderList.length) {
                                 var orderList1 = {
                                         orderList,
                                         currentPage: currentPage,
@@ -1273,7 +1273,7 @@ router.get('/get/orderErrorList', function(req, res, next) {
                             })
                             sum = index;
                             responseData.message = '查询成功';
-                            if (count == orderList.length) {
+                            if (orderListInfo.length == orderList.length) {
                                 var orderList1 = {
                                         orderList,
                                         currentPage: currentPage,
@@ -1344,7 +1344,7 @@ router.get('/get/orderSuccessList', function(req, res, next) {
                             })
                             sum = ind;
                             responseData.message = '查询成功';
-                            if (count == orderList.length) {
+                            if (orderListInfo.length == orderList.length) {
                                 var orderList1 = {
                                         orderList,
                                         currentPage: currentPage,

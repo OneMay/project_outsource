@@ -1133,6 +1133,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
+                sort(data);
                  data.orderList.forEach((value, index) => {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
@@ -1262,6 +1263,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
+                sort(data);
                  data.orderList.forEach((value, index) => {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
@@ -1363,6 +1365,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
+                sort(data);
                  data.orderList.forEach((value, index) => {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
@@ -1432,6 +1435,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
+                 sort(data);
                  data.orderList.forEach((value, index) => {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
@@ -1457,4 +1461,17 @@
              console.log(err)
          }
      })
+ }
+
+ function sort(data) {
+     for (var i = 0; i < data.orderList.length; i++) {
+         for (var j = i + 1; j < data.orderList.length; j++) {
+             if (parseInt(data.orderList[i].number) > parseInt(data.orderList[j].number)) {
+                 var tmp = data.orderList[i];
+                 data.orderList[i] = data.orderList[j];
+                 data.orderList[j] = tmp;
+             }
+         }
+     }
+     return data;
  }
