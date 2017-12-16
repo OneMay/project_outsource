@@ -8,6 +8,7 @@ var Product = require('../models/product');
 var Order = require('../models/order');
 var Loan = require('../models/loan');
 var MembersDemeanor = require('../models/Members_demeanor');
+var Withdrawals = require('../models/withdrawals');
 //统一返回格式
 var responseData;
 router.use(function(req, res, next) {
@@ -74,7 +75,10 @@ router.use(function(req, res, next) {
                     }
                 })
             } else {
-                res.cookies.set('serInfo', null);
+                res.cookies.set('serInfo', null, {
+                    'httpOnly': false,
+                    'path': '/'
+                });
                 res.redirect(301, '/login.html');
                 return;
             }
@@ -681,5 +685,131 @@ router.post('/get/membersDemeanorItem', function(req, res, next) {
         }
     })
 
+})
+
+/**
+ * /提现录入
+ */
+router.post('/set/withdrawals', function(req, res, next) {
+    var _userId = req.body._userId;
+    var money = req.body.money;
+    if (_userId && name > 0 && money) {
+        User.findOne({
+            _id: _userId
+        }).then(function(userInfo) {
+            if (userInfo && userInfo.member_mark >= 500 && (money <= userInfo.member_mark)) {
+                var id = userInfo._id;
+                userInfo.member_mark = (parseInt(userInfo.member_mark) - parseInt(money)) > 0 ? (parseInt(userInfo.member_mark) - parseInt(money)) : 0;
+                delete userInfo._id;
+                User.update({ _id: id }, userInfo, function(err) {});
+                var withdrawals = new Withdrawals({
+                    _userId: _userId,
+                    money: parseFloat(money) > 0 ? parseFloat(money) : 0,
+                    success: false,
+                    time: moment().format('YYYY-MM-DD HH:mm:ss')
+                })
+                withdrawals.save();
+                responseData.code = 200;
+                responseData.message = '成功，将在下月15号结算处理';
+                res.json(responseData);
+                return;
+            } else {
+                responseData.code = 404;
+                responseData.message = '不能提现';
+                res.json(responseData);
+                return;
+            }
+        })
+    } else {
+        responseData.code = 404;
+        responseData.message = '信息有误';
+        res.json(responseData);
+        return;
+    }
+
+})
+
+/**
+ * 用户贷款查看
+ */
+router.post('/get/loanList', function(req, res, next) {
+    var _id = req.body._userId || '233';
+    var sum = 0;
+    User.findOne({
+        _id: _id
+    }).then(function(userInfo) {
+        if (userInfo) {
+            Loan.find({
+                _userId: _id
+            }).then(function(loanListInfo) {
+                if (loanListInfo) {
+                    var loanList = loanListInfo;
+
+                    responseData.message = '查询成功';
+                    var loanList1 = {
+                        loanList
+                    }
+                    Object.assign(responseData, loanList1);
+                    return res.json(responseData);
+
+                } else {
+                    var loanList = [];
+                    responseData.code = 404;
+                    responseData.message = '数据库无此用户订单记录';
+                    var loanList1 = {
+                        loanList
+                    }
+                    Object.assign(responseData, loanList1);
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = 404;
+            responseData.message = '数据库无此用户';
+            return res.json(responseData)
+        }
+    })
+})
+
+/**
+ * 用户提现查看
+ */
+router.post('/get/WithdrawalsList', function(req, res, next) {
+    var _id = req.body._userId || '233';
+    var sum = 0;
+    User.findOne({
+        _id: _id
+    }).then(function(userInfo) {
+        if (userInfo) {
+            Withdrawals.find({
+                _userId: _id
+            }).then(function(WithdrawalsListInfo) {
+                if (WithdrawalsListInfo) {
+                    var WithdrawalsList = WithdrawalsListInfo;
+
+                    responseData.message = '查询成功';
+                    var WithdrawalsList1 = {
+                        WithdrawalsList
+                    }
+                    Object.assign(responseData, WithdrawalsList1);
+                    return res.json(responseData);
+
+                } else {
+                    var WithdrawalsList = [];
+                    responseData.code = 404;
+                    responseData.message = '数据库无此用户订单记录';
+                    var WithdrawalsList1 = {
+                        WithdrawalsList
+                    }
+                    Object.assign(responseData, WithdrawalsList1);
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = 404;
+            responseData.message = '数据库无此用户';
+            return res.json(responseData)
+        }
+    })
 })
 module.exports = router;

@@ -16,7 +16,7 @@
          }
      })();
      (function messages() {
-         var examine, deliver, loan;
+         var examine, deliver, loan, withdrawals;
          $.ajax({
              url: '/admin/get/examineList',
              type: 'GET',
@@ -47,11 +47,27 @@
                              cache: false,
                              success: function(data) {
                                  loan = data.count;
-                                 var str = '<li class="am-dropdown-header">所有消息都在这里</li>' +
-                                     '<li><a href="/admin/examineorderlist.html">会员商城未审核订单 <span class="am-badge am-badge-danger am-round">' + examine + '</span></a></li>' +
-                                     '<li><a href="/admin/delivergoodsorderlist.html">会员商城未发货订单 <span class="am-badge am-badge-danger am-round">' + deliver + '</span></a></li>' +
-                                     '<li><a href="/admin/loanNoList.html">贷款未处理订单 <span class="am-badge am-badge-danger am-round">' + loan + '</span></a></li>';
-                                 $('.am-dropdown-content').html(str)
+                                 $.ajax({
+                                     url: '/admin/get/withdrawalsNo',
+                                     type: 'GET',
+                                     data: {
+                                         currentPage: 1
+                                     },
+                                     dataType: 'json',
+                                     cache: false,
+                                     success: function(data) {
+                                         withdrawals = data.count;
+                                         var str = '<li class="am-dropdown-header">所有消息都在这里</li>' +
+                                             '<li><a href="/admin/examineorderlist.html">会员商城未审核订单 <span class="am-badge am-badge-danger am-round">' + examine + '</span></a></li>' +
+                                             '<li><a href="/admin/delivergoodsorderlist.html">会员商城未发货订单 <span class="am-badge am-badge-danger am-round">' + deliver + '</span></a></li>' +
+                                             '<li><a href="/admin/loanNoList.html">贷款未处理订单 <span class="am-badge am-badge-danger am-round">' + loan + '</span></a></li>' +
+                                             '<li><a href="/admin/withdrawalsNo.html">提现未处理 <span class="am-badge am-badge-danger am-round">' + withdrawals + '</span></a></li>';
+                                         $('.am-dropdown-content').html(str)
+                                     },
+                                     err: function(err) {
+                                         console.log(err)
+                                     }
+                                 })
 
                              },
                              err: function(err) {
@@ -2211,4 +2227,195 @@
      } else {
          alert('出错')
      }
+ }
+
+ //提现未处理订单
+ if (pathname == '/admin/withdrawalsNo.html') {
+     currentPage = 1;
+     var mallPrev = document.getElementById('mallPrev');
+     var mallNext = document.getElementById('mallNext');
+     mallPrev.onclick = function() {
+         getCurrentPage12(-1);
+     }
+     mallNext.onclick = function() {
+         getCurrentPage12(1);
+     }
+     getPage12(currentPage);
+
+
+
+     function getCurrentPage12(num) {
+         if (currentPage + num <= 1) {
+             currentPage = 1;
+             getPage12(currentPage)
+         } else if (currentPage + num >= page) {
+             currentPage = page;
+             getPage12(currentPage)
+         } else {
+             currentPage += num;
+             getPage12(currentPage)
+         }
+
+
+     }
+
+     function getPage12(currentpage) {
+         $.ajax({
+             url: '/admin/get/withdrawalsNo',
+             type: 'GET',
+             data: {
+                 currentPage: currentpage
+             },
+             cache: false,
+             dataType: 'json',
+             success: function(data) {
+                 page = data.page;
+                 if ($('tbody>tr').length > 0) {
+                     $('tbody>tr').remove();
+                 }
+                 if (data.code == 200) {
+                     sort3(data);
+                     data.withdrawalsList.forEach((value, index) => {
+                         var html = "<tr>" +
+                             "<td>" + value.number + "</td>" +
+                             "<td>" + value.phoneNumber + "</td>" +
+                             "<td>" + value.username + "</td>" +
+                             "<td>" + value.bankNumber + "</td>" +
+                             "<td>" + value.isVip + "</td>" +
+                             "<td>" + value.money + "</td>" +
+                             "<td>" + value.time + "</td>" +
+                             '<td>' +
+                             '<div class="am-btn-toolbar">' +
+                             '<div class="am-btn-group am-btn-group-xs">' +
+                             '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="成功" onclick="setItemSuccess(' + "'" + value._id + "'" + ')">' + '<span class="am-icon-pencil-square-o"></span></span>' +
+                             '</div>' +
+                             '</div>' +
+                             '</td>' +
+                             "</tr>";
+                         $('tbody').append(html);
+                     });
+                     var str = '总数：<span style="color:#187794;font-size:20px;">' + data.count + '</span>条，共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                     $('.Message').html(str);
+                 } else {
+                     $('.Message').html(data.message);
+                 }
+             },
+             err: function(err) {
+                 console.log(err)
+             }
+         })
+     }
+     //成功
+     function setItemSuccess(id, _userId) {
+         if (id) {
+             $.ajax({
+                 url: '/admin/set/withdrawalsSu',
+                 type: 'POST',
+                 data: {
+                     _id: id
+                 },
+                 cache: false,
+                 dataType: 'json',
+                 success: function(data) {
+                     console.log(data.code)
+                     if (data.code == 200) {
+                         window.location.reload();
+                     } else {
+                         alert(data.message)
+                     }
+                 },
+                 err: function(err) {
+                     console.log(err)
+                 }
+             })
+         } else {
+             alert('出错')
+         }
+     }
+
+ }
+
+ //提现成功
+ if (pathname == '/admin/withdrawalsSu.html') {
+     currentPage = 1;
+     var mallPrev = document.getElementById('mallPrev');
+     var mallNext = document.getElementById('mallNext');
+     mallPrev.onclick = function() {
+         getCurrentPage13(-1);
+     }
+     mallNext.onclick = function() {
+         getCurrentPage13(1);
+     }
+     getPage13(currentPage);
+
+
+
+     function getCurrentPage13(num) {
+         if (currentPage + num <= 1) {
+             currentPage = 1;
+             getPage13(currentPage)
+         } else if (currentPage + num >= page) {
+             currentPage = page;
+             getPage13(currentPage)
+         } else {
+             currentPage += num;
+             getPage13(currentPage)
+         }
+
+
+     }
+
+     function getPage13(currentpage) {
+         $.ajax({
+             url: '/admin/get/withdrawalsSu',
+             type: 'GET',
+             data: {
+                 currentPage: currentpage
+             },
+             cache: false,
+             dataType: 'json',
+             success: function(data) {
+                 page = data.page;
+                 if ($('tbody>tr').length > 0) {
+                     $('tbody>tr').remove();
+                 }
+                 if (data.code == 200) {
+                     sort3(data);
+                     data.withdrawalsList.forEach((value, index) => {
+                         var html = "<tr>" +
+                             "<td>" + value.number + "</td>" +
+                             "<td>" + value.phoneNumber + "</td>" +
+                             "<td>" + value.username + "</td>" +
+                             "<td>" + value.bankNumber + "</td>" +
+                             "<td>" + value.isVip + "</td>" +
+                             "<td>" + value.money + "</td>" +
+                             "<td>" + value.time + "</td>" +
+                             "</tr>";
+                         $('tbody').append(html);
+                     });
+                     var str = '总数：<span style="color:#187794;font-size:20px;">' + data.count + '</span>条，共<span style="color:#dd514c;font-size:20px;">' + data.page + '</span>页，当前第<span style="color: #5eb95e;font-size:20px;">' + data.currentPage + '</span>页';
+                     $('.Message').html(str);
+                 } else {
+                     $('.Message').html(data.message);
+                 }
+             },
+             err: function(err) {
+                 console.log(err)
+             }
+         })
+     }
+
+ }
+
+ function sort3(data) {
+     for (var i = 0; i < data.withdrawalsList.length; i++) {
+         for (var j = i + 1; j < data.withdrawalsList.length; j++) {
+             if (parseInt(data.withdrawalsList[i].number) > parseInt(data.withdrawalsList[j].number)) {
+                 var tmp = data.withdrawalsList[i];
+                 data.withdrawalsList[i] = data.withdrawalsList[j];
+                 data.withdrawalsList[j] = tmp;
+             }
+         }
+     }
+     return data;
  }

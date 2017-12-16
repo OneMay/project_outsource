@@ -12,6 +12,7 @@ var Number_people = require('../models/Number_people');
 var Order = require('../models/order');
 var MembersDemeanor = require('../models/Members_demeanor');
 var Loan = require('../models/loan');
+var Withdrawals = require('../models/withdrawals');
 //统一返回格式
 var responseData;
 var num = 0;
@@ -1935,5 +1936,165 @@ router.post('/set/DKmember_mark', function(req, res, next) {
             return res.json(responseData);
         }
     })
+})
+
+//提现未处理订单
+router.get('/get/withdrawalsNo', function(req, res, next) {
+    var currentPage = parseInt(req.query.currentPage) || 1;
+    var limit = 6;
+    var page = 0;
+    var sum = 0;
+    Withdrawals.find({ success: false }).count().then(function(count) {
+        if (count > 0) {
+            //计算总页数
+            page = Math.ceil(count / limit);
+            //取值不能超过page
+            currentPage = Math.min(currentPage, page)
+                //取值不能小于1；
+            currentPage = Math.max(currentPage, 1);
+            var skip = (currentPage - 1) * limit;
+            Withdrawals.find({ success: false }).limit(limit).skip(skip).then(function(WithdrawalsInfo) {
+                var withdrawalsList = [];
+                WithdrawalsInfo.forEach(function(value, index) {
+                    var ind = index;
+                    User.findOne({
+                        _id: value._userId
+                    }).then(function(userInfo) {
+                        withdrawalsList.push({
+                            _id: value._id,
+                            _userId: value._userId,
+                            username: userInfo.username,
+                            phoneNumber: userInfo.phoneNumber,
+                            bankNumber: userInfo.bankNumber,
+                            isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                            money: value.money,
+                            time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                            number: (currentPage - 1) * 6 + (ind + 1)
+                        })
+                        responseData.message = '查询成功';
+                        if (WithdrawalsInfo.length == withdrawalsList.length) {
+                            var withdrawalsList1 = {
+                                    withdrawalsList,
+                                    currentPage: currentPage,
+                                    page: page,
+                                    count: count,
+                                    limit: limit
+                                }
+                                //responseData.productList = productList;
+                            Object.assign(responseData, withdrawalsList1);
+                            return res.json(responseData);
+                        }
+                    })
+                })
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var withdrawalsList1 = {
+                    withdrawalsList: [],
+                    currentPage: 1,
+                    page: page,
+                    count: 0,
+                    limit: limit
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, withdrawalsList1);
+            return res.json(responseData);
+        }
+    })
+})
+
+//提现成功订单
+router.get('/get/withdrawalsSu', function(req, res, next) {
+    var currentPage = parseInt(req.query.currentPage) || 1;
+    var limit = 6;
+    var page = 0;
+    var sum = 0;
+    Withdrawals.find({ success: true }).count().then(function(count) {
+        if (count > 0) {
+            //计算总页数
+            page = Math.ceil(count / limit);
+            //取值不能超过page
+            currentPage = Math.min(currentPage, page)
+                //取值不能小于1；
+            currentPage = Math.max(currentPage, 1);
+            var skip = (currentPage - 1) * limit;
+            Withdrawals.find({ success: true }).limit(limit).skip(skip).then(function(WithdrawalsInfo) {
+                var withdrawalsList = [];
+                WithdrawalsInfo.forEach(function(value, index) {
+                    var ind = index;
+                    User.findOne({
+                        _id: value._userId
+                    }).then(function(userInfo) {
+                        withdrawalsList.push({
+                            _id: value._id,
+                            _userId: value._userId,
+                            username: userInfo.username,
+                            phoneNumber: userInfo.phoneNumber,
+                            bankNumber: userInfo.bankNumber,
+                            isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                            money: value.money,
+                            time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                            number: (currentPage - 1) * 6 + (ind + 1)
+                        })
+                        responseData.message = '查询成功';
+                        if (WithdrawalsInfo.length == withdrawalsList.length) {
+                            var withdrawalsList1 = {
+                                    withdrawalsList,
+                                    currentPage: currentPage,
+                                    page: page,
+                                    count: count,
+                                    limit: limit
+                                }
+                                //responseData.productList = productList;
+                            Object.assign(responseData, withdrawalsList1);
+                            return res.json(responseData);
+                        }
+                    })
+                })
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var withdrawalsList1 = {
+                    withdrawalsList: [],
+                    currentPage: 1,
+                    page: page,
+                    count: 0,
+                    limit: limit
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, withdrawalsList1);
+            return res.json(responseData);
+        }
+    })
+})
+
+//提现成功
+router.post('/set/withdrawalsSu', function(req, res, next) {
+    var _id = req.body._id;
+    if (_id) {
+        Withdrawals.findOne({
+            _id: _id
+        }).then(function(WithdrawalsInfo) {
+            if (WithdrawalsInfo) {
+                var _id = WithdrawalsInfo._id;
+                WithdrawalsInfo.success = true;
+                delete WithdrawalsInfo._id;
+                Withdrawals.update({ _id: _id }, WithdrawalsInfo, function(err) {});
+                responseData.code = 200;
+                responseData.message = '修改成功';
+                return res.json(responseData);
+            } else {
+                responseData.code = 404;
+                responseData.message = '修改失败';
+                return res.json(responseData);
+            }
+        })
+    } else {
+        responseData.code = 404;
+        responseData.message = '修改失败';
+        return res.json(responseData);
+    }
 })
 module.exports = router;
