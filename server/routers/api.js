@@ -7,6 +7,7 @@ var InvitationCode = require('../models/invitationcode');
 var Product = require('../models/product');
 var Order = require('../models/order');
 var Loan = require('../models/loan');
+var MembersDemeanor = require('../models/Members_demeanor');
 //统一返回格式
 var responseData;
 router.use(function(req, res, next) {
@@ -17,6 +18,39 @@ router.use(function(req, res, next) {
     }
     next();
 })
+Date.prototype.Format = function(fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份         
+        "d+": this.getDate(), //日         
+        "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时         
+        "H+": this.getHours(), //小时         
+        "m+": this.getMinutes(), //分         
+        "s+": this.getSeconds(), //秒         
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度         
+        "S": this.getMilliseconds() //毫秒         
+    };
+    var week = {
+        "0": "/u65e5",
+        "1": "/u4e00",
+        "2": "/u4e8c",
+        "3": "/u4e09",
+        "4": "/u56db",
+        "5": "/u4e94",
+        "6": "/u516d"
+    };
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    if (/(E+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "/u661f/u671f" : "/u5468") : "") + week[this.getDay() + ""]);
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+    }
+    return fmt;
+}
 router.use(function(req, res, next) {
         var originalUrl = ['/api/user/']
         if (originalUrl.indexOf(req.originalUrl) >= 0) {
@@ -544,6 +578,108 @@ router.post('/set/loan', function(req, res, next) {
         res.json(responseData);
         return;
     }
+
+})
+
+//文章列表
+/**
+ * 通过limit(Number)限制每次取到的数据条数，
+ * skip():忽略数据的条数
+ * 每页显示2条
+ * 1:1-2,skip:0->(当前页-1)*limit
+ * 2:3-4,skip:2
+ * 实现分页
+ */
+router.get('/get/membersDemeanorList', function(req, res, next) {
+    var currentPage = parseInt(req.query.currentPage) || 1;
+    var limit = 6;
+    var page = 0;
+    var sum = 0;
+    // var count = 6;
+    // var index = page * count;
+    MembersDemeanor.count().then(function(count) {
+        if (count > 0) {
+            //计算总页数
+            page = Math.ceil(count / limit);
+            //取值不能超过page
+            currentPage = Math.min(currentPage, page)
+                //取值不能小于1；
+            currentPage = Math.max(currentPage, 1);
+            var skip = (currentPage - 1) * limit;
+            MembersDemeanor.find().sort({ '_id': -1 }).limit(limit).skip(skip).then(function(membersDemeanorListInfo) {
+                //console.log(productList);
+                //var results = productList.slice(index,index + count);
+                var membersDemeanorList = [];
+                membersDemeanorListInfo.forEach(function(value, index) {
+                    membersDemeanorList.push({
+                        _id: value._id,
+                        title: value.title,
+                        content: value.content,
+                        membersDemeanoPhoto: value.membersDemeanoPhoto,
+                        time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                        number: (currentPage - 1) * 6 + (index + 1)
+                    })
+                    sum = index;
+                })
+
+                responseData.message = '查询成功';
+                if (sum + 1 == membersDemeanorListInfo.length) {
+                    var membersDemeanorList1 = {
+                            membersDemeanorList,
+                            currentPage: currentPage,
+                            page: page,
+                            count: count,
+                            limit: limit
+                        }
+                        //responseData.productList = productList;
+                    Object.assign(responseData, membersDemeanorList1);
+                    res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var membersDemeanorList1 = {
+                    membersDemeanorList: [],
+                    currentPage: 1,
+                    page: page,
+                    count: 0,
+                    limit: limit
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, membersDemeanorList1);
+            return res.json(responseData);
+        }
+    })
+
+})
+
+//文章单个
+router.post('/get/membersDemeanorItem', function(req, res, next) {
+    var _id = req.body._id;
+    MembersDemeanor.findOne({
+        _id: _id
+    }).then(function(membersDemeanorListInfo) {
+        if (membersDemeanorListInfo) {
+            responseData.message = '查询成功';
+            var membersDemeanorList = membersDemeanorListInfo;
+            var membersDemeanorList1 = {
+                    membersDemeanorList
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, membersDemeanorList1);
+            res.json(responseData);
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var membersDemeanorList1 = {
+                    membersDemeanorList: {}
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, membersDemeanorList1);
+            return res.json(responseData);
+        }
+    })
 
 })
 module.exports = router;
