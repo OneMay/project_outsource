@@ -6,6 +6,7 @@ var User = require('../models/user');
 var InvitationCode = require('../models/invitationcode');
 var Product = require('../models/product');
 var Order = require('../models/order');
+var Loan = require('../models/loan');
 //统一返回格式
 var responseData;
 router.use(function(req, res, next) {
@@ -502,5 +503,47 @@ router.post('/get/orderList', function(req, res, next) {
             return res.json(responseData)
         }
     })
+})
+
+
+/**
+ * /贷款订单录入
+ */
+router.post('/set/loan', function(req, res, next) {
+    var _userId = req.body._userId;
+    var name = req.body.name;
+    var money = req.body.money;
+    if (_userId && name > 0 && money) {
+        User.findOne({
+            _id: _userId
+        }).then(function(userInfo) {
+            if (userInfo) {
+                var loan = new Loan({
+                    _userId: _userId,
+                    name: name,
+                    money: parseFloat(money) > 0 ? parseFloat(money) : 0,
+                    fail: false,
+                    success: false,
+                    time: moment().format('YYYY-MM-DD HH:mm:ss')
+                })
+                loan.save();
+                responseData.code = 200;
+                responseData.message = '成功';
+                res.json(responseData);
+                return;
+            } else {
+                responseData.code = 404;
+                responseData.message = '无此用户信息';
+                res.json(responseData);
+                return;
+            }
+        })
+    } else {
+        responseData.code = 404;
+        responseData.message = '信息有误';
+        res.json(responseData);
+        return;
+    }
+
 })
 module.exports = router;

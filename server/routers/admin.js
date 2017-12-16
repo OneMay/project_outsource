@@ -11,6 +11,7 @@ var User = require('../models/user');
 var Number_people = require('../models/Number_people');
 var Order = require('../models/order');
 var MembersDemeanor = require('../models/Members_demeanor');
+var Loan = require('../models/loan');
 //统一返回格式
 var responseData;
 var num = 0;
@@ -61,8 +62,8 @@ Date.prototype.Format = function(fmt) {
     return fmt;
 }
 router.use(function(req, res, next) {
-        var originalUrl = ['/get/mallpageList']
-        if (originalUrl.indexOf(req._parsedUrl.pathname) >= 0) {
+        var originalUrl = ['/user/login', 'user/logout']
+        if (originalUrl.indexOf(req._parsedUrl.pathname) < 0) {
             if (req.session.adminuser_id) {
                 adminUser.findOne({
                     _id: req.session.adminuser_id
@@ -293,30 +294,75 @@ router.get('/get/mallpageList', function(req, res, next) {
 
 })
 
-//删除产品
-router.post('/delete/productmall', function(req, res, next) {
-    var _id = req.body._id;
-    //console.log(name);
-    Product.findOne({
-        _id: _id
-    }).then(function(product) {
-        if (product) {
-            responseData.message = '删除成功';
-            Product.remove({ _id: _id }, function(err) {})
-            res.json(responseData);
-            return;
-        } else {
-            responseData.code = 404;
-            responseData.message = '删除失败，为找到此产品！';
-            res.json(responseData);
-            return;
-        }
+//会员商城库存修改
+router.post('/set/productInventory', function(req, res, next) {
+        var productInventory = parseInt(req.body.productInventory);
+        var _id = req.body._id;
+        Product.findOne({
+            _id: _id
+        }).then(function(productInfo) {
+            if (productInfo) {
+                var id = productInfo._id;
+                productInfo.productInventory = (parseInt(productInfo.productInventory) + productInventory) > 0 ? (parseInt(productInfo.productInventory) + productInventory) : 0;
+                delete productInfo._id;
+                Product.update({ _id: id }, productInfo, function(err) {});
+                responseData.message = '修改积分成功';
+                return res.json(responseData);
+            } else {
+                responseData.code = 404;
+                responseData.message = '修改积分失败';
+                return res.json(responseData);
+            }
+        })
     })
-})
-
-/**
- * 获取普通vip列表
- */
+    //删除产品
+router.post('/delete/productmall', function(req, res, next) {
+        var _id = req.body._id;
+        //console.log(name);
+        Product.findOne({
+            _id: _id
+        }).then(function(product) {
+            if (product) {
+                responseData.message = '删除成功';
+                Product.remove({ _id: _id }, function(err) {})
+                res.json(responseData);
+                return;
+            } else {
+                responseData.code = 404;
+                responseData.message = '删除失败，为找到此产品！';
+                res.json(responseData);
+                return;
+            }
+        })
+    })
+    //index.html
+router.get('/findall', function(req, res, next) {
+        var shangping, dingdan, daikuan, huiyuan;
+        User.find().count().then(function(count) {
+            huiyuan = count;
+            Product.find().count().then(function(count) {
+                shangping = count;
+                Order.find().count().then(function(count) {
+                    dingdan = count;
+                    Loan.find().count().then(function(count) {
+                        daikuan = count;
+                        var responseData = {};
+                        responseData.code = 200;
+                        responseData.huiyuan = huiyuan;
+                        responseData.shangping = shangping;
+                        responseData.dingdan = dingdan;
+                        responseData.daikuan = daikuan;
+                        responseData.message = '成功！';
+                        res.json(responseData);
+                        return;
+                    })
+                })
+            })
+        })
+    })
+    /**
+     * 获取普通vip列表
+     */
 
 router.post('/get/userlist', function(req, res, next) {
         var currentPage = parseInt(req.body.currentPage) || 1;
@@ -537,131 +583,98 @@ router.post('/get/userlist', function(req, res, next) {
      */
 
 router.post('/get/userViplist', function(req, res, next) {
-        var currentPage = parseInt(req.body.currentPage) || 1;
-        var phoneNumber = req.body.phoneNumber;
-        var limit = 6;
-        var page = 0;
-        var sum = 0;
-        var number_people = 0;
-        Number_people.findOne().then(function(numberPeopleInfo) {
-            if (numberPeopleInfo) {
-                number_people = numberPeopleInfo.numberPeople;
+    var currentPage = parseInt(req.body.currentPage) || 1;
+    var phoneNumber = req.body.phoneNumber;
+    var limit = 6;
+    var page = 0;
+    var sum = 0;
+    var number_people = 0;
+    Number_people.findOne().then(function(numberPeopleInfo) {
+        if (numberPeopleInfo) {
+            number_people = numberPeopleInfo.numberPeople;
+        } else {
+            number_people = 80;
+        }
+    })
+    if (!phoneNumber) {
+        User.find({ isVip: true }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                User.find({ isVip: true }).limit(limit).skip(skip).then(function(userListInfo) {
+                    //console.log(productList);
+                    //var results = productList.slice(index,index + count);
+                    var userList = [];
+                    userListInfo.forEach(function(value, index) {
+                        userList.push({
+                            _id: value._id,
+                            username: value.username,
+                            phoneNumber: value.phoneNumber,
+                            bankNumber: value.bankNumber,
+                            isVip: value.isVip,
+                            invitated_people: value.invitated_people,
+                            straight: value.straight,
+                            secondhand: value.secondhand,
+                            member_mark: value.member_mark,
+                            power: value.power,
+                            previnvitated_people: value.previnvitated_people,
+                            number: (currentPage - 1) * 6 + (index + 1)
+                        })
+                        sum = index;
+                    })
+                    responseData.message = '查询成功';
+                    if (sum + 1 == userListInfo.length) {
+                        var userList1 = {
+                                userList,
+                                currentPage: currentPage,
+                                page: page,
+                                count: count,
+                                limit: limit,
+                                number_people: number_people
+                            }
+                            //responseData.productList = productList;
+                        Object.assign(responseData, userList1);
+                        return res.json(responseData);
+                    }
+                })
             } else {
-                number_people = 80;
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var userList1 = {
+                        userList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit,
+                        number_people: number_people
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, userList1);
+                return res.json(responseData);
             }
         })
-        if (!phoneNumber) {
-            User.find({ isVip: true }).count().then(function(count) {
-                if (count > 0) {
-                    //计算总页数
-                    page = Math.ceil(count / limit);
-                    //取值不能超过page
-                    currentPage = Math.min(currentPage, page)
-                        //取值不能小于1；
-                    currentPage = Math.max(currentPage, 1);
-                    var skip = (currentPage - 1) * limit;
-                    User.find({ isVip: true }).limit(limit).skip(skip).then(function(userListInfo) {
-                        //console.log(productList);
-                        //var results = productList.slice(index,index + count);
-                        var userList = [];
-                        userListInfo.forEach(function(value, index) {
-                            userList.push({
-                                _id: value._id,
-                                username: value.username,
-                                phoneNumber: value.phoneNumber,
-                                bankNumber: value.bankNumber,
-                                isVip: value.isVip,
-                                invitated_people: value.invitated_people,
-                                straight: value.straight,
-                                secondhand: value.secondhand,
-                                member_mark: value.member_mark,
-                                power: value.power,
-                                previnvitated_people: value.previnvitated_people,
-                                number: (currentPage - 1) * 6 + (index + 1)
-                            })
-                            sum = index;
-                        })
-                        responseData.message = '查询成功';
-                        if (sum + 1 == userListInfo.length) {
-                            var userList1 = {
-                                    userList,
-                                    currentPage: currentPage,
-                                    page: page,
-                                    count: count,
-                                    limit: limit,
-                                    number_people: number_people
-                                }
-                                //responseData.productList = productList;
-                            Object.assign(responseData, userList1);
-                            return res.json(responseData);
-                        }
-                    })
-                } else {
-                    responseData.code = '404';
-                    responseData.message = '数据库无记录';
-                    var userList1 = {
-                            userList: [],
-                            currentPage: 1,
-                            page: page,
-                            count: 0,
-                            limit: limit,
-                            number_people: number_people
-                        }
-                        //responseData.productList = productList;
-                    Object.assign(responseData, userList1);
-                    return res.json(responseData);
-                }
-            })
-        } else {
-            User.find({ phoneNumber: phoneNumber, isVip: true }).count().then(function(count) {
-                if (count > 0) {
-                    //计算总页数
-                    page = Math.ceil(count / limit);
-                    //取值不能超过page
-                    currentPage = Math.min(currentPage, page)
-                        //取值不能小于1；
-                    currentPage = Math.max(currentPage, 1);
-                    var skip = (currentPage - 1) * limit;
-                    User.find({ phoneNumber: phoneNumber, isVip: true }).limit(limit).skip(skip).then(function(userListInfo) {
-                        var userList = [];
-                        var value = userListInfo[0];
-                        if (userListInfo[0].invitation_code_from_people != 'tuijianinvitation001') {
-                            User.findOne({ invitation_code: userListInfo[0].invitation_code_from_people }).then(function(userInfo) {
-                                if (userInfo.invitation_code_from_people != 'tuijianinvitation001') {
-                                    User.findOne({ invitation_code: userInfo.invitation_code_from_people }).then(function(users) {
-                                        userList.push({
-                                            _id: value._id,
-                                            username: value.username,
-                                            phoneNumber: value.phoneNumber,
-                                            bankNumber: value.bankNumber,
-                                            isVip: value.isVip,
-                                            invitated_people: value.invitated_people,
-                                            straight: value.straight,
-                                            secondhand: value.secondhand,
-                                            member_mark: value.member_mark,
-                                            power: value.power,
-                                            previnvitated_people: value.previnvitated_people,
-                                            number: (currentPage - 1) * 6 + (1),
-                                            lastphoneNumber: userInfo.phoneNumber,
-                                            lasterphoneNumber: users.phoneNumber
-                                        })
-                                        sum = 1
-                                        responseData.message = '查询成功';
-                                        if (sum == userListInfo.length) {
-                                            var userList1 = {
-                                                    userList,
-                                                    currentPage: currentPage,
-                                                    page: page,
-                                                    count: count,
-                                                    limit: limit,
-                                                    number_people: number_people
-                                                }
-                                                //responseData.productList = productList;
-                                            Object.assign(responseData, userList1);
-                                            return res.json(responseData);
-                                        }
-                                    })
-                                } else {
+    } else {
+        User.find({ phoneNumber: phoneNumber, isVip: true }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                User.find({ phoneNumber: phoneNumber, isVip: true }).limit(limit).skip(skip).then(function(userListInfo) {
+                    var userList = [];
+                    var value = userListInfo[0];
+                    if (userListInfo[0].invitation_code_from_people != 'tuijianinvitation001') {
+                        User.findOne({ invitation_code: userListInfo[0].invitation_code_from_people }).then(function(userInfo) {
+                            if (userInfo.invitation_code_from_people != 'tuijianinvitation001') {
+                                User.findOne({ invitation_code: userInfo.invitation_code_from_people }).then(function(users) {
                                     userList.push({
                                         _id: value._id,
                                         username: value.username,
@@ -676,7 +689,7 @@ router.post('/get/userViplist', function(req, res, next) {
                                         previnvitated_people: value.previnvitated_people,
                                         number: (currentPage - 1) * 6 + (1),
                                         lastphoneNumber: userInfo.phoneNumber,
-                                        lasterphoneNumber: ''
+                                        lasterphoneNumber: users.phoneNumber
                                     })
                                     sum = 1
                                     responseData.message = '查询成功';
@@ -693,61 +706,125 @@ router.post('/get/userViplist', function(req, res, next) {
                                         Object.assign(responseData, userList1);
                                         return res.json(responseData);
                                     }
+                                })
+                            } else {
+                                userList.push({
+                                    _id: value._id,
+                                    username: value.username,
+                                    phoneNumber: value.phoneNumber,
+                                    bankNumber: value.bankNumber,
+                                    isVip: value.isVip,
+                                    invitated_people: value.invitated_people,
+                                    straight: value.straight,
+                                    secondhand: value.secondhand,
+                                    member_mark: value.member_mark,
+                                    power: value.power,
+                                    previnvitated_people: value.previnvitated_people,
+                                    number: (currentPage - 1) * 6 + (1),
+                                    lastphoneNumber: userInfo.phoneNumber,
+                                    lasterphoneNumber: ''
+                                })
+                                sum = 1
+                                responseData.message = '查询成功';
+                                if (sum == userListInfo.length) {
+                                    var userList1 = {
+                                            userList,
+                                            currentPage: currentPage,
+                                            page: page,
+                                            count: count,
+                                            limit: limit,
+                                            number_people: number_people
+                                        }
+                                        //responseData.productList = productList;
+                                    Object.assign(responseData, userList1);
+                                    return res.json(responseData);
                                 }
-                            })
-                        } else {
-                            userList.push({
-                                _id: value._id,
-                                username: value.username,
-                                phoneNumber: value.phoneNumber,
-                                bankNumber: value.bankNumber,
-                                isVip: value.isVip,
-                                invitated_people: value.invitated_people,
-                                straight: value.straight,
-                                secondhand: value.secondhand,
-                                member_mark: value.member_mark,
-                                power: value.power,
-                                previnvitated_people: value.previnvitated_people,
-                                number: (currentPage - 1) * 6 + (1),
-                                lastphoneNumber: '',
-                                lasterphoneNumber: ''
-                            })
-                            sum = 1
-                            responseData.message = '查询成功';
-                            if (sum == userListInfo.length) {
-                                var userList1 = {
-                                        userList,
-                                        currentPage: currentPage,
-                                        page: page,
-                                        count: count,
-                                        limit: limit,
-                                        number_people: number_people
-                                    }
-                                    //responseData.productList = productList;
-                                Object.assign(responseData, userList1);
-                                return res.json(responseData);
                             }
+                        })
+                    } else {
+                        userList.push({
+                            _id: value._id,
+                            username: value.username,
+                            phoneNumber: value.phoneNumber,
+                            bankNumber: value.bankNumber,
+                            isVip: value.isVip,
+                            invitated_people: value.invitated_people,
+                            straight: value.straight,
+                            secondhand: value.secondhand,
+                            member_mark: value.member_mark,
+                            power: value.power,
+                            previnvitated_people: value.previnvitated_people,
+                            number: (currentPage - 1) * 6 + (1),
+                            lastphoneNumber: '',
+                            lasterphoneNumber: ''
+                        })
+                        sum = 1
+                        responseData.message = '查询成功';
+                        if (sum == userListInfo.length) {
+                            var userList1 = {
+                                    userList,
+                                    currentPage: currentPage,
+                                    page: page,
+                                    count: count,
+                                    limit: limit,
+                                    number_people: number_people
+                                }
+                                //responseData.productList = productList;
+                            Object.assign(responseData, userList1);
+                            return res.json(responseData);
                         }
-                        //console.log(productList);
-                        //var results = productList.slice(index,index + count);
-                    })
-                } else {
-                    responseData.code = '404';
-                    responseData.message = '数据库无记录';
+                    }
+                    //console.log(productList);
+                    //var results = productList.slice(index,index + count);
+                })
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var userList1 = {
+                        userList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit,
+                        number_people: number_people
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, userList1);
+                return res.json(responseData);
+            }
+        })
+    }
+})
+
+/**
+ * 获取单个会员列表
+ */
+router.post('/get/alluserlist', function(req, res, next) {
+        var phoneNumber = req.body.phoneNumber;
+
+        User.find({ phoneNumber: phoneNumber }).count().then(function(count) {
+            if (count > 0) {
+                User.find({ phoneNumber: phoneNumber }).then(function(userListInfo) {
+                    var userList = userListInfo;
+                    responseData.message = '查询成功';
                     var userList1 = {
-                            userList: [],
-                            currentPage: 1,
-                            page: page,
-                            count: 0,
-                            limit: limit,
-                            number_people: number_people
-                        }
-                        //responseData.productList = productList;
+                        userList
+                    }
                     Object.assign(responseData, userList1);
                     return res.json(responseData);
+
+                })
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var userList1 = {
+                    userList: []
                 }
-            })
-        }
+                Object.assign(responseData, userList1);
+                return res.json(responseData);
+            }
+        })
+
     })
     /**
      * 普通vip积分修改
@@ -761,7 +838,7 @@ router.post('/set/vipmember_mark', function(req, res, next) {
     }).then(function(userInfo) {
         if (userInfo) {
             var _id = userInfo._id;
-            userInfo.member_mark = (userInfo.member_mark + member_mark) > 0 ? (userInfo.member_mark + member_mark) : 0;
+            userInfo.member_mark = (parseInt(userInfo.member_mark) + member_mark) > 0 ? (parseInt(userInfo.member_mark) + member_mark) : 0;
             if (isstraight == 'straight') {
                 userInfo.straight = 0;
                 delete userInfo._id;
@@ -789,6 +866,11 @@ router.post('/set/vipmember_mark', function(req, res, next) {
                         return res.json(responseData);
                     }
                 })
+            } else if (isstraight == 'all') {
+                delete userInfo._id;
+                User.update({ _id: _id }, userInfo, function(err) {});
+                responseData.message = '修改积分成功';
+                return res.json(responseData);
             } else {
                 responseData.code = 404;
                 responseData.message = '修改积分失败';
@@ -1013,69 +1095,91 @@ router.post('/set/number_people', function(req, res, next) {
  * 会员商城未审核订单
  */
 router.get('/get/examineList', function(req, res, next) {
-        var currentPage = parseInt(req.query.currentPage) || 1;
-        var limit = 6;
-        var page = 0;
-        var sum = 0;
-        Order.find({ isExamine: false, fail: false }).count().then(function(count) {
-            if (count > 0) {
-                //计算总页数
-                page = Math.ceil(count / limit);
-                //取值不能超过page
-                currentPage = Math.min(currentPage, page)
-                    //取值不能小于1；
-                currentPage = Math.max(currentPage, 1);
-                var skip = (currentPage - 1) * limit;
-                Order.find({ isExamine: false, fail: false }).limit(limit).skip(skip).then(function(orderListInfo) {
-                    //console.log(productList);
-                    //var results = productList.slice(index,index + count);
-                    var orderList = [];
-                    orderListInfo.forEach(function(value, index) {
-                        var ind = index;
-                        User.findOne({
-                            _id: value._userId
-                        }).then(function(userInfo) {
-                            orderList.push({
-                                _id: value._id,
-                                username: userInfo.username,
-                                phoneNumber: userInfo.phoneNumber,
-                                isVip: userInfo.isVip ? '高级会员' : '普通会员',
-                                mallName: value.mallName,
-                                money: value.money,
-                                inventory: value.inventory,
-                                time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
-                                number: (currentPage - 1) * 6 + (ind + 1)
-                            })
-                            sum = index;
-                            responseData.message = '查询成功';
-                            if (orderListInfo.length == orderList.length) {
-                                var orderList1 = {
-                                        orderList,
-                                        currentPage: currentPage,
-                                        page: page,
-                                        count: count,
-                                        limit: limit
-                                    }
-                                    //responseData.productList = productList;
-                                Object.assign(responseData, orderList1);
-                                return res.json(responseData);
-                            }
+    var currentPage = parseInt(req.query.currentPage) || 1;
+    var limit = 6;
+    var page = 0;
+    var sum = 0;
+    Order.find({ isExamine: false, fail: false }).count().then(function(count) {
+        if (count > 0) {
+            //计算总页数
+            page = Math.ceil(count / limit);
+            //取值不能超过page
+            currentPage = Math.min(currentPage, page)
+                //取值不能小于1；
+            currentPage = Math.max(currentPage, 1);
+            var skip = (currentPage - 1) * limit;
+            Order.find({ isExamine: false, fail: false }).limit(limit).skip(skip).then(function(orderListInfo) {
+                //console.log(productList);
+                //var results = productList.slice(index,index + count);
+                var orderList = [];
+                orderListInfo.forEach(function(value, index) {
+                    var ind = index;
+                    User.findOne({
+                        _id: value._userId
+                    }).then(function(userInfo) {
+                        orderList.push({
+                            _id: value._id,
+                            username: userInfo.username,
+                            phoneNumber: userInfo.phoneNumber,
+                            isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                            mallName: value.mallName,
+                            money: value.money,
+                            inventory: value.inventory,
+                            time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                            number: (currentPage - 1) * 6 + (ind + 1)
                         })
+                        sum = index;
+                        responseData.message = '查询成功';
+                        if (orderListInfo.length == orderList.length) {
+                            var orderList1 = {
+                                    orderList,
+                                    currentPage: currentPage,
+                                    page: page,
+                                    count: count,
+                                    limit: limit
+                                }
+                                //responseData.productList = productList;
+                            Object.assign(responseData, orderList1);
+                            return res.json(responseData);
+                        }
                     })
                 })
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var orderList1 = {
+                    orderList: [],
+                    currentPage: 1,
+                    page: page,
+                    count: 0,
+                    limit: limit
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, orderList1);
+            return res.json(responseData);
+        }
+    })
+})
+
+/**
+ * 订单删除
+ */
+router.post('/delete/order', function(req, res, next) {
+        var _id = req.body._id;
+        Order.findOne({
+            _id: _id
+        }).then(function(orderInfo) {
+            if (orderInfo) {
+                responseData.message = '删除成功';
+                Order.remove({ _id: _id }, function(err) {})
+                res.json(responseData);
+                return;
             } else {
-                responseData.code = '404';
-                responseData.message = '数据库无记录';
-                var orderList1 = {
-                        orderList: [],
-                        currentPage: 1,
-                        page: page,
-                        count: 0,
-                        limit: limit
-                    }
-                    //responseData.productList = productList;
-                Object.assign(responseData, orderList1);
-                return res.json(responseData);
+                responseData.code = 404;
+                responseData.message = '删除失败，没有此订单信息！';
+                res.json(responseData);
+                return;
             }
         })
     })
@@ -1525,765 +1629,310 @@ router.post('/delete/membersDemeanoritem', function(req, res, next) {
     })
 })
 
-//增加静止温度数据
-router.post('/add/staticTemperature', function(req, res, next) {
-    var date = req.body.date;
-    //console.log(date);
-    var hour = req.body.hour;
-    var data = req.body.data;
-    var num = 0;
-    if (date == '' || hour == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        StaticTemperature.findOne({
-            date: date
-        }).then(function(staticTemperatureInfo) {
-            if (staticTemperatureInfo) {
-
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < staticTemperatureInfo.datas.length; i++) {
-                    //如果找到了
-                    if (staticTemperatureInfo.datas[i].hour == hour) {
-                        //将read修改为1
-                        staticTemperatureInfo.datas[i].data = data;
-                        //混合类型因为没有特定约束，
-                        //因此可以任意修改，一旦修改了原型，
-                        //则必须调用markModified()
-                        //传入read，表示该属性类型发生变化
-                        staticTemperatureInfo.markModified('data');
-                        //保存
-                        num = 3;
-                        return staticTemperatureInfo.save();
-                    }
-                }
-                if (num != 3) {
-                    var _id = staticTemperatureInfo._id;
-                    num = 4;
-                    return StaticTemperature.update({ _id: _id }, { $addToSet: { "datas": { hour: hour, data: data } } }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                // }
-            } else {
-                var staticTemperature = new StaticTemperature({
-                    date: date,
-                    datas: [{
-                        hour: hour,
-                        data: data
-                    }]
-                });
-                num = 5;
-                return staticTemperature.save();
-            }
-        }).then(function(staticTemperatureInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-        })
-    }
-})
-
-//增加静止湿度数据
-router.post('/add/staticHumidity', function(req, res, next) {
-    var date = req.body.date;
-    //console.log(date);
-    var hour = req.body.hour;
-    var data = req.body.data;
-    var num = 0;
-    if (date == '' || hour == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        StaticHumidity.findOne({
-            date: date
-        }).then(function(staticHumidityInfo) {
-            if (staticHumidityInfo) {
-
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < staticHumidityInfo.datas.length; i++) {
-                    //如果找到了
-                    if (staticHumidityInfo.datas[i].hour == hour) {
-                        //将read修改为1
-                        staticHumidityInfo.datas[i].data = data;
-                        //混合类型因为没有特定约束，
-                        //因此可以任意修改，一旦修改了原型，
-                        //则必须调用markModified()
-                        //传入read，表示该属性类型发生变化
-                        staticHumidityInfo.markModified('data');
-                        //保存
-                        num = 3;
-                        return staticHumidityInfo.save();
-                    }
-                }
-                if (num != 3) {
-                    var _id = staticHumidityInfo._id;
-                    num = 4;
-                    return StaticHumidity.update({ _id: _id }, { $addToSet: { "datas": { hour: hour, data: data } } }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                // }
-            } else {
-                var staticHumidity = new StaticHumidity({
-                    date: date,
-                    datas: [{
-                        hour: hour,
-                        data: data
-                    }]
-                });
-                num = 5;
-                return staticHumidity.save();
-            }
-        }).then(function(staticHumidityInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-        })
-    }
-})
-
-//增加静止降雨量数据
-router.post('/add/staticRainfall', function(req, res, next) {
-    var date = req.body.date;
-    //console.log(date);
-    var hour = req.body.hour;
-    var data = req.body.data;
-    var num = 0;
-    if (date == '' || hour == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        StaticRainfall.findOne({
-            date: date
-        }).then(function(staticRainfallInfo) {
-            if (staticRainfallInfo) {
-
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < staticRainfallInfo.datas.length; i++) {
-                    //如果找到了
-                    if (staticRainfallInfo.datas[i].hour == hour) {
-                        //将read修改为1
-                        staticRainfallInfo.datas[i].data = data;
-                        //混合类型因为没有特定约束，
-                        //因此可以任意修改，一旦修改了原型，
-                        //则必须调用markModified()
-                        //传入read，表示该属性类型发生变化
-                        staticRainfallInfo.markModified('data');
-                        //保存
-                        num = 3;
-                        return staticRainfallInfo.save();
-                    }
-                }
-                if (num != 3) {
-                    var _id = staticRainfallInfo._id;
-                    num = 4;
-                    return StaticRainfall.update({ _id: _id }, { $addToSet: { "datas": { hour: hour, data: data } } }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                // }
-            } else {
-                var staticRainfall = new StaticRainfall({
-                    date: date,
-                    datas: [{
-                        hour: hour,
-                        data: data
-                    }]
-                });
-                num = 5;
-                return staticRainfall.save();
-            }
-        }).then(function(staticRainfallInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-        })
-    }
-})
-
-//增加静止土壤湿度数据
-router.post('/add/staticSoilhumidity', function(req, res, next) {
-    var date = req.body.date;
-    //console.log(date);
-    var hour = req.body.hour;
-    var data = req.body.data;
-    var num = 0;
-    if (date == '' || hour == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        StaticSoilhumidity.findOne({
-            date: date
-        }).then(function(staticSoilhumidityInfo) {
-            if (staticSoilhumidityInfo) {
-
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < staticSoilhumidityInfo.datas.length; i++) {
-                    //如果找到了
-                    if (staticSoilhumidityInfo.datas[i].hour == hour) {
-                        //将read修改为1
-                        staticSoilhumidityInfo.datas[i].data = data;
-                        //混合类型因为没有特定约束，
-                        //因此可以任意修改，一旦修改了原型，
-                        //则必须调用markModified()
-                        //传入read，表示该属性类型发生变化
-                        staticSoilhumidityInfo.markModified('data');
-                        //保存
-                        num = 3;
-                        return staticSoilhumidityInfo.save();
-                    }
-                }
-                if (num != 3) {
-                    var _id = staticSoilhumidityInfo._id;
-                    num = 4;
-                    return StaticSoilhumidity.update({ _id: _id }, { $addToSet: { "datas": { hour: hour, data: data } } }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                // }
-            } else {
-                var staticSoilhumidity = new StaticSoilhumidity({
-                    date: date,
-                    datas: [{
-                        hour: hour,
-                        data: data
-                    }]
-                });
-                num = 5;
-                return staticSoilhumidity.save();
-            }
-        }).then(function(staticSoilhumidityInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-        })
-    }
-})
-
-//增加静止风速风向数据
-router.post('/add/staticWindspeed', function(req, res, next) {
-    var date = req.body.date;
-    //console.log(date);
-    var hour = req.body.hour;
-    var data = req.body.data;
-    var num = 0;
-    if (date == '' || hour == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        StaticWindspeed.findOne({
-            date: date
-        }).then(function(staticWindspeedInfo) {
-            if (staticWindspeedInfo) {
-
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < staticWindspeedInfo.datas.length; i++) {
-                    //如果找到了
-                    if (staticWindspeedInfo.datas[i].hour == hour) {
-                        //将read修改为1
-                        staticWindspeedInfo.datas[i].data = data;
-                        //混合类型因为没有特定约束，
-                        //因此可以任意修改，一旦修改了原型，
-                        //则必须调用markModified()
-                        //传入read，表示该属性类型发生变化
-                        staticWindspeedInfo.markModified('data');
-                        //保存
-                        num = 3;
-                        return staticWindspeedInfo.save();
-                    }
-                }
-                if (num != 3) {
-                    var _id = staticWindspeedInfo._id;
-                    num = 4;
-                    return StaticWindspeed.update({ _id: _id }, { $addToSet: { "datas": { hour: hour, data: data } } }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                // }
-            } else {
-                var staticWindspeed = new StaticWindspeed({
-                    date: date,
-                    datas: [{
-                        hour: hour,
-                        data: data
-                    }]
-                });
-                num = 5;
-                return staticWindspeed.save();
-            }
-        }).then(function(staticWindspeedInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-        })
-    }
-})
-
-//增加静止pm2.5数据
-router.post('/add/staticPm', function(req, res, next) {
-    var date = req.body.date;
-    //console.log(date);
-    var hour = req.body.hour;
-    var data = req.body.data;
-    var num = 0;
-    if (date == '' || hour == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        StaticPm.findOne({
-            date: date
-        }).then(function(staticPmInfo) {
-            if (staticPmInfo) {
-
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < staticPmInfo.datas.length; i++) {
-                    //如果找到了
-                    if (staticPmInfo.datas[i].hour == hour) {
-                        //将read修改为1
-                        staticPmInfo.datas[i].data = data;
-                        //混合类型因为没有特定约束，
-                        //因此可以任意修改，一旦修改了原型，
-                        //则必须调用markModified()
-                        //传入read，表示该属性类型发生变化
-                        staticPmInfo.markModified('data');
-                        //保存
-                        num = 3;
-                        return staticPmInfo.save();
-                    }
-                }
-                if (num != 3) {
-                    var _id = staticPmInfo._id;
-                    num = 4;
-                    return StaticPm.update({ _id: _id }, { $addToSet: { "datas": { hour: hour, data: data } } }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                // }
-            } else {
-                var staticPm = new StaticPm({
-                    date: date,
-                    datas: [{
-                        hour: hour,
-                        data: data
-                    }]
-                });
-                num = 5;
-                return staticPm.save();
-            }
-        }).then(function(staticPmInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-        })
-    }
-})
-
-//增加静止光照强度数据
-router.post('/add/staticLight', function(req, res, next) {
-    var date = req.body.date;
-    //console.log(date);
-    var hour = req.body.hour;
-    var data = req.body.data;
-    var num = 0;
-    if (date == '' || hour == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        StaticLight.findOne({
-            date: date
-        }).then(function(staticLightInfo) {
-            if (staticLightInfo) {
-
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < staticLightInfo.datas.length; i++) {
-                    //如果找到了
-                    if (staticLightInfo.datas[i].hour == hour) {
-                        //将read修改为1
-                        staticLightInfo.datas[i].data = data;
-                        //混合类型因为没有特定约束，
-                        //因此可以任意修改，一旦修改了原型，
-                        //则必须调用markModified()
-                        //传入read，表示该属性类型发生变化
-                        staticLightInfo.markModified('data');
-                        //保存
-                        num = 3;
-                        return staticLightInfo.save();
-                    }
-                }
-                if (num != 3) {
-                    var _id = staticLightInfo._id;
-                    num = 4;
-                    return StaticLight.update({ _id: _id }, { $addToSet: { "datas": { hour: hour, data: data } } }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                // }
-            } else {
-                var staticLight = new StaticLight({
-                    date: date,
-                    datas: [{
-                        hour: hour,
-                        data: data
-                    }]
-                });
-                num = 5;
-                return staticLight.save();
-            }
-        }).then(function(staticLightInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-        })
-    }
-})
-
-//增加静止气压数据
-router.post('/add/staticPressure', function(req, res, next) {
-    var date = req.body.date;
-    //console.log(date);
-    var hour = req.body.hour;
-    var data = req.body.data;
-    var num = 0;
-    if (date == '' || hour == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        StaticPressure.findOne({
-            date: date
-        }).then(function(staticPressureInfo) {
-            if (staticPressureInfo) {
-
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < staticPressureInfo.datas.length; i++) {
-                    //如果找到了
-                    if (staticPressureInfo.datas[i].hour == hour) {
-                        //将read修改为1
-                        staticPressureInfo.datas[i].data = data;
-                        //混合类型因为没有特定约束，
-                        //因此可以任意修改，一旦修改了原型，
-                        //则必须调用markModified()
-                        //传入read，表示该属性类型发生变化
-                        staticPressureInfo.markModified('data');
-                        //保存
-                        num = 3;
-                        return staticPressureInfo.save();
-                    }
-                }
-                if (num != 3) {
-                    var _id = staticPressureInfo._id;
-                    num = 4;
-                    return StaticPressure.update({ _id: _id }, { $addToSet: { "datas": { hour: hour, data: data } } }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                // }
-            } else {
-                var staticPressure = new StaticPressure({
-                    date: date,
-                    datas: [{
-                        hour: hour,
-                        data: data
-                    }]
-                });
-                num = 5;
-                return staticPressure.save();
-            }
-        }).then(function(staticPressureInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-        })
-    }
-})
-
-//增加销售数据
-router.post('/add/sale', function(req, res, next) {
-    var year = req.body.year;
-    var month = req.body.month;
-    var name = req.body.name;
-    var salesVolume = req.body.salesVolume;
-    var num = 0;
-    if (year == '' || month == '') {
-        responseData.code = 2;
-        responseData.message = '输入数据不能为空';
-        res.json(responseData);
-        return;
-    } else {
-        Sale.findOne({
-            year: year
-        }).then(function(saleInfo) {
-            if (saleInfo) {
-                var monthList = [];
-                // if(staticTemperatureInfo.datas){
-                for (var i = 0; i < saleInfo.datas.length; i++) {
-                    monthList.push(saleInfo.datas[i].month);
-                    for (var j = 0; j < saleInfo.datas[i].data.length; j++) {
-                        //如果找到了
-                        if (saleInfo.datas[i].month == month && saleInfo.datas[i].data[j].name == name) {
-                            //将read修改为1
-                            saleInfo.datas[i].data[j].salesVolume = salesVolume;
-                            //混合类型因为没有特定约束，
-                            //因此可以任意修改，一旦修改了原型，
-                            //则必须调用markModified()
-                            //传入read，表示该属性类型发生变化
-                            saleInfo.markModified('salesVolume');
-                            //保存
-                            num = 3;
-                            return saleInfo.save();
-                        }
-                    }
-                }
-                if (monthList.indexOf(month) < 0) {
-                    var _id = saleInfo._id;
-                    var send = 'datas';
-                    num = 6;
-                    return Sale.update({ _id: _id }, {
-                        $addToSet: {
-                            [send]: { month: month, 'data': { name: name, salesVolume: salesVolume } }
-                        }
-                    }, function(err) {
-                        if (err) {
-                            console.log('add err');
-                        } else {
-                            console.log('add success');
-                        }
-                    })
-                }
-                if (num != 3 && num != 6) {
-                    for (var i = 0; i < saleInfo.datas.length; i++) {
-                        for (var j = 0; j < saleInfo.datas[i].data.length; j++) {
-                            //如果找到了
-                            if (saleInfo.datas[i].month == month) {
-                                num = 4;
-                                var _id = saleInfo._id;
-                                var send = 'datas.' + i + '.data';
-                                return Sale.update({ _id: _id }, {
-                                    $addToSet: {
-                                        [send]: { name: name, salesVolume: salesVolume }
+//贷款未处理订单
+router.get('/get/loanNocList', function(req, res, next) {
+        var currentPage = parseInt(req.query.currentPage) || 1;
+        var limit = 6;
+        var page = 0;
+        var sum = 0;
+        Loan.find({ success: false, fail: false }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                Loan.find({ success: false, fail: false }).limit(limit).skip(skip).then(function(loanListInfo) {
+                    var loanList = [];
+                    loanListInfo.forEach(function(value, index) {
+                        var ind = index;
+                        User.findOne({
+                            _id: value._userId
+                        }).then(function(userInfo) {
+                            loanList.push({
+                                _id: value._id,
+                                username: userInfo.username,
+                                phoneNumber: userInfo.phoneNumber,
+                                isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                                name: value.name,
+                                money: value.money,
+                                time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                                number: (currentPage - 1) * 6 + (ind + 1)
+                            })
+                            responseData.message = '查询成功';
+                            if (loanListInfo.length == loanList.length) {
+                                var loanList1 = {
+                                        loanList,
+                                        currentPage: currentPage,
+                                        page: page,
+                                        count: count,
+                                        limit: limit
                                     }
-                                }, function(err) {
-                                    if (err) {
-                                        console.log('add err');
-                                    } else {
-                                        console.log('add success');
-                                    }
-                                })
+                                    //responseData.productList = productList;
+                                Object.assign(responseData, loanList1);
+                                return res.json(responseData);
                             }
-                        }
-                    }
-
-                }
-                // }
+                        })
+                    })
+                })
             } else {
-                var sale = new Sale({
-                    year: year,
-                    datas: [{
-                        month: month,
-                        data: [{
-                            name: name,
-                            salesVolume: salesVolume
-                        }]
-                    }]
-                });
-                num = 5;
-                return sale.save();
-            }
-        }).then(function(saleInfo) {
-            if (num == 3) {
-                responseData.code = 3;
-                responseData.message = '数据更新成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 4) {
-                responseData.code = 4;
-                responseData.message = '数据增加成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 5) {
-                responseData.code = 5;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
-            }
-            if (num == 6) {
-                responseData.code = 6;
-                responseData.message = '数据新建成功';
-                res.json(responseData);
-                return;
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var loanList1 = {
+                        loanList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, loanList1);
+                return res.json(responseData);
             }
         })
-    }
+    })
+    //贷款失败订单
+router.get('/get/loanFailList', function(req, res, next) {
+        var currentPage = parseInt(req.query.currentPage) || 1;
+        var limit = 6;
+        var page = 0;
+        var sum = 0;
+        Loan.find({ success: false, fail: true }).count().then(function(count) {
+            if (count > 0) {
+                //计算总页数
+                page = Math.ceil(count / limit);
+                //取值不能超过page
+                currentPage = Math.min(currentPage, page)
+                    //取值不能小于1；
+                currentPage = Math.max(currentPage, 1);
+                var skip = (currentPage - 1) * limit;
+                Loan.find({ success: false, fail: true }).limit(limit).skip(skip).then(function(loanListInfo) {
+                    var loanList = [];
+                    loanListInfo.forEach(function(value, index) {
+                        var ind = index;
+                        User.findOne({
+                            _id: value._userId
+                        }).then(function(userInfo) {
+                            loanList.push({
+                                _id: value._id,
+                                username: userInfo.username,
+                                phoneNumber: userInfo.phoneNumber,
+                                isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                                name: value.name,
+                                money: value.money,
+                                time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                                number: (currentPage - 1) * 6 + (ind + 1)
+                            })
+                            responseData.message = '查询成功';
+                            if (loanListInfo.length == loanList.length) {
+                                var loanList1 = {
+                                        loanList,
+                                        currentPage: currentPage,
+                                        page: page,
+                                        count: count,
+                                        limit: limit
+                                    }
+                                    //responseData.productList = productList;
+                                Object.assign(responseData, loanList1);
+                                return res.json(responseData);
+                            }
+                        })
+                    })
+                })
+            } else {
+                responseData.code = '404';
+                responseData.message = '数据库无记录';
+                var loanList1 = {
+                        loanList: [],
+                        currentPage: 1,
+                        page: page,
+                        count: 0,
+                        limit: limit
+                    }
+                    //responseData.productList = productList;
+                Object.assign(responseData, loanList1);
+                return res.json(responseData);
+            }
+        })
+    })
+    //贷款成功订单
+router.get('/get/loanSuccessList', function(req, res, next) {
+    var currentPage = parseInt(req.query.currentPage) || 1;
+    var limit = 6;
+    var page = 0;
+    var sum = 0;
+    Loan.find({ success: true, fail: false }).count().then(function(count) {
+        if (count > 0) {
+            //计算总页数
+            page = Math.ceil(count / limit);
+            //取值不能超过page
+            currentPage = Math.min(currentPage, page)
+                //取值不能小于1；
+            currentPage = Math.max(currentPage, 1);
+            var skip = (currentPage - 1) * limit;
+            Loan.find({ success: true, fail: false }).limit(limit).skip(skip).then(function(loanListInfo) {
+                var loanList = [];
+                loanListInfo.forEach(function(value, index) {
+                    var ind = index;
+                    User.findOne({
+                        _id: value._userId
+                    }).then(function(userInfo) {
+                        loanList.push({
+                            _id: value._id,
+                            username: userInfo.username,
+                            phoneNumber: userInfo.phoneNumber,
+                            isVip: userInfo.isVip ? '高级会员' : '普通会员',
+                            name: value.name,
+                            money: value.money,
+                            grant: value.grant,
+                            time: new Date(value.time).Format("yyyy-MM-dd HH:mm:ss"),
+                            number: (currentPage - 1) * 6 + (ind + 1)
+                        })
+                        responseData.message = '查询成功';
+                        if (loanListInfo.length == loanList.length) {
+                            var loanList1 = {
+                                    loanList,
+                                    currentPage: currentPage,
+                                    page: page,
+                                    count: count,
+                                    limit: limit
+                                }
+                                //responseData.productList = productList;
+                            Object.assign(responseData, loanList1);
+                            return res.json(responseData);
+                        }
+                    })
+                })
+            })
+        } else {
+            responseData.code = '404';
+            responseData.message = '数据库无记录';
+            var loanList1 = {
+                    loanList: [],
+                    currentPage: 1,
+                    page: page,
+                    count: 0,
+                    limit: limit
+                }
+                //responseData.productList = productList;
+            Object.assign(responseData, loanList1);
+            return res.json(responseData);
+        }
+    })
+})
 
+//贷款失败
+router.post('/set/setLoanFail', function(req, res, next) {
+    var _id = req.body._id;
+    if (_id) {
+        Loan.findOne({
+            _id: _id
+        }).then(function(loanInfo) {
+            if (loanInfo) {
+                var _id = loanInfo._id;
+                loanInfo.fail = true;
+                delete loanInfo._id;
+                Loan.update({ _id: _id }, loanInfo, function(err) {});
+                responseData.code = 200;
+                responseData.message = '修改成功';
+                return res.json(responseData);
+            } else {
+                responseData.code = 404;
+                responseData.message = '修改失败';
+                return res.json(responseData);
+            }
+        })
+    } else {
+        responseData.code = 404;
+        responseData.message = '修改失败';
+        return res.json(responseData);
+    }
+})
+
+//贷款成功
+router.post('/set/setLoanSuccess', function(req, res, next) {
+    var _id = req.body._id;
+    if (_id) {
+        Loan.findOne({
+            _id: _id
+        }).then(function(loanInfo) {
+            if (loanInfo) {
+                var _id = loanInfo._id;
+                loanInfo.success = true;
+                delete loanInfo._id;
+                Loan.update({ _id: _id }, loanInfo, function(err) {});
+                responseData.code = 200;
+                responseData.message = '修改成功';
+                return res.json(responseData);
+            } else {
+                responseData.code = 404;
+                responseData.message = '修改失败';
+                return res.json(responseData);
+            }
+        })
+    } else {
+        responseData.code = 404;
+        responseData.message = '修改失败';
+        return res.json(responseData);
+    }
+})
+
+//删除贷款订单
+router.post('/delete/loanitem', function(req, res, next) {
+    var _id = req.body._id;
+    //console.log(name);
+    Loan.findOne({
+        _id: _id
+    }).then(function(loanInfo) {
+        if (loanInfo) {
+            responseData.message = '删除成功';
+            Loan.remove({ _id: _id }, function(err) {})
+            res.json(responseData);
+            return;
+        } else {
+            responseData.code = 404;
+            responseData.message = '删除失败，为找到此订单！';
+            res.json(responseData);
+            return;
+        }
+    })
+})
+
+//贷款成功积分录入
+router.post('/set/DKmember_mark', function(req, res, next) {
+    var member_mark = parseInt(req.body.member_mark);
+    var _id = req.body._id;
+    Loan.findOne({
+        _id: _id
+    }).then(function(loaninfo) {
+        if (loaninfo && (loaninfo.grant == false)) {
+            var id = loaninfo._id;
+            loaninfo.grant = true;
+            User.findOne({
+                _id: loaninfo._userId
+            }).then(function(userInfo) {
+                if (userInfo) {
+                    var _id = userInfo._id;
+                    userInfo.member_mark = (parseInt(userInfo.member_mark) + member_mark) > 0 ? (parseInt(userInfo.member_mark) + member_mark) : 0;
+                    delete userInfo._id;
+                    User.update({ _id: _id }, userInfo, function(err) {});
+                    delete loaninfo._id;
+                    Loan.update({ _id: id }, loaninfo, function(err) {});
+                    responseData.message = '修改积分成功';
+                    return res.json(responseData);
+                } else {
+                    responseData.code = 404;
+                    responseData.message = '修改积分失败';
+                    return res.json(responseData);
+                }
+            })
+        } else {
+            responseData.code = 404;
+            responseData.message = '修改积分失败';
+            return res.json(responseData);
+        }
+    })
 })
 module.exports = router;
