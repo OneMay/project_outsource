@@ -1846,7 +1846,7 @@
                              '<td>' +
                              '<div class="am-btn-toolbar">' +
                              '<div class="am-btn-group am-btn-group-xs">' +
-                             '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="成功" onclick="setSuccess(' + "'" + value._id + "'" + ')">' + '<span class="am-icon-pencil-square-o"></span></span>' +
+                             '<span class="am-btn am-btn-default am-btn-xs am-text-secondary am-round" title="成功" onclick="setSuccess(' + "'" + value._id + "'" + ",'" + value._userId + "'" + ')">' + '<span class="am-icon-pencil-square-o"></span></span>' +
                              '<span class="am-btn am-btn-default am-btn-xs am-text-danger am-round" title="失败" onclick="setFail(' + "'" + value._id + "'" + ')"><span class="am-icon-music" ></span></span>' +
                              '<span class="am-btn am-btn-default am-btn-xs am-text-danger am-round" title="删除" onclick="deleteDK(' + "'" + value._id + "'" + ')"><span class="am-icon-trash-o" ></span></span>' +
                              '</div>' +
@@ -1867,7 +1867,7 @@
          })
      }
      //成功
-     function setSuccess(id) {
+     function setSuccess(id, _userId) {
          if (id) {
              $.ajax({
                  url: '/admin/set/setLoanSuccess',
@@ -1880,7 +1880,7 @@
                  success: function(data) {
                      console.log(data.code)
                      if (data.code == 200) {
-                         setViper(id);
+                         setViper(_userId);
                          getPage9(1);
                      } else {
                          alert(data.message)

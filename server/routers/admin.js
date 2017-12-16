@@ -1653,6 +1653,7 @@ router.get('/get/loanNocList', function(req, res, next) {
                         }).then(function(userInfo) {
                             loanList.push({
                                 _id: value._id,
+                                _userId: value._userId,
                                 username: userInfo.username,
                                 phoneNumber: userInfo.phoneNumber,
                                 isVip: userInfo.isVip ? '高级会员' : '普通会员',
