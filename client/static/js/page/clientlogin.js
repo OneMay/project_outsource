@@ -103,6 +103,8 @@ function registSubmit() {
     }
 }
 
+var url = document.referrer;
+
 function loginSubmit() {
     $.ajax({
         type: "post",
@@ -113,7 +115,7 @@ function loginSubmit() {
             if (messageInfo.code === 200) {
                 $login.find('#loginmsg').html("登录成功");
                 setTimeout(() => {
-                    window.location.href = "home.html";
+                    window.location.href = url;
                 }, 3000);
             } else {
                 $login.find('#loginmsg').html("账号或密码错误");

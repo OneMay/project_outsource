@@ -1,0 +1,215 @@
+@media only screen and (min-width:320px)and (max-width:768px) {
+    html {
+        font-size: 9px;
+        font-weight: Microsoft YaHei, Simsun, Arial, Helvetica, sans-serif;
+        /* width:100%; */
+    }
+    .wrap {
+        width: 100%;
+    }
+      #header{
+          display:none;
+      }
+    #header .wrap {
+        padding: 10px 0 0;
+    }
+    #header .wrap .login {
+        margin: 0;
+    }
+    #header .wrap .login a {
+        color: #525252;
+        font-size: 1.2rem;
+        line-height: 20px;
+        padding: 0 10px;
+        margin-left: 10px;
+        display: inline-block;
+        background: #f5f9fd;
+    }
+    #header .wrap .nav {
+      width:100%;
+    }
+    #header .wrap .nav li {
+        margin: 0 1%;
+        padding: 0 2%;
+        line-height: 20px;
+    }
+    #banner .items img {
+       
+        height: 200px;
+
+    }
+    #banner {
+       height: 200px;
+
+    }
+    #banner .items {
+        height: 200px;
+       
+    }
+    .button {
+        left:60%;
+        bottom:15%;
+    }
+    .button span {
+        width: 0.75rem;
+        height: 0.75rem;
+        /* width:15px; */
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    .borrow-item {
+        width: 50%;
+        height: 110px;
+    }
+    .borrow-item dl {
+        padding-left: 8rem;
+        padding-top: 4rem;
+        padding-bottom: 1.25rem;
+    }
+    .part_product .index_product {
+        margin-top: 0px;
+    }
+    #product {
+        margin-top: 0;
+    }
+     .part_product .index_product .productwrap a .product {
+        width:auto;
+    }
+     .part_product .index_product .productwrap a .product:hover {
+         width:100%;
+     }
+    .index_product .product .profit {
+         width:auto;
+        }
+  .index_product .product .profit:hover {
+             width: 100%;
+         }
+    .part_product .index_product {
+        margin-right:20px;
+    }
+    .part_product .productwrap {
+        width:50%;
+        
+    }
+    .product_bus {
+        width: 15rem;
+    }
+    .profit {
+        width: 15rem;
+    }
+    .wrap890 {
+        margin-top: 0;
+        width: 99%;
+        /* padding:0; */
+    }
+    .wrap280 {
+        /* clear: both; */
+        width: 99%;
+        margin-top: 20px;
+        margin-right: 2px;
+    }
+    /* 贷款 */
+    .breadcrumbs{
+        display: none;
+    }
+    #content .describe {
+        padding: 0px;
+    }
+    #borrower .question {
+        width: 100%;
+        margin-right: 0;
+        margin-left: 0px;
+        height: 200px;
+    }
+    /* 车贷 */
+    #info .item {
+        margin-top: 0px;
+    }
+    .item .tit {
+        margin-left: 0px;
+    }
+    .con-che {
+        padding: 0;
+    }
+    .item .con-che p span {
+        display: none;
+    }
+    .icon-rmb-01,
+    .icon-rmb-02,
+    .icon-rili {
+        height: 0;
+    }
+    .icon-car-green,
+    .icon-car-blue {
+        height: 0.6875rem
+    }
+    #info .item table {
+        margin-left: 0;
+    }
+    .item .con-che td:first-child {
+        width: auto;
+    }
+    .item1 td b,
+    .item2 td b {
+        margin-right: 20px;
+    }
+    .data {
+        display: none;
+    }
+    /* 信用卡 */
+    .card_center ul li {
+        padding-left: 10px;
+        width: 5.75rem;
+    }
+    .apply_center {
+        display: none;
+    }
+    /*新闻中心 */
+
+    .breadcrumb {
+        /* padding:0 0 0 30px; */
+        width: 100%;
+        /* display:none; */
+    }
+
+    #content_nav {
+        width: 100%;
+    }
+    /* 公司简介 */
+
+    .a_lnav {
+        width: 25%;
+    }
+
+    #content-right {
+        width: 70%;
+        padding: 2px;
+    }
+
+    #content-right h2 {
+        padding: 2px;
+        height: 2rem;
+        line-height: 2rem;
+    }
+
+    #content-right p {
+        font-family: "Microsoft YaHei", 微软雅黑, "Microsoft JhengHei", 华文细黑, STHeiti, MingLiu!important;
+        line-height: 1rem;
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+    }
+    /* 会员风采 */
+    #content-right ul li {
+        padding:0;
+    }
+    #content-right ul li span {
+        width:auto;
+    }
+    /* 联系我们 */
+    #content-right .content-tel p {
+        margin:0;
+    }
+    #menu{
+        display: block;
+    }
+}
