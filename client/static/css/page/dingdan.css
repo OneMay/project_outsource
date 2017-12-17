@@ -1,6 +1,5 @@
-#cart .boxHead h2 {
-    padding-left: 30px;
-    position: relative;
+#cart .boxHead {
+    display: block;
     z-index: 10;
     height: 60px;
     padding: 0 10px 0 24px;
@@ -11,10 +10,17 @@
     background: linear-gradient(#fbfbfb, #ececec);
     line-height: 60px;
     font-size: 18px;
+    font-weight: bold;
     color: #333;
 }
 
+#cart .boxHead .open {
+    cursor: pointer;
+    margin-left: 900px;
+}
+
 #cart .boxBody {
+    display: none;
     padding: 20px 0;
 }
 
@@ -29,7 +35,7 @@
 #cart .tips {
     text-align: center;
     padding: 20px;
-    color: rbg(141, 141, 141);
+    color: rgba(141, 141, 141, 0.8);
 }
 
 #cart .toBuy {
@@ -60,9 +66,11 @@
     margin: auto;
 }
 
+#cart .WithdrawalsListTitle,
+#cart .loanListTitle,
 #cart .cartListTile {
     position: relative;
-    top: -35px;
+    top: -20px;
     z-index: 1;
     line-height: 38px;
     height: 38px;
@@ -88,9 +96,11 @@
     text-align: center;
 }
 
+#cart .WithdrawalsCart,
+#cart .loanCart,
 #cart .cartGoods {
     position: relative;
-    top: -35px;
+    top: -20px;
     z-index: 1;
     line-height: 50px;
     height: 50px;
@@ -98,46 +108,24 @@
     border-bottom: 1px solid #ccc;
 }
 
-#cart .cartBottom {
-    height: 52px;
-    margin-bottom: 20px;
+#cart .loan {
+    width: 100%;
 }
 
-#cart .all {
-    margin-top: 15px;
-    float: left;
-    font-size: 15px;
-}
-
-#cart .allBa {
-    float: right;
-    font-size: 15px;
-}
-
-#cart .allBa div {
-    float: left
-}
-
-#cart .allBa .changed,
-#cart .allBa .allprices,
-#cart .allBa .sure {
+#cart .loan .loanList span {
+    display: inline-block;
+    width: 19.6%;
+    text-align: center;
     overflow: hidden;
-    width: 150px;
-    margin-right: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-#cart .allBa .sure button {
-    width: 150px;
-    height: 50px;
-    font-size: 20px;
-    font-weight: bold;
-    color: coral;
-    border: none;
-    border-radius: 5px;
-}
-
-#cart .allBa .changed p span,
-#cart .allBa .allprices p span {
-    font-size: 20px;
-    color: #ff0000;
+#cart .Withdrawals span {
+    display: inline-block;
+    width: 33%;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

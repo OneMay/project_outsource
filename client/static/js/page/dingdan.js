@@ -61,4 +61,96 @@ $(function() {
             }
         }
     })
+    $.ajax({
+        url: "http://localhost:9090/api/get/loanList",
+        type: "post",
+        dataType: "json",
+        data: { _userId: userId },
+        success: function(messageInfo) {
+            var loanlength = messageInfo.loanList.length;
+            if (loanlength == 0) {
+                $('#cart').find('.emptyLoan').css("display", "block")
+                $('#cart').find('.loanList').css("display", "none")
+            } else {
+                $('#cart').find('.emptyLoan').css("display", "none")
+                $('#cart').find('.loanList').css("display", "block")
+                for (var i = 0; i < loanlength; i++) {
+                    var name = messageInfo.loanList[i].name;
+                    var money = messageInfo.loanList[i].money;
+                    var fail = messageInfo.loanList[i].fail;
+                    var time = messageInfo.loanList[i].time;
+                    var success = function() {
+                        if (messageInfo.loanList[i].success == true) {
+                            if (fail == true) {
+                                return "审核通过";
+                            } else {
+                                return "审核未通过";
+                            }
+                        } else {
+                            return "审核中";
+                        }
+                    };
+                    var fail = function() {
+                        if (messageInfo.loanList[i].fail == true) {
+                            return "贷款成功";
+                        } else {
+                            return "贷款失败"
+                        }
+                    };
+                    var div = "<div class='loanCart'>" +
+                        "<span class='name'>" + name + "</span>" +
+                        "<span class='count'>" + money + "</span>" +
+                        "<span class='consignee'>" + success() + "</span>" +
+                        "<span class='consigneePhone'>" + fail() + "</span>" +
+                        "<span class='consigneeAddress'>" + time + "</span>" +
+                        "</div>";
+                    $("#cart").find('.loanList').append(div);
+                }
+
+            }
+        }
+    })
+    $.ajax({
+        url: "http://localhost:9090/api/get/WithdrawalsList",
+        type: "post",
+        dataType: "json",
+        data: { _userId: userId },
+        success: function(messageInfo) {
+            var Withdrawalslength = messageInfo.WithdrawalsList.length;
+            if (Withdrawalslength == 0) {
+                $('#cart').find('.emptyWithdrawals').css("display", "block")
+                $('#cart').find('.Withdrawals').css("display", "none")
+            } else {
+                $('#cart').find('.emptyWithdrawals').css("display", "none")
+                $('#cart').find('.Withdrawals').css("display", "block")
+                for (var i = 0; i < Withdrawalslength; i++) {
+                    var Withdrawalsmoney = messageInfo.WithdrawalsList[i].money;
+                    var Withdrawalstime = messageInfo.WithdrawalsList[i].time;
+                    var Withdrawalssuccess = function() {
+                        if (messageInfo.WithdrawalsList[i].success == true) {
+                            return "提现成功";
+                        } else {
+                            return "审核中";
+                        }
+                    };
+                    var div = "<div class='WithdrawalsCart'>" +
+                        "<span class='count'>" + Withdrawalsmoney + "</span>" +
+                        "<span class='consignee'>" + Withdrawalssuccess() + "</span>" +
+                        "<span class='consigneeAddress'>" + Withdrawalstime + "</span>" +
+                        "</div>";
+                    $("#cart").find('.WithdrawalsList').append(div);
+                }
+
+            }
+        }
+    })
+    $('#cart').find('.cartopen').on("click", function() {
+        $('#cart').find('.cartbox').toggle(300)
+    })
+    $('#cart').find('.loanopen').on("click", function() {
+        $('#cart').find('.loanbox').toggle(300)
+    })
+    $('#cart').find('.Withdrawalsopen').on("click", function() {
+        $('#cart').find('.Withdrawalsbox').toggle(300)
+    })
 })
