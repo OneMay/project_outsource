@@ -16,8 +16,6 @@ var app = express();
 app.set('views', path.join(path.resolve(__dirname, '..'), 'client'))
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
-var history = require('connect-history-api-fallback');
-app.use(history()) // 这里千万要注意，要在static静态资源上面
 app.use(express.static(path.join(path.resolve(__dirname, '..'), 'client')));
 app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
@@ -48,6 +46,9 @@ app.use(function(req, res, next) {
     // }
     return next();
 })
+app.get("/", function(req, res) {
+    res.render("home");
+});
 app.use('/api', api);
 app.use('/admin', admin);
 if ('development' === app.get('env')) {
