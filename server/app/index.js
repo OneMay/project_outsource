@@ -24,6 +24,7 @@ mongoose.connect(mongodbUrl, function(err) {
 //     password: 'adminpassword'
 // });
 // user.save();
+
 //对port进行一些处理，使之能用
 function normalizePort(val) {
     var port = parseInt(val, 10);
