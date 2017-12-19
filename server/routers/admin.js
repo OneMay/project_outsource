@@ -1,4 +1,4 @@
-var express = require('express');
+﻿var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var path = require('path');
@@ -24,10 +24,10 @@ router.use(function(req, res, next) {
         next();
     })
     //推荐奖励人数：80
-    // var number_people = new Number_people({
-    //     numberPeople: 80
-    // })
-    // number_people.save();
+     /*var number_people = new Number_people({
+         numberPeople: 80
+     })
+     number_people.save();*/
     //时间格式化
 Date.prototype.Format = function(fmt) {
     var o = {
