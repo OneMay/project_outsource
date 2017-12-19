@@ -244,7 +244,7 @@
                          '<br><span class="subInventory2">-</span>' +
                          '<input type="text" style="display:inline-block;width:70px;" class="am-input-sm value2" id="inventory" value="0" readonly>' +
                          '<span class="addInventory2">+</span><br/>' +
-                         '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="productInventory(' + "'" + value._id + "'" + ')">确定</span>' +
+                         '<span  class="userSubmit am-btn am-btn-success am-radius"onclick="productInventory(' + "'" + value._id + "'" + ",'" + index + "'" + ')">确定</span>' +
                          "</td>" +
                          "<td class='am-hide-sm-only'>" + value.productDescription + "</td>" +
                          "<td>" +
@@ -272,9 +272,9 @@
      })
  }
 
- function productInventory(id) {
+ function productInventory(id, index) {
      if (id) {
-         var value = parseInt($('#inventory')[0].value);
+         var value = parseInt($('.value2')[index].value);
          $.ajax({
              url: '/admin/set/productInventory',
              type: 'POST',

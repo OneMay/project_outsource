@@ -304,7 +304,7 @@ router.post('/set/productInventory', function(req, res, next) {
         }).then(function(productInfo) {
             if (productInfo) {
                 var id = productInfo._id;
-                productInfo.productInventory = (parseInt(productInfo.productInventory) + productInventory) > 0 ? (parseInt(productInfo.productInventory) + productInventory) : 0;
+                productInfo.productInventory = (parseInt(productInfo.productInventory) + parseInt(productInventory)) > 0 ? (parseInt(productInfo.productInventory) + parseInt(productInventory)) : 0;
                 delete productInfo._id;
                 Product.update({ _id: id }, productInfo, function(err) {});
                 responseData.message = '修改积分成功';
