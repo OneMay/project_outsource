@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="/static/assets/css/admin.css">
     <script src="/static/assets/js/jquery.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
+    <script src="/static/js/lib/vconsole.min.js"></script>
 </head>
 
 <body>
@@ -147,6 +148,11 @@
         <script src="/static/assets/js/amazeui.min.js"></script>
         <!--<![endif]-->
         <script src="/static/js/page/public.js"></script>
+        <script>
+            // init vConsole
+            var vConsole = new VConsole();
+            console.log('Hello world');
+        </script>
     </body>
 
 </html>
