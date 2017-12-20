@@ -5,11 +5,25 @@
     <title>贷款</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/style.css" rel="stylesheet">
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
 </head>
 
 <body>
-
+    <div class="wrapper">
+        <span>请选择你要贷款的类型：</span>
+        <select id="loanname">  
+        <option value ="1">房贷</option>  
+        <option value ="2">车贷</option>  
+        <option value="3">信用贷</option>  
+      </select>
+        <p>
+            <label for="money">请输入你要贷款的金额：</label>
+            <input type="text" placeholder="请输入金额">
+        </p>
+        <span class="submit">提交</span>
+    </div>
+    <script src="./static/js/lib/jquery-3.2.1.min.js"></script>
+    <script src="./static/js/page/loan.js"></script>
 </body>
 
 </html>

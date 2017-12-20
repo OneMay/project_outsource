@@ -123,9 +123,31 @@ function loginSubmit() {
         },
         error: function(messageInfo) {
             if (messageInfo === 404) {
-
+                $login.find('#loginmsg').html(messageInfo.message)
             }
         }
     })
+}
 
+function logout() {
+    $.ajax({
+        type: "get",
+        url: "http://localhost:9090/api/user/logout",
+        success: function() {
+            alert("退出成功")
+        }
+    })
+}
+
+var cookie = document.cookie;
+var username, reg;
+if (cookie) {
+    reg = cookie.match(/userInfo=(\S*)}/);
+    username = reg[1] ? reg[1].match(/username":"(\S*)","phone/)[1] : '';
+    $("#header").find(".login").css("display", "none");
+    $("#header").find(".username").html(decodeURI(username));
+    $("#header").find(".logout").css("display", "block");
+} else {
+    $("#header").find(".login").css("display", "block");
+    $("#header").find(".logout").css("display", "none");
 }

@@ -50,6 +50,7 @@ a:hover {
     color: #a22e0b;
     text-decoration: none;
 }
+
 #header {
     background: #FFF;
     height: 100px;
@@ -70,11 +71,13 @@ a:hover {
     width: auto;
 }
 
+#header .wrap .logout,
 #header .wrap .login {
     float: right;
     margin: 5px 0 0;
 }
 
+#header .wrap .logout a,
 #header .wrap .login a {
     color: #525252;
     font-size: 1.2rem;
@@ -85,6 +88,7 @@ a:hover {
     background: #f5f9fd;
 }
 
+#header .wrap .logout a:hover,
 #header .wrap .login a:hover {
     background: #218ce5;
     color: #FFF;
@@ -156,6 +160,7 @@ a:hover {
     text-align: center;
     width: auto;
 }
+
 .banner {
     width: 100%;
     height: 300px;
@@ -164,10 +169,12 @@ a:hover {
     font-size: 0;
     color: transparent;
 }
+
 #content_nav {
-     width: 75rem;
-     margin:0 auto;
+    width: 75rem;
+    margin: 0 auto;
 }
+
 .breadcrumb {
     padding: 18px 0 5px;
 }
@@ -175,7 +182,7 @@ a:hover {
 .breadcrumb {
     padding-left: 20px;
     background: url(http://www.ppdaicdn.com/2014/img/myaccount/breadcrumb.png) no-repeat 0 18px;
-    width:73.75rem;
+    width: 73.75rem;
 }
 
 .breadcrumb li {
@@ -228,6 +235,7 @@ a:hover {
     height: 3rem;
     line-height: 3rem;
 }
+
 .a_lnav ul li.a_lnavacon a {
     height: 24px;
     display: block;
@@ -235,6 +243,7 @@ a:hover {
     padding-left: 22px;
     color: #666
 }
+
 .a_lnav ul li.a_lnavacon a.current {
     border-left: 4px solid #39A1EA;
     color: #000;
@@ -243,13 +252,13 @@ a:hover {
 .a_lnav ul li.a_lnavacon a {
     height: 1.5rem;
     display: block;
-    line-height:1.5rem;
+    line-height: 1.5rem;
     padding-left: 22px;
     color: #666;
 }
 
 #content-right {
-    width:56.25rem;
+    width: 56.25rem;
     float: right;
     border: 2px solid #e0e0e0;
     padding: 10px 20px;
@@ -258,20 +267,21 @@ a:hover {
 
 #content-right h2 {
     font-size: 1.2rem;
-    text-align:center;
+    text-align: center;
     color: #666;
-    background:#3ab5f4;
+    background: #3ab5f4;
     padding: 10px 10px 0px;
     margin-bottom: 20px;
-    line-height:3.1875rem;
+    line-height: 3.1875rem;
     border-bottom: 1px solid #39A1EA;
 }
 
 
 /* 公司动态 */
-#content-right  p {
+
+#content-right p {
     text-indent: 2em;
-    font-size:0.875rem;
+    font-size: 0.875rem;
     line-height: 2rem;
     margin-bottom: 20px;
     text-align: justify;
@@ -281,21 +291,25 @@ a:hover {
     margin-top: 30px;
     padding-bottom: 50px;
 }
-.feature img{
-    width:100%;
+
+.feature img {
+    width: 100%;
 }
+
 .feature p {
     margin-bottom: 5px;
 }
 
 .feature p a {
     color: #39a1ea;
-    font-size:1.125rem;
+    font-size: 1.125rem;
     padding-right: 10px;
 }
 
 
 /* 会员 */
+
+
 /* #content-right .content-vip p {
     text-indent: 2em;
     font-size: 0.875rem;
@@ -305,7 +319,7 @@ a:hover {
 } */
 
 #content-right .content-vip img {
-    width:56.25rem;
+    width: 56.25rem;
 }
 
 
@@ -313,13 +327,14 @@ a:hover {
 
 #content-right .content-tel p {
     /* margin: 20px 0 30px; */
-    line-height:2.5rem;
-    font-size:1.125rem;
+    line-height: 2.5rem;
+    font-size: 1.125rem;
 }
 
 #content-right .content-tel p i {
     color: #fe6c00;
 }
+
 
 /* h1 {
     border-bottom: 1px solid #55bdf4;
@@ -334,7 +349,10 @@ a:hover {
     border-bottom: 1px solid #0069ae;
     font-weight: 500;
 } */
+
+
 /*  */
+
 #content-right ul li {
     padding: 5px 5px 5px 5px;
 }
@@ -343,12 +361,11 @@ a:hover {
     text-align: left;
     font-size: 0.875rem;
     height: 1.875rem;
-    line-height : 1.875rem;
-       white-space: nowrap;
-       text-overflow: ellipsis;
-       content: "…";
-       overflow: hidden;
-
+    line-height: 1.875rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    content: "…";
+    overflow: hidden;
     /* list-style: circle; */
     /* transition: all 0.3s ease-in 0s;
     -moz-transition: all 0.3s ease-in 0s;
@@ -378,11 +395,11 @@ a:hover {
     top: 0.875rem;
 }
 
- #content-right ul li em {
+#content-right ul li em {
     background: url(../images/xtb.png) no-repeat -347px 0px;
 }
 
- #content-right ul li span {
+#content-right ul li span {
     float: right;
     width: 5rem;
     display: inline-table;
@@ -390,7 +407,7 @@ a:hover {
 }
 
 #content-right ul li a {
-    font-size:0.875rem;
+    font-size: 0.875rem;
     margin: 8px 0;
     padding-left: 10px;
 }
@@ -420,6 +437,8 @@ a:hover {
     border: 1px solid #3ab5f4;
     color: #FFFFFF;
 }
+
+
 /* 定位 */
 
 #menu {
@@ -429,7 +448,7 @@ a:hover {
     z-index: 999;
     background: blue;
     /* height:400px; */
-    display: none;
+    /* display: none; */
 }
 
 #menu ul {

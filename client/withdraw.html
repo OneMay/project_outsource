@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/static/js/lib/jquery-3.2.1.min.js"></script>
+    <!-- <script src="scripts/money.js"></script> -->
+    <title>提现</title>
+    <style>
+        .wrap {
+            font-size: 16px;
+            width: 1200px;
+            margin: 0 auto;
+            background: white;
+        }
+        
+        .wrap h2 {
+            font-size: 0.875rem;
+            text-align: center;
+            height: 20px;
+            line-height: 20px;
+            border-bottom: 1px solid #fff;
+        }
+        /* .wrap h2 span{
+        text-align: left;
+         padding-left:20px;
+         height:20px;
+        line-height: 20px;
+    } */
+        
+        .wrap .withdraw-number {
+            background: gray;
+            width: 100%;
+        }
+        
+        .withdraw-number p {
+            text-align: left;
+            /* 颜色问题 */
+            color: #fff;
+            height: 20px;
+            line-height: 20px;
+            /* font-size:0.875rem; */
+            border: 1px solid #fff;
+        }
+        
+        .withdraw-money input {
+            /* padding: 2% 2%; */
+            box-sizing: border-box;
+            background: #efeff0;
+            /* border: 0; */
+            border-radius: 5px;
+            color: #595757;
+            width: 98.2%;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            margin-bottom: 20px;
+        }
+        /* .withdraw-money input:focus{
+        border:none;
+        border-bottom:1px solid #ccc;
+    } */
+        
+        .withdraw-money {
+            background: #efeff0;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+        }
+        
+        .withdraw-money form span {
+            display: inline-block;
+        }
+        
+        .btn {
+            /* background: #8ec31f; */
+            /* color: #fff; */
+            text-align: center;
+            border: 0;
+            border-radius: 10px;
+            padding: 1%;
+            width: 50%;
+            font-size: 16px;
+            margin-left: 20%;
+            margin-top: 20px;
+        }
+        
+        .active {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        $(function() {
+            var cookie = document.cookie;
+            var id, reg;
+            if (cookie) {
+                reg = cookie.match(/userInfo=(\S*)}/);
+                id = reg[1] ? reg[1].match(/_id":"(\S*)","username/)[1] : '';
+            }
+
+            //  var moneyNumber=document.getElementsByClassName("numberMoney");
+            $.ajax({
+                url: 'http://localhost:9090/api/user/member_mark',
+                dataType: 'json',
+                type: 'post',
+                data: {
+                    _id: id
+                },
+                success: function(userInfo) {
+                    var mark = userInfo.userInfo.member_mark;
+                    $(".numberMoney").html(mark)
+                },
+                error: function() {
+                    alert(jaksd)
+                }
+
+            })
+
+
+        })
+
+        function validationNumber(e, num) {
+            var regu = /^[0-9]+\.?[0-9]*$/;
+            if (e.value != "") {
+                if (!regu.test(e.value)) {
+                    alert("请输入正确的数字");
+                    e.value = e.value.substring(0, e.value.length - 1);
+                    e.focus();
+                } else {
+                    if (num == 0) {
+                        if (e.value.indexOf('.') > -1) {
+                            e.value = e.value.substring(0, e.value.length - 1);
+                            e.focus();
+                        }
+                    }
+                    if (e.value.indexOf('.') > -1) {
+                        if (e.value.split('.')[1].length > num) {
+                            e.value = e.value.substring(0, e.value.length - 1);
+                            e.focus();
+                        }
+                    }
+                }
+            }
+        }
+
+        /*检测输入数据是否正确
+             如果提现金额小于500,则无法提现 按钮则显示为灰色
+              金额大于500，则可以进行提现。
+           */
+
+
+        function draw() {
+            var money = document.getElementById("money");
+            var btn = document.getElementById("btn");
+            validationNumber(money, 0)
+            var m = money.value;
+            console.log(m);
+            if (m < 500) {
+                btn.disabled = true;
+
+            } else {
+                btn.disabled = false;
+                btn.style.backgroundColor = 'red';
+            }
+        }
+    </script>
+    <div class="wrap">
+        <!-- <span><</span>  -->
+        <h2> 余额提现</h2>
+        <div class="withdraw-number">
+            <p>可提现的金额<span class="numberMoney"></span></p>
+
+        </div>
+        <div class="withdraw-money">
+            <form>
+                <label for="提现金额"> 提现金额</label>
+                <br>
+                <span>￥</span>
+                <input type="text" name="money" id="money" oninput="draw()" value="">
+            </form>
+        </div>
+        <input type="button" id="btn" value="提现">
+    </div>
+
+</body>
+
+</html>

@@ -6,48 +6,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./static/css/page/dingdan.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/news.css">
-    <link href="css/default.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <div class="wrapper">
         <div id="header">
-            <!-- 导航栏开始 -->
             <div class="wrap">
-                <h1 class="logo">
-                    <img class="newLogo" src="http://image.moerlong.com/logo/cd/logo1.png" style="margin-top:-20px;">
-                </h1>
                 <div class="login">
-                    <a href="login.html" rel="nofollow">登录</a><a href="regist.html" rel="nofollow">注册</a> </div>
-                <!-- 导航栏 -->
-                <ul class="nav">
-                    <li class="on"><a href="" target="_blank">首页</a></li>
-                    <li>
-                        <a>我要借钱</a>
-                        <ul class="subMenu">
-                            <li><a href="">房贷</a></li>
-                            <li><a href="">车贷</a></li>
-                            <li><a href="" target="_blank">信用卡</a></li>
-                            <li><a href="" target="_blank">公积金</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="" target="_blank">我要赚钱</a></li>
-                    <li><a href="" target="_blank">会员中心</a></li>
-                    <li><a>新闻中心</a>
-                        <ul class="subMenu">
-                            <li><a href="">公司动态</a></li>
-                            <li><a href="">会员风采</a></li>
-                            <li><a href="" target="_blank">行业资讯</a> </li>
-                            <li><a href="" target="_blank">贷款知识</a> </li>
-                        </ul>
-                    </li>
-                </ul>
-
+                    <a href="login.html" rel="nofollow">登录</a>
+                    <a href="regist.html" rel="nofollow">注册</a>
+                </div>
+                <div class="logout">
+                    <a href="login.html" class="username"></a>
+                    <a rel="nofollow" onclick="logout()">退出</a>
+                </div>
             </div>
-            <!-- 导航栏结束 -->
         </div>
-        <div class="banner">贷款就上国兴惠普</div>
         <div class="main">
             <div class="content" id="cart">
                 <div>
@@ -126,20 +100,19 @@
             </div>
         </div>
         <div id="menu">
-            <div class="wrap clearfix">
-                <ul>
-                    <li><a href="index.html"><span></span>首页</a></li>
-                    <li>
-                        <a href=""> <span></span>我要借钱</a>
-                    </li>
-                    <li> <a href=""><span></span>我要赚钱</a></li>
-                    <li><a href="dingdan.html"><span></span>会员中心</a></li>
-                </ul>
-            </div>
+            <ul>
+                <li><a href="index.html"><span></span>首页</a></li>
+                <li>
+                    <a href=""> <span></span>我要借钱</a>
+                </li>
+                <li> <a href=""><span></span>我要赚钱</a></li>
+                <li><a href="dingdan.html"><span></span>会员中心</a></li>
+            </ul>
         </div>
     </div>
     <script type="text/javascript" src="./static/js/lib/jquery-3.2.1.min.js"></script>
     <script src="./static/js/page/dingdan.js"></script>
+    <script src="./static/js/page/clientlogin.js"></script>
 </body>
 
 </html>

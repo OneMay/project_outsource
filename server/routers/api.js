@@ -551,7 +551,7 @@ router.post('/set/loan', function(req, res, next) {
     var _userId = req.body._userId;
     var name = req.body.name;
     var money = req.body.money;
-    if (_userId && name > 0 && money) {
+    if (_userId && name && money > 0) {
         User.findOne({
             _id: _userId
         }).then(function(userInfo) {

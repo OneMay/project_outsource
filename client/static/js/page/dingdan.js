@@ -77,31 +77,39 @@ $(function() {
                 for (var i = 0; i < loanlength; i++) {
                     var name = messageInfo.loanList[i].name;
                     var money = messageInfo.loanList[i].money;
-                    var fail = messageInfo.loanList[i].fail;
                     var time = messageInfo.loanList[i].time;
-                    var success = function() {
-                        if (messageInfo.loanList[i].success == true) {
-                            if (fail == true) {
+                    var success = messageInfo.loanList[i].success;
+                    var fail = messageInfo.loanList[i].fail
+                    var a = function() {
+                        if (success == true) {
+                            if (fail == false) {
                                 return "审核通过";
+                            }
+                        } else {
+                            if (fail == false) {
+                                return "审核中";
                             } else {
                                 return "审核未通过";
                             }
-                        } else {
-                            return "审核中";
                         }
                     };
-                    var fail = function() {
-                        if (messageInfo.loanList[i].fail == true) {
-                            return "贷款成功";
+                    var b = function() {
+                        if (fail == true) {
+                            return "贷款失败";
                         } else {
-                            return "贷款失败"
+                            if (success == false) {
+                                return "审核中";
+                            } else {
+                                return "贷款成功";
+                            }
                         }
                     };
+
                     var div = "<div class='loanCart'>" +
                         "<span class='name'>" + name + "</span>" +
                         "<span class='count'>" + money + "</span>" +
-                        "<span class='consignee'>" + success() + "</span>" +
-                        "<span class='consigneePhone'>" + fail() + "</span>" +
+                        "<span class='consignee'>" + a() + "</span>" +
+                        "<span class='consigneePhone'>" + b() + "</span>" +
                         "<span class='consigneeAddress'>" + time + "</span>" +
                         "</div>";
                     $("#cart").find('.loanList').append(div);
