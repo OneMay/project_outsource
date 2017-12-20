@@ -5,11 +5,13 @@
          if (reg.test(cookie)) {
              var adminUser = reg.exec(cookie)[1] + '}';
              var adminUserName = JSON.parse(adminUser).username;
+             alert(adminUserName);
              $('.am-icon-dashboard').html('欢迎系统管理员：' + adminUserName);
          } else if (/adminuserInfo=(.+)/.test(cookie)) {
              var reg = /adminuserInfo=(.+)/;
              var adminUser = reg.exec(cookie)[1];
              var adminUserName = JSON.parse(adminUser).username;
+             alert(adminUserName);
              $('.am-icon-dashboard').html('欢迎系统管理员：' + adminUserName);
          } else {
              window.location.href = '/admin/login.html';
