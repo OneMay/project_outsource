@@ -2,11 +2,13 @@
      (function cookies() {
          var cookie = document.cookie;
          var reg = /adminuserInfo=(.+)}(.+)/;
+         console.log(cookie)
          if (reg.test(cookie)) {
              var adminUser = reg.exec(cookie)[1] + '}';
              var adminUserName = JSON.parse(adminUser).username;
              alert(adminUserName);
              $('.am-icon-dashboard').html('欢迎系统管理员：' + adminUserName);
+             
          } else if (/adminuserInfo=(.+)/.test(cookie)) {
              var reg = /adminuserInfo=(.+)/;
              var adminUser = reg.exec(cookie)[1];
@@ -17,8 +19,10 @@
              window.location.href = '/admin/login.html';
          }
      })();
+     
      (function messages() {
          var examine, deliver, loan, withdrawals;
+
          $.ajax({
              url: '/admin/get/examineList',
              type: 'GET',
@@ -237,7 +241,7 @@
                  $('tbody')[0].removeEventListener('click', deleteItemMall, false);
              }
              if (data.code == 200) {
-                 data.productList.forEach((value, index) => {
+                 data.productList.forEach(function(value, index) {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
                          "<td>" + value.productName + "</td>" +
@@ -1196,7 +1200,7 @@
                  $('tbody>tr').remove();
              }
              if (data.code == 200) {
-                 data.membersDemeanorList.forEach((value, index) => {
+                 data.membersDemeanorList.forEach(function(value, index) {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
                          "<td>" + value.title + "</td>" +
@@ -1297,7 +1301,7 @@
              }
              if (data.code == 200) {
                  sort(data);
-                 data.orderList.forEach((value, index) => {
+                 data.orderList.forEach(function(value, index) {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
                          "<td>" + value.phoneNumber + "</td>" +
@@ -1428,7 +1432,7 @@
              }
              if (data.code == 200) {
                  sort(data);
-                 data.orderList.forEach((value, index) => {
+                 data.orderList.forEach(function(value, index) {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
                          "<td>" + value.phoneNumber + "</td>" +
@@ -1531,7 +1535,7 @@
              }
              if (data.code == 200) {
                  sort(data);
-                 data.orderList.forEach((value, index) => {
+                 data.orderList.forEach(function(value, index) {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
                          "<td>" + value.phoneNumber + "</td>" +
@@ -1608,7 +1612,7 @@
              }
              if (data.code == 200) {
                  sort(data);
-                 data.orderList.forEach((value, index) => {
+                 data.orderList.forEach(function(value, index) {
                      var html = "<tr>" +
                          "<td>" + value.number + "</td>" +
                          "<td>" + value.phoneNumber + "</td>" +
@@ -1852,7 +1856,7 @@
                  }
                  if (data.code == 200) {
                      sort2(data);
-                     data.loanList.forEach((value, index) => {
+                     data.loanList.forEach(function(value, index) {
                          var html = "<tr>" +
                              "<td>" + value.number + "</td>" +
                              "<td>" + value.phoneNumber + "</td>" +
@@ -2008,7 +2012,7 @@
                  }
                  if (data.code == 200) {
                      sort2(data);
-                     data.loanList.forEach((value, index) => {
+                     data.loanList.forEach(function(value, index) {
                          var html = "<tr>" +
                              "<td>" + value.number + "</td>" +
                              "<td>" + value.phoneNumber + "</td>" +
@@ -2161,7 +2165,7 @@
                  }
                  if (data.code == 200) {
                      sort2(data);
-                     data.loanList.forEach((value, index) => {
+                     data.loanList.forEach(function(value, index) {
                          var html = "<tr>" +
                              "<td>" + value.number + "</td>" +
                              "<td>" + value.phoneNumber + "</td>" +
@@ -2277,7 +2281,7 @@
                  }
                  if (data.code == 200) {
                      sort3(data);
-                     data.withdrawalsList.forEach((value, index) => {
+                     data.withdrawalsList.forEach(function(value, index) {
                          var html = "<tr>" +
                              "<td>" + value.number + "</td>" +
                              "<td>" + value.phoneNumber + "</td>" +
@@ -2383,7 +2387,7 @@
                  }
                  if (data.code == 200) {
                      sort3(data);
-                     data.withdrawalsList.forEach((value, index) => {
+                     data.withdrawalsList.forEach(function(value, index) {
                          var html = "<tr>" +
                              "<td>" + value.number + "</td>" +
                              "<td>" + value.phoneNumber + "</td>" +

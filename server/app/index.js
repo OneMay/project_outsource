@@ -1,4 +1,4 @@
-var app = require('../server');
+﻿var app = require('../server');
 var http = require('http');
 var mongoose = require('mongoose');
 var debug = require('debug')('server:server');
@@ -18,12 +18,12 @@ mongoose.connect(mongodbUrl, function(err) {
 
     }
 });
-//var User = require('../models/adminuser');
-// var user = new User({
-//     username: 'adminuser',
-//     password: 'adminpassword'
-// });
-// user.save();
+/*var User = require('../models/adminuser');
+ var user = new User({
+     username: 'adminuser',
+     password: 'adminpassword'
+ });
+ user.save();*/
 
 //对port进行一些处理，使之能用
 function normalizePort(val) {
