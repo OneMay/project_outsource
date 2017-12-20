@@ -693,7 +693,7 @@ router.post('/get/membersDemeanorItem', function(req, res, next) {
 router.post('/set/withdrawals', function(req, res, next) {
     var _userId = req.body._userId;
     var money = req.body.money;
-    if (_userId && name > 0 && money) {
+    if (_userId && money > 0 && money) {
         User.findOne({
             _id: _userId
         }).then(function(userInfo) {
