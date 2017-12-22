@@ -24,10 +24,10 @@ router.use(function(req, res, next) {
         next();
     })
     //推荐奖励人数：80
-     /*var number_people = new Number_people({
-         numberPeople: 80
-     })
-     number_people.save();*/
+    /*var number_people = new Number_people({
+        numberPeople: 80
+    })
+    number_people.save();*/
     //时间格式化
 Date.prototype.Format = function(fmt) {
     var o = {
@@ -264,6 +264,7 @@ router.get('/get/mallpageList', function(req, res, next) {
                 })
 
                 responseData.message = '查询成功';
+                responseData.code = '200';
                 if (sum + 1 == productListInfo.length) {
                     var productList1 = {
                             productList,
