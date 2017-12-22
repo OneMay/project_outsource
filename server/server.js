@@ -47,7 +47,7 @@ app.use(function(req, res, next) {
     return next();
 })
 app.get("/", function(req, res) {
-    res.render("home");
+    res.render("index");
 });
 app.use('/api', api);
 app.use('/admin', admin);
