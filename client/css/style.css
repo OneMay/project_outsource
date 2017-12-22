@@ -1,0 +1,373 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+html{
+    width:100%;
+    font-size:16px;
+    font:Microsoft YaHei,
+    Simsun,
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+body {
+    font: Microsoft YaHei, Simsun, Arial, Helvetica, sans-serif;
+    color: #666;
+}
+ul {
+    list-style-type: none;
+}
+
+.clearfix {
+    *zoom: 1
+}
+.clearfix:after {
+    display: block;
+    content: "clear";
+    height: 0;
+    clear: both;
+    overflow: hidden;
+    visibility: hidden
+}
+
+.wrap {
+    width: 75rem;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+    color: #666;
+    cursor: pointer;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:hover {
+    color: #a22e0b;
+    text-decoration: none;
+}
+#content_ad{
+    min-width:75rem;
+    background: #fff;
+}
+.borrow-item {
+    float: left;
+    width: 18.75rem;
+    
+}
+.item01 {
+    background: url(https://www.yirendai.com/static/borrow/images/newBorrow/bow_adv01.png) 5px 35px no-repeat;
+}
+.item02{
+ background: url(https://www.yirendai.com/static/borrow/images/newBorrow/bow_adv02.png) 5px  35px no-repeat;
+}
+.item03{
+ background: url(https://www.yirendai.com/static/borrow/images/newBorrow/bow_adv03.png) 5px 35px no-repeat;
+}
+.item04{
+ background: url(https://www.yirendai.com/static/borrow/images/newBorrow/bow_adv03.png) 5px 35px no-repeat;
+}
+.borrow-item dl {
+    padding-left:5.875rem;
+    padding-top: 2.5rem;
+    padding-bottom: 1.25rem;
+}
+.borrow-item dt {
+    font-size: 1.5rem;
+    padding-bottom: 0.3125rem;
+}
+.borrow-item dt span {
+    color: #83a0d0;
+}
+.borrow-item dd {
+    color: #999;
+    font-size: 0.875rem;
+    line-height: 1.3;
+}
+.content1{
+display:none;
+margin-top:20px;
+}
+#product{
+ min-width:1200px; 
+background: #FFF;
+margin: 0 auto 30px;
+}
+
+
+.part_product .index_product {
+    margin-top: 50px;
+}
+
+.part_product .productwrap {
+    float: left;
+    width: 300px;
+    height: 386px;
+    text-align: center;
+}
+
+.part_product .product {
+    width: 280px;
+    height: 380px;
+    margin: 0 auto;
+    border: 1px solid #d2d2d2;
+    margin-top: 3px;
+    color: #000000;
+    background: #ffffff;
+}
+
+.index_product .product,
+.index_product .product .profit,
+.index_product .product .profit .rate,
+.index_product .product .profit .rate span,
+.index_product .product .profit .text {
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+}
+
+.part_product .product .title {
+    font-size: 1.2rem;
+    margin-top: 44px;
+    margin-bottom: 15px
+}
+
+.part_product .product p {
+    font-family: "Microsoft YaHei", 微软雅黑, "Microsoft JhengHei", 华文细黑, STHeiti, MingLiu!important;
+}
+
+.part_product .product .subtitle {
+    font-size: 1rem;
+}
+
+.index_product .product_bus .profit {
+    background: url(http://www.ppdaicdn.com/invest/2016/index/images/prd_bg1.png) center center no-repeat;
+}
+
+.index_product .product_company .profit {
+    background: url(http://www.ppdaicdn.com/invest/2016/index/images/prd_bg2.png) center center no-repeat;
+}
+
+.index_product .product_education .profit {
+    background: url(http://www.ppdaicdn.com/invest/2016/index/images/prd_bg3.png) center center no-repeat;
+}
+
+.index_product .product_home .profit {
+    background: url(http://www.ppdaicdn.com/invest/2016/index/images/prd_bg4.png) center center no-repeat;
+}
+
+.index_product .product .profit {
+    width: 280px;
+    height: 150px;
+    margin-top: 20px;
+    color: #ffffff;
+}
+
+.index_product .product .profit .rate {
+    padding-top: 25px;
+    height: 70px;
+    line-height: 70px;
+}
+
+.index_product .product .profit .rate span {
+    font-size: 3rem;
+}
+
+.index_product .product:hover {
+    width: 288px;
+    height: 386px;
+    margin-top: 0px;
+    /*border:1px solid #ddd;*/
+    /*box-shadow: 0px 0px 15px 2px #ddd;-webkit-box-shadow: 0px 0px 15px 2px #ddd;-moz-box-shadow:0px 0px 15px 2px #ddd;*/
+}
+
+.index_product .product:hover .profit {
+    width: 288px;
+    height: 158px;
+    margin-top: 20px;
+}
+
+.index_product .product:hover .profit .rate span {
+    font-size: 4.3rem;
+}
+
+.index_product .product:hover .profit .text {
+    font-size: 1rem;
+}
+
+.index_product .product .productbtn {
+    display: block;
+    width: 132px;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #bfbfbf;
+    border-radius: 5px;
+    background: #ffffff;
+    text-align: center;
+    margin: 0 auto;
+    color: #000000;
+    font-size: 1.2rem;
+    margin-top: 43px;
+}
+
+.index_product .product_bus:hover {
+    border: 1px solid #88CCF6;
+    box-shadow: 0px 0px 15px 2px #ddd;
+    -webkit-box-shadow: 0px 0px 15px 2px #ddd;
+    -moz-box-shadow: 0px 0px 15px 2px #ddd;
+}
+
+.index_product .product_company:hover {
+    border: 1px solid #34DDDD;
+    box-shadow: 0px 0px 15px 2px #ddd;
+    -webkit-box-shadow: 0px 0px 15px 2px #ddd;
+    -moz-box-shadow: 0px 0px 15px 2px #ddd;
+}
+
+.index_product .product_education:hover {
+    border: 1px solid #F2C02F;
+    box-shadow: 0px 0px 15px 2px #ddd;
+    -webkit-box-shadow: 0px 0px 15px 2px #ddd;
+    -moz-box-shadow: 0px 0px 15px 2px #ddd;
+}
+
+.index_product .product_home:hover {
+    border: 1px solid #FFA397;
+    box-shadow: 0px 0px 15px 2px #ddd;
+    -webkit-box-shadow: 0px 0px 15px 2px #ddd;
+    -moz-box-shadow: 0px 0px 15px 2px #ddd;
+}
+
+.index_product .product:hover .productbtn {
+    background: #218ce5;
+    color: #ffffff;
+    border: 1px solid #218ce5;
+}
+/* 会员风采 */
+.wrap890 {
+    width: 885px;
+    margin-top: 30px;
+     height: 342px;
+    float: left;
+    padding-left:5px;
+    overflow:hidden;
+    border:1px solid #eee;
+}
+.wrap890 .title {
+    height: 35px;
+    border-bottom: 1px solid #999;
+}
+
+.title h3 {
+    font-size: 22px;
+    color: #009944;
+    float: left;
+    /* width:100px; */
+    line-height: 24px;
+    margin: 0 35px 0 12px;
+}
+
+.title .more {
+    float: right;
+    margin-right: 20px;
+}
+
+.title span,
+.title a {
+    color: #666;
+    font-size: 14px;
+    margin-top: 8px;
+    display: inline-block;
+    float: left;
+    margin-right: 20px;
+}
+.wrap890 ul{
+    margin-top:10px;
+}
+.wrap890 ul li {
+    text-align: left;
+    font-size: 0.875rem;
+    height: 30px;
+    line-height: 30px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        content: "…";
+        overflow: hidden
+}
+.wrap890 ul li em {
+    width: 4px;
+    height: 4px;
+    display: block;
+    float: left;
+    position: relative;
+    top: 14px;
+}
+.wrap890  ul  li em{
+     background: url(../images/xtb.png) no-repeat -347px 0px;
+}
+.wrap890 ul li span {
+    float: right;
+    width: 100px;
+    display: inline-table;
+    color: #999;
+}
+.wrap890 ul li a {
+    font-size: 0.875rem;
+    margin: 8px 0;
+    padding-left: 10px;
+    font-weight: normal;
+
+}
+.wrap280 {
+    width: 280px;
+    margin-top: 30px;
+    float: right;
+    margin-right:10px;
+}
+.tit {
+    height: 50px;
+    width: auto;
+    background-color: #eee;
+    color: #666;
+}
+.news a {
+    font-size: 14px;
+    color: #666;
+    float: right;
+}
+.news .head img {
+    width: 70px;
+    height: 70px;
+    float: left;
+    margin-right: 15px;
+    display: block;
+}
+.news .head p {
+    font-size: 12px;
+    color: #999;
+    margin-top: 12px;
+    line-height: 20px;
+    height: 40px;
+    overflow: hidden;
+}
+.news .content {
+    padding: 20px;
+}
+
+.news ul {
+    margin-top: 0px;
+    height: 180px;
+    overflow: hidden;
+}
+.news ul li {
+    line-height: 25px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    content: "…";
+    overflow: hidden;
+}
+
