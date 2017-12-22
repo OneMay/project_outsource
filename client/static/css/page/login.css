@@ -1,112 +1,314 @@
-.wrapper {
-    width: 37%;
-    margin: 10% auto;
+@media only screen and (min-width: 1024px) {
+    .wrapper {
+        width: 37%;
+        margin: 10% auto;
+    }
+    .main {
+        padding: 40px 60px;
+        background: #E1E1E1;
+        border-radius: 25px;
+        -webkit-border-radius: 25px;
+        -moz-border-radius: 25px;
+        -o-border-radius: 25px;
+        text-align: center
+    }
+    .main h1 {
+        text-align: center;
+        font-size: 27px;
+        font-weight: 500;
+        color: #f45B4B;
+        margin: 0 0 20px 0;
+    }
+    .main form p {
+        overflow: hidden;
+    }
+    .main form p label:not([name='radio']) {
+        margin-right: 20px;
+        float: left;
+        width: 20%;
+        height: 39px;
+        line-height: 39px;
+        text-align: right;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .main input[type="text"],
+    .main input[type="password"] {
+        float: left;
+        width: 60%;
+        outline: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #818181;
+        padding: 10px 20px;
+        background: #CACACA;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        -webkit-border-radius: 25px;
+        -moz-border-radius: 25px;
+        -o-border-radius: 25px;
+        margin: 0 0 12px 0;
+        -webkit-appearance: none;
+    }
+    .remember-forgot {
+        text-align: center;
+    }
+    .forgot,
+    .remember {
+        padding: 0 7px 0 0;
+        font-size: 15px;
+        font-weight: 500;
+        color: #f45B4B;
+    }
+    .main input[type="submit"] {
+        background: #f45B4B;
+        color: #fff;
+        font-size: 17px;
+        padding: 15px 20px;
+        width: 88%;
+        cursor: pointer;
+        border-radius: 20px;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        -o-border-radius: 20px;
+        margin: 0 7px 0 3px;
+        outline: none;
+        border: none;
+    }
+    .bottom {
+        margin: 50px 0 0 0;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 500;
+        color: #444
+    }
+    .bottom a {
+        font-size: 25px;
+        font-weight: 500;
+        color: #f45B4B;
+        text-decoration: none;
+    }
+    .warning {
+        width: 100%;
+        font-size: 15px;
+        font-weight: 500;
+        color: #f45B4B;
+        display: block;
+        overflow: hidden;
+    }
+    .invitation_code {
+        display: none;
+    }
 }
 
-.main {
-    padding: 40px 60px;
-    background: #E1E1E1;
-    border-radius: 25px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -o-border-radius: 25px;
-    text-align: center
+
+/** iPad **/
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .wrapper {
+        width: 80%;
+        margin: 10% auto;
+    }
+    .main {
+        padding: 40px 60px;
+        background: #E1E1E1;
+        border-radius: 25px;
+        -webkit-border-radius: 25px;
+        -moz-border-radius: 25px;
+        -o-border-radius: 25px;
+        text-align: center
+    }
+    .main h1 {
+        text-align: center;
+        font-size: 27px;
+        font-weight: 500;
+        color: #f45B4B;
+        margin: 0 0 20px 0;
+    }
+    .main form p {
+        overflow: hidden;
+    }
+    .main form p label:not([name='radio']) {
+        margin-right: 20px;
+        float: left;
+        width: 20%;
+        height: 39px;
+        line-height: 39px;
+        text-align: right;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    .main input[type="text"],
+    .main input[type="password"] {
+        float: left;
+        width: 60%;
+        outline: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #818181;
+        padding: 10px 20px;
+        background: #CACACA;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        -webkit-border-radius: 25px;
+        -moz-border-radius: 25px;
+        -o-border-radius: 25px;
+        margin: 0 0 12px 0;
+        -webkit-appearance: none;
+    }
+    .remember-forgot {
+        text-align: center;
+    }
+    .forgot,
+    .remember {
+        padding: 0 7px 0 0;
+        font-size: 15px;
+        font-weight: 500;
+        color: #f45B4B;
+    }
+    .main input[type="submit"] {
+        background: #f45B4B;
+        color: #fff;
+        font-size: 17px;
+        padding: 15px 20px;
+        width: 88%;
+        cursor: pointer;
+        border-radius: 20px;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        -o-border-radius: 20px;
+        margin: 0 7px 0 3px;
+        outline: none;
+        border: none;
+    }
+    .bottom {
+        margin: 50px 0 0 0;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 500;
+        color: #444
+    }
+    .bottom a {
+        font-size: 25px;
+        font-weight: 500;
+        color: #f45B4B;
+        text-decoration: none;
+    }
+    .warning {
+        width: 100%;
+        font-size: 15px;
+        font-weight: 500;
+        color: #f45B4B;
+        display: block;
+        overflow: hidden;
+    }
+    .invitation_code {
+        display: none;
+    }
 }
 
-.main h1 {
-    text-align: center;
-    font-size: 27px;
-    font-weight: 500;
-    color: #f45B4B;
-    margin: 0 0 20px 0;
-}
 
-.main form p {
-    overflow: hidden;
-}
+/** iPhone **/
 
-.main form p label:not([name='radio']) {
-    margin-right: 20px;
-    float: left;
-    width: 20%;
-    height: 39px;
-    line-height: 39px;
-    text-align: right;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.main input[type="text"],
-.main input[type="password"] {
-    float: left;
-    width: 60%;
-    outline: none;
-    font-size: 15px;
-    font-weight: 500;
-    color: #818181;
-    padding: 10px 20px;
-    background: #CACACA;
-    border: 1px solid #ccc;
-    border-radius: 25px;
-    -webkit-border-radius: 25px;
-    -moz-border-radius: 25px;
-    -o-border-radius: 25px;
-    margin: 0 0 12px 0;
-    -webkit-appearance: none;
-}
-
-.remember-forgot {
-    text-align: center;
-}
-
-.forgot,
-.remember {
-    padding: 0 7px 0 0;
-    font-size: 15px;
-    font-weight: 500;
-    color: #f45B4B;
-}
-
-.main input[type="submit"] {
-    background: #f45B4B;
-    color: #fff;
-    font-size: 17px;
-    padding: 15px 20px;
-    width: 88%;
-    cursor: pointer;
-    border-radius: 20px;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
-    -o-border-radius: 20px;
-    margin: 0 7px 0 3px;
-    outline: none;
-    border: none;
-}
-
-.bottom {
-    margin: 50px 0 0 0;
-    width: 100%;
-    font-size: 14px;
-    font-weight: 500;
-    color: #444
-}
-
-.bottom a {
-    font-size: 25px;
-    font-weight: 500;
-    color: #f45B4B;
-    text-decoration: none;
-}
-
-.warning {
-    width: 100%;
-    font-size: 15px;
-    font-weight: 500;
-    color: #f45B4B;
-    display: block;
-    overflow: hidden;
-}
-
-.invitation_code {
-    display: none;
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+    .wrapper {
+        width: 100%;
+    }
+    .main {
+        padding: 20px auto;
+        background: #E1E1E1;
+        border-radius: 20px;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        -o-border-radius: 20px;
+        text-align: center
+    }
+    .main h1 {
+        text-align: center;
+        font-size: 27px;
+        font-weight: 500;
+        color: #f45B4B;
+        margin: 0 0 20px 0;
+    }
+    .main form p {
+        margin-left: 40px;
+        overflow: hidden;
+    }
+    .main form p label:not([name='radio']) {
+        margin-right: 20px;
+        float: left;
+        width: 20%;
+        height: 39px;
+        line-height: 39px;
+        text-align: right;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .main input[type="text"],
+    .main input[type="password"] {
+        float: left;
+        width: 40%;
+        outline: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #818181;
+        padding: 10px 20px;
+        background: #CACACA;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        -webkit-border-radius: 25px;
+        -moz-border-radius: 25px;
+        -o-border-radius: 25px;
+        margin: 0 0 12px 0;
+        -webkit-appearance: none;
+    }
+    .remember-forgot {
+        text-align: center;
+    }
+    .forgot,
+    .remember {
+        padding: 0 7px 0 0;
+        font-size: 15px;
+        font-weight: 500;
+        color: #f45B4B;
+    }
+    .main input[type="submit"] {
+        background: #f45B4B;
+        color: #fff;
+        font-size: 17px;
+        padding: 15px 20px;
+        width: 88%;
+        cursor: pointer;
+        border-radius: 20px;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        -o-border-radius: 20px;
+        margin: 0 7px 0 3px;
+        outline: none;
+        border: none;
+    }
+    .bottom {
+        margin: 50px 0 0 0;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 500;
+        color: #444
+    }
+    .bottom a {
+        font-size: 20px;
+        font-weight: 500;
+        color: #f45B4B;
+        text-decoration: none;
+    }
+    .warning {
+        width: 100%;
+        font-size: 12px;
+        font-weight: 500;
+        color: #f45B4B;
+        display: block;
+        overflow: hidden;
+    }
+    .invitation_code {
+        display: none;
+    }
 }

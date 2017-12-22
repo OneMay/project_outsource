@@ -1,0 +1,167 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font: 100% Microsoft YaHei, Simsun, Arial, Helvetica, sans-serif;
+    color: #666;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.wrap h2 {
+    height: 30px;
+    text-align: center;
+    font-size: 1.4rem;
+    line-height: 30px;
+    color: #666;
+    
+    background:#DF7F04;
+}
+
+.breadcrumbs {
+    height: 70px;
+    line-height: 70px;
+    font-size: 1.2rem;
+}
+
+
+/* 公共样式 */
+
+.wrap {
+    width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.clearfix:after {
+    display: block;
+    content: "clear";
+    height: 0;
+    clear: both;
+    overflow: hidden;
+    visibility: hidden
+}
+
+.breadcrumbs ul li {
+    float: left;
+}
+
+.breadcrumbs ul span {
+    display: inline-block;
+}
+
+#content .wrap {
+    border: 1px solid #666;
+}
+
+#content .type {
+    height: 240px;
+    overflow: hidden;
+}
+
+#content .describe {
+    padding: 30px 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+#content .describe h3 {
+    font-size: 1.5rem;
+    color: #333;
+    line-height: 24px;
+    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
+}
+
+#content .describe p {
+    line-height: 30px;
+    text-indent: 2em;
+}
+
+#borrower {
+    margin: 10px auto;
+}
+
+#borrower .question {
+    width: 360px;
+    height: 300px;
+    float: left;
+    border: 1px solid #ccc;
+    margin: 0 20px 0;
+}
+
+#borrower .question p {
+    color: #333;
+    font-size: 1.25rem;
+    background: url(http://www.ppdaicdn.com/loan/img/brrowerindex/borrowerqa.png) no-repeat 0 0;
+    height: 70px;
+    line-height: 70px;
+    border-bottom: 1px solid #ddd;
+    margin: 0 20px;
+    /* text-indent: 2em; */
+}
+
+#borrower .question ul {
+    margin: 20px 20px 60px 20px;
+}
+
+#borrower .question ul li {
+    background: url(http://www.ppdaicdn.com/loan/img/brrowerindex/sbicon.png) no-repeat 0 10px;
+    line-height: 1.7;
+    color: #666;
+    font-size: 14px;
+    padding-left: 15px;
+}
+
+#borrower .qa1 p {
+    background-position: 0 16px;
+    text-indent: 43px;
+}
+#borrower .qa2 p {
+    background-position: 0 -56px;
+    text-indent: 53px;
+}
+#borrower .qa3 p {
+    background-position: 0 -126px;
+    text-indent: 43px;
+}
+
+#borrower .qa1 {
+    margin: 0 40px 0 0;
+}
+
+#borrower .qa2 {
+    margin: 0 20px 0
+}
+
+#borrower .question ul li {
+    /* margin-right:10px; */
+}
+
+#borrower .qa3 {
+    /* float:right; */
+    /* margin-right:0; */
+    margin: 0 0 0 34px;
+}
+.gotobroorowbtn {
+    display: block;
+    width: 310px;
+    height: 50px;
+    background: #F39E31;
+    color: #fff;
+    font-size: 1.375rem;
+    margin: 50px auto 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+.gotobroorowbtn:hover {
+    background: #DF7F04;
+}

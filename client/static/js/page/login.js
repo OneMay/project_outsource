@@ -5,7 +5,6 @@ window.onload = function() {
     (function cookies() {
         var cookie = document.cookie;
         var reg = /adminuserInfo=(.+)}(.+)/;
-        alert(cookie)
         if (reg.test(cookie)) {
             window.location.href = '/admin/index.html'
         } else if (/adminuserInfo=(.+)/.test(cookie)) {

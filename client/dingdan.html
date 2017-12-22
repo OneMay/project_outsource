@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title></title>
+    <title>会员中心</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./static/css/page/dingdan.css" rel="stylesheet">
@@ -10,13 +10,26 @@
 
 <body>
     <div class="wrapper">
+        <div id="header">
+            <div class="wrap">
+                <div class="login">
+                    <a href="login.html" rel="nofollow">登录</a>
+                    <a href="regist.html" rel="nofollow">注册</a>
+                </div>
+                <div class="logout">
+                    <a href="login.html" class="username"></a>
+                    <a rel="nofollow" onclick="logout()">退出</a>
+                </div>
+            </div>
+        </div>
         <div class="main">
             <div class="content" id="cart">
                 <div>
                     <div class="boxHead">
-                        <h2>订单列表</h2>
+                        <span>商城订单列表</span>
+                        <span class="open cartopen">展开》》</span>
                     </div>
-                    <div class="boxBody">
+                    <div class="boxBody cartbox">
                         <div class="emptyCart" style="display:none">
                             <div class="emptyCartImg"></div>
                             <p class="tips">你订单列表居然是空的！</p>
@@ -35,21 +48,50 @@
                                     <span>是否发货</span>
                                 </div>
                             </div>
-                            <div class="cartBottom">
-                                <div class="all">
-                                    <span class="allImg"></span>
-                                    <span>全选</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="boxHead">
+                        <span>贷款订单列表</span>
+                        <span class="open loanopen">展开》》</span>
+                    </div>
+                    <div class="boxBody loanbox">
+                        <div class="emptyLoan" style="display:none">
+                            <div class="emptyCartImg"></div>
+                            <p class="tips">你的贷款订单列表是空的！</p>
+                            <a href="./goodslist.html" class="toBuy">现在就去贷款</a>
+                        </div>
+                        <div class="loan">
+                            <div class="loanList">
+                                <div class="loanListTitle">
+                                    <span>贷款类型</span>
+                                    <span>贷款金额</span>
+                                    <span>审核是否通过</span>
+                                    <span>贷款是否成功</span>
+                                    <span>申请时间</span>
                                 </div>
-                                <div class="allBa">
-                                    <div class="changed">
-                                        <p>已选择<span>0</span>件商品</p>
-                                    </div>
-                                    <div class="allprices">
-                                        <p>总金额：<span>153</span></p>
-                                    </div>
-                                    <div class="sure">
-                                        <button>结算</button>
-                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="boxHead">
+                        <span>提现订单列表</span>
+                        <span class="open Withdrawalsopen">展开》》</span>
+                    </div>
+                    <div class="boxBody Withdrawalsbox">
+                        <div class="emptyWithdrawals" style="display:none">
+                            <div class="emptyCartImg"></div>
+                            <p class="tips">你还没有提现过！</p>
+                            <a href="./goodslist.html" class="toBuy">现在就去提现</a>
+                        </div>
+                        <div class="Withdrawals">
+                            <div class="WithdrawalsList">
+                                <div class="WithdrawalsListTitle">
+                                    <span>提现金额</span>
+                                    <span>提现是否成功</span>
+                                    <span>申请时间</span>
                                 </div>
                             </div>
                         </div>
@@ -57,9 +99,20 @@
                 </div>
             </div>
         </div>
+        <div id="menu">
+            <ul>
+                <li><a href="index.html"><span></span>首页</a></li>
+                <li>
+                    <a href=""> <span></span>我要借钱</a>
+                </li>
+                <li> <a href=""><span></span>我要赚钱</a></li>
+                <li><a href="dingdan.html"><span></span>会员中心</a></li>
+            </ul>
+        </div>
     </div>
     <script type="text/javascript" src="./static/js/lib/jquery-3.2.1.min.js"></script>
     <script src="./static/js/page/dingdan.js"></script>
+    <script src="./static/js/page/clientlogin.js"></script>
 </body>
 
 </html>
