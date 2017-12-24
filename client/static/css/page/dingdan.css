@@ -103,7 +103,7 @@
         }
         #cart .cartGoods span {
             display: inline-block;
-            width: 142px;
+            width: 127px;
             height: 50px;
             text-align: center;
             overflow: hidden;
@@ -112,7 +112,7 @@
         }
         #cart .cartListTile span {
             display: inline-block;
-            width: 140px;
+            width: 123px;
             text-align: center;
         }
         #cart .WithdrawalsCart,
