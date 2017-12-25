@@ -7,9 +7,9 @@
     .wrap {
         width: 100%;
     }
-      #header{
-          display:none;
-      }
+    #header {
+        display: none;
+    }
     #header .wrap {
         padding: 10px 0 0;
     }
@@ -26,7 +26,7 @@
         background: #f5f9fd;
     }
     #header .wrap .nav {
-      width:100%;
+        width: 100%;
     }
     #header .wrap .nav li {
         margin: 0 1%;
@@ -34,21 +34,17 @@
         line-height: 20px;
     }
     #banner .items img {
-       
         height: 200px;
-
     }
     #banner {
-       height: 200px;
-
+        height: 200px;
     }
     #banner .items {
         height: 200px;
-       
     }
     .button {
-        left:60%;
-        bottom:15%;
+        left: 60%;
+        bottom: 15%;
     }
     .button span {
         width: 0.75rem;
@@ -72,33 +68,32 @@
     #product {
         margin-top: 0;
     }
-     .part_product .index_product .productwrap a .product {
-        width:auto;
+    .part_product .index_product .productwrap a .product {
+        width: auto;
     }
-     .part_product .index_product .productwrap a .product:hover {
-         width:100%;
-     }
+    .part_product .index_product .productwrap a .product:hover {
+        width: 100%;
+    }
     .index_product .product .profit {
-         width:auto;
-        }
-  .index_product .product .profit:hover {
-             width: 100%;
-         }
+        width: auto;
+    }
+    .index_product .product .profit:hover {
+        width: 100%;
+    }
     .part_product .index_product {
-        margin-right:20px;
+        margin-right: 20px;
     }
     .part_product .productwrap {
-        width:50%;
-        
+        width: 50%;
     }
     .product_bus {
-        width: 15rem;
+        width: 100%;
     }
     .profit {
-        width: 15rem;
+        width: 100%;
     }
     .wrap890 {
-        margin-top: 0;
+        margin-top: 10px;
         width: 99%;
         /* padding:0; */
     }
@@ -108,8 +103,20 @@
         margin-top: 20px;
         margin-right: 2px;
     }
+    /* 我要借钱 */
+    #borrow .borrow-type a:hover {
+        color: #8f9397;
+    }
+    .borrow-type {
+        border: 1px solid #8f9397;
+        border-left: none;
+        padding: 10px 0;
+    }
+    .borrow-type:last-child {
+        border-right: none;
+    }
     /* 贷款 */
-    .breadcrumbs{
+    .breadcrumbs {
         display: none;
     }
     #content .describe {
@@ -122,6 +129,9 @@
         height: 200px;
     }
     /* 车贷 */
+    #content .type {
+        height: 200px;
+    }
     #info .item {
         margin-top: 0px;
     }
@@ -156,6 +166,12 @@
     .data {
         display: none;
     }
+    #content_nav {
+        display: none;
+    }
+    .banner {
+        height: 200px;
+    }
     /* 信用卡 */
     .card_center ul li {
         padding-left: 10px;
@@ -165,33 +181,27 @@
         display: none;
     }
     /*新闻中心 */
-
     .breadcrumb {
         /* padding:0 0 0 30px; */
         width: 100%;
         /* display:none; */
     }
-
     #content_nav {
         width: 100%;
     }
     /* 公司简介 */
-
     .a_lnav {
         width: 25%;
     }
-
     #content-right {
         width: 70%;
         padding: 2px;
     }
-
     #content-right h2 {
         padding: 2px;
         height: 2rem;
         line-height: 2rem;
     }
-
     #content-right p {
         font-family: "Microsoft YaHei", 微软雅黑, "Microsoft JhengHei", 华文细黑, STHeiti, MingLiu!important;
         line-height: 1rem;
@@ -200,16 +210,28 @@
     }
     /* 会员风采 */
     #content-right ul li {
-        padding:0;
+        padding: 0;
     }
     #content-right ul li span {
-        width:auto;
+        width: auto;
     }
     /* 联系我们 */
     #content-right .content-tel p {
-        margin:0;
+        margin: 0;
     }
-    #menu{
+    #menu {
         display: block;
+    }
+    .h {
+        display: block;
+    }
+    .footer {
+        display: none;
+    }
+    .info-img {
+        width: 100% !important;
+    }
+    .info-img img {
+        width: 100% !important;
     }
 }

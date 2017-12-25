@@ -7,10 +7,10 @@ $(function() {
     }
 
 
-    $(".wrapper").find(".submit").click(function() {
+    $(".wrap").find("#btn").click(function() {
         var obj = $("#loanname option:selected");
         var name = obj.text();
-        var money = parseFloat($(".wrapper").find("input").val());
+        var money = parseFloat($(".wrap").find(".input-number").val());
         $.ajax({
             url: "http://localhost:9090/api/set/loan",
             type: "post",

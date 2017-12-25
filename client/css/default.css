@@ -50,15 +50,17 @@ a:hover {
     color: #a22e0b;
     text-decoration: none;
 }
+
 #login-button {
-    width:100%;
+    width: 100%;
     position: fixed;
-    top:0px;
-   
+    top: 0px;
 }
- #login-button h2 {
-   text-align: right;
+
+#login-button h2 {
+    text-align: right;
 }
+
 #header {
     background: #FFF;
     height: 100px;
@@ -76,7 +78,7 @@ a:hover {
 }
 
 #header .wrap .logo img {
-    width:auto;
+    width: auto;
 }
 
 #header .wrap .login {
@@ -95,7 +97,7 @@ a:hover {
 }
 
 #header .wrap .login a:hover {
-    background:#218ce5;
+    background: #218ce5;
     color: #FFF;
 }
 
@@ -119,13 +121,16 @@ a:hover {
     background: #218ce5;
     color: #218ce5;
 }
+
 #header .wrap .nav li ul li:hover {
-    background:white;
+    background: white;
     /* color: #218ce5; */
 }
+
 #header .wrap .nav li ul li a:hover {
     color: #218ce5;
 }
+
 #header .wrap .nav li a {
     color: #525252;
     font-size: 1.2rem;
@@ -140,6 +145,7 @@ a:hover {
 
 
 /* 二级菜单 */
+
 .subMenu {
     position: absolute;
     top: 36px;
@@ -155,6 +161,7 @@ a:hover {
     margin-left: 0px !important;
     margin-right: -4px !important;
 }
+
 .subMenu li a {
     display: block;
     text-align: center;
@@ -163,9 +170,12 @@ a:hover {
 
 
 /* 轮播图*/
+
+
 /* #banner-nav{
     width:1200px
 } */
+
 #banner {
     width: 100%;
     margin: 0 auto;
@@ -183,15 +193,15 @@ a:hover {
 #banner .items {
     position: absolute;
     left: 0;
-    width:600%;
+    width: 600%;
     height: 360px;
     overflow: hidden;
 }
 
 #banner .items img {
     float: left;
-      height: 360px;
-    width:16.67%;
+    height: 360px;
+    width: 16.67%;
 }
 
 
@@ -199,8 +209,8 @@ a:hover {
 
 .button {
     position: absolute;
-    left:50%;
-    bottom:3rem;
+    left: 50%;
+    bottom: 3rem;
     margin: 0 auto;
     z-index: 3;
 }
@@ -222,6 +232,7 @@ a:hover {
 
 
 /* 贷款 */
+
 #content_ad {
     background: #fff;
 }
@@ -232,12 +243,13 @@ a:hover {
 }
 
 .item01 {
-    background: url(../images/bow_adv01.png) 0.3125rem 2.1875rem no-repeat ;
+    background: url(../images/bow_adv01.png) 0.3125rem 2.1875rem no-repeat;
 }
 
 .item02 {
     background: url(../images/bow_adv02.png) 0.3125rem 2.1875rem no-repeat;
 }
+
 .item03 {
     background: url(../images/bow_adv03.png) 0.3125rem 2.1875rem no-repeat;
 }
@@ -266,11 +278,7 @@ a:hover {
     font-size: 0.875rem;
     line-height: 1.3;
 }
-/* 产品 */
-/* #product {
-    background: #FFF;
-    margin: 0 auto 30px;
-} */
+
 .part_product .index_product {
     margin-top: 50px;
 }
@@ -334,7 +342,7 @@ a:hover {
 
 .index_product .product .profit {
     width: 17.5rem;
-    height:9.375rem;
+    height: 9.375rem;
     margin-top: 1.25rem;
     color: #ffffff;
 }
@@ -342,7 +350,7 @@ a:hover {
 .index_product .product .profit .rate {
     padding-top: 1.5625rem;
     height: 4.375rem;
-    line-height : 4.375rem;
+    line-height: 4.375rem;
 }
 
 .index_product .product .profit .rate span {
@@ -351,7 +359,7 @@ a:hover {
 
 .index_product .product:hover {
     width: 17.5rem;
-    height:24.125rem;
+    height: 24.125rem;
     margin-top: 0px;
     /*border:1px solid #ddd;*/
     /*box-shadow: 0px 0px 15px 2px #ddd;-webkit-box-shadow: 0px 0px 15px 2px #ddd;-moz-box-shadow:0px 0px 15px 2px #ddd;*/
@@ -359,7 +367,7 @@ a:hover {
 
 .index_product .product:hover .profit {
     width: 17.5rem;
-    height:9.875rem;
+    height: 9.875rem;
     margin-top: 20px;
 }
 
@@ -422,33 +430,32 @@ a:hover {
 
 
 /* 会员风采 */
+
 .wrap890 {
-    width:55.3125rem;
+    width: 74%;
     margin-top: 30px;
-     height: 21.875rem;
+    height: 15rem;
     float: left;
     overflow: hidden;
     border: 1px solid #eee;
 }
 
 .wrap280 {
-    width:17.5rem;
+    width: 23.33%;
     margin-top: 30px;
     float: right;
     margin-right: 10px;
 }
 
 .info .title {
-    height:2.1875rem;
-    background-color: #218ce5;
+    height: 2.1875rem;
+    background-color: #34dddd;
 }
 
 .info .title h3 {
     font-size: 1.375rem;
-
     float: left;
-
-    line-height:2.1875rem;
+    line-height: 2.1875rem;
     margin: 0 35px 0 12px;
 }
 
@@ -458,7 +465,7 @@ a:hover {
     color: #666;
     font-size: 0.875rem;
     float: right;
-    line-height:2.1875rem;
+    line-height: 2.1875rem;
 }
 
 .info ul {
@@ -510,105 +517,143 @@ a:hover {
 .news {
     border: 1px solid #ddd;
     background-color: #fff;
-    height: 21.875rem;
+    height: 15rem;
     overflow: hidden;
 }
 
 
 /* 贷款资讯 */
 
-/* 定位 */
-#menu{
-    position:fixed;
-    width:100%;
-    bottom:0px;
 
-    z-index:999;
-    background:white;
+/* 定位 */
+
+#menu {
+    display: none;
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+    height: 70px;
+    z-index: 999;
+    background: white;
     /* height:400px; */
     /* display:none; */
 }
-#menu ul {
-  margin-top:15px;
-}
-#menu ul li  a span{
-    display:block;
-    width:30px;
-    height:30px;
-    margin:0 auto;
-    /* padding:0 auto; */
-    background: url(http://www.ppdaicdn.com/2014/img/myaccount/breadcrumb.png) no-repeat center center;
-}
-#menu  ul li {
-    /* background: url(http://www.ppdaicdn.com/2014/img/myaccount/breadcrumb.png) no-repeat center 0px; */
-    width:25%;
-    float:left;
-    text-align: center;
-    
-}
-#menu ul li a{
-      /* background: url(http://www.ppdaicdn.com/2014/img/myaccount/breadcrumb.png) no-repeat center 0px; */
-    display:block;
-    font-size:1rem;
-    text-align: center;
-}
- #menu ul li a:link {
-     color: #8f9397;
- }
 
- #menu ul li a:hover {
-     color: #8f9397;
- }
+#menu ul {
+    margin-top: 15px;
+}
+
+#menu ul li a span {
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
+
+.h {
+    height: 70px;
+    display: none;
+}
+
+.index-item1 {
+    background: url(../images/home.png) no-repeat center center;
+}
+
+.index-item2 {
+    background: url(../images/index2.png) no-repeat center center;
+}
+
+.index-item3 {
+    background: url(../images/index.jpg) no-repeat center center;
+}
+
+.index-item4 {
+    background: url(../images/index4.png) no-repeat center center;
+}
+
+#menu ul li {
+    width: 25%;
+    float: left;
+    text-align: center;
+}
+
+#menu ul li a {
+    display: block;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#menu ul li a:link {
+    color: #8f9397;
+}
+
+#menu ul li a:hover {
+    color: #8f9397;
+}
+
+
+/* 我要借款 */
+
+.borrow-type {
+    margin-top: 10px;
+    width: 24.8%;
+    float: left;
+    border: 1px solid #8f9397;
+    border-right: none;
+    padding: 10px 0;
+}
+
+.borrow-type:last-child {
+    border-right: 1px solid #8f9397;
+}
+
+.borrow-type img {
+    width: 25%;
+    padding-left: 38%
+}
+
+.borrow-type p {
+    text-align: center;
+    /* white-space: nowrap; */
+    font-size: 10%;
+}
+
+#img-ad .type {
+    margin: 10px 0;
+}
+
+#img-ad .type img {
+    width: 100%;
+    height: 200px;
+}
+
+
 /*底部 */
-.footer {
+
+
+/* .footer {
     clear: both;
     min-width: 1200px;
     margin-top: 30px;
     background-color: #57626e;
     color: #acafb3;
+} */
+
+.footer {
+    border-top: 1px solid #fff;
+    background: #666;
+    padding-top: 14px;
+    clear: both;
+    width: 100%;
+    margin-top: 30px;
+    background-color: #57626e;
+    color: #acafb3;
 }
 
-
-/* .footer{margin-bottom:-200px;} */
-
-.footer  .tel{
-    float:left;
-    width:50%;  
-    height: 54px;
-    margin-top:30px;
-}
-.footer .text{
-
-}
-
-.footer .tel .icon-tel {
-    background: url(../images/g_sprite.png) -308px -60px;
-    width: 60px;
-    float: left;
-    height: 54px;
-}
-.footer  .tel .num {
-    font-size: 26px;
-    font-weight: bold;
-    padding: 6px 0 0;
-    display: inline-block;
-}
-
-.footer .text {
-    padding: 15px 0 0;
-    line-height: 175%;
-    float:right;
-    /* clear: both; */
-}
-
-.footer .gray {
-    color: #8f9397;
-}
-
-.footer  .sns {
-    float: right;
-}
-
-.footer  .sns .ti {
-    padding: 0 0 10px 17px;
+.footer p {
+    font-size: 0.875rem;
+    text-align: center;
+    height: 24px;
+    line-height: 24px;
+    color: #AEAEAE;
 }

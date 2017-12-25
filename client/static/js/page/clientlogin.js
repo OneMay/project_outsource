@@ -87,7 +87,7 @@ function registSubmit() {
                     if (messageInfo.code === 200) {
                         $regist.find('#msgWarning').html('注册成功！3s后自动跳转到登录界面...')
                         setTimeout(function() {
-                            //window.location.href = "login.html";
+                            window.location.href = "login.html";
                         }, 3000);
                     } else {
                         $regist.find('#msgWarning').html('注册失败，请稍后重试!');
@@ -134,7 +134,8 @@ function logout() {
         type: "get",
         url: "http://localhost:9090/api/user/logout",
         success: function() {
-            alert("退出成功")
+            window.location.reload();
+            alert("退出成功");
         }
     })
 }
