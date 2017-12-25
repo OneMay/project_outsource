@@ -63,7 +63,7 @@ Date.prototype.Format = function(fmt) {
     return fmt;
 }
 router.use(function(req, res, next) {
-        var originalUrl = ['/user/login', 'user/logout']
+        var originalUrl = ['/user/login', '/user/logout']
         if (originalUrl.indexOf(req._parsedUrl.pathname) < 0) {
             if (req.session.adminuser_id) {
                 adminUser.findOne({

@@ -28,7 +28,7 @@ app.use(session({
         secret: 'secret',
         resave: false,
         saveUninitialized: true,
-        cookie: { maxAge: 60 * 1000 * 180 } //设置过期时间
+        cookie: { maxAge: 60 * 1000 * 240 } //设置过期时间
     }))
     //cookie
 app.use(function(req, res, next) {

@@ -53,8 +53,9 @@ Date.prototype.Format = function(fmt) {
     return fmt;
 }
 router.use(function(req, res, next) {
-        var originalUrl = ['/api/user/']
-        if (originalUrl.indexOf(req.originalUrl) >= 0) {
+        console.log(req._parsedUrl.pathname)
+        var originalUrl = ['/user/member_mark', '/set/shoppingCart', '/get/orderList', '/set/loan', '/set/withdrawals', '/get/loanList', '/get/WithdrawalsList']
+        if (originalUrl.indexOf(req._parsedUrl.pathname) >= 0) {
             if (req.session.user_id) {
                 User.findOne({
                     _id: req.session.user_id
@@ -63,7 +64,7 @@ router.use(function(req, res, next) {
                         console.log(userInfo)
                         res.cookies.set('userInfo', JSON.stringify({
                             _id: userInfo._id,
-                            username: userInfo.username,
+                            username: encodeURI(userInfo.username),
                             phoneNumber: userInfo.phoneNumber,
                             invitation_code: userInfo.invitation_code,
                             member_mark: userInfo.member_mark
@@ -72,10 +73,17 @@ router.use(function(req, res, next) {
                             'path': '/'
                         });
                         next()
+                    } else {
+                        res.cookies.set('userInfo', null, {
+                            'httpOnly': false,
+                            'path': '/'
+                        });
+                        res.redirect(301, '/login.html');
+                        return;
                     }
                 })
             } else {
-                res.cookies.set('serInfo', null, {
+                res.cookies.set('userInfo', null, {
                     'httpOnly': false,
                     'path': '/'
                 });
