@@ -6,21 +6,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <style type="text/css">
+        .wrap {
+            margin: 0 auto;
+            /*margin-bottom:20px;*/
+            width: 768px;
+            /*background: url(E:/client/clientStatic/images/bg.jpg);*/
+            border: 1px solid #ccc;
+        }
+        
+        .wrap img {
+            width: 100%;
+        }
+        
+        .wrap h2 {
+            text-align: center;
+        }
+        
+        .wrap span {
+            font-size: 1.2rem;
+            margin: 10%;
+            color: #0069ae;
+            /*margin-top:10px;*/
+        }
+        
+        #loanname {
+            width: 50%;
+            height: 30px;
+            /*padding:0 auto;*/
+            margin-bottom: 20px;
+        }
+        
+        .input-number {
+            width: 50%;
+            height: 30px;
+        }
+        
+        #btn {
+            outline: none;
+            background: gray;
+            /* color: #fff; */
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            padding: 1%;
+            width: 50%;
+            font-size: 1rem;
+            margin-left: 25%;
+            margin-top: 20px;
+            margin-bottom: 5%;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="wrapper">
-        <span>请选择你要贷款的类型：</span>
+    <div class="wrap">
+        <img src="static/images/bg.jpg">
+        <h2>贷款申请</h2>
+        <span>贷款类型:</span>
         <select id="loanname">  
         <option value ="1">房贷</option>  
         <option value ="2">车贷</option>  
         <option value="3">信用贷</option>  
-      </select>
-        <p>
-            <label for="money">请输入你要贷款的金额：</label>
-            <input type="text" placeholder="请输入金额">
-        </p>
-        <span class="submit">提交</span>
+        </select>
+
+        <br>
+        <span>贷款金额:</span>
+        <input type="text" placeholder="输入金额(单位：万元)" maxlength="5" onkeyup="this.value=this.value.replace(/[^0-9|\.^]/g,'');" onafterpaste="this.value=this.value.replace(/\D/g,'');" name="money" class="input-number">
+        <input type="submit" id="btn" value="立即申请">
+
+
+
     </div>
     <script src="./static/js/lib/jquery-3.2.1.min.js"></script>
     <script src="./static/js/page/loan.js"></script>

@@ -47,7 +47,7 @@ a:link {
 }
 
 a:hover {
-    color: #a22e0b;
+    color: #39a1ea;
     text-decoration: none;
 }
 
@@ -71,13 +71,11 @@ a:hover {
     width: auto;
 }
 
-#header .wrap .logout,
 #header .wrap .login {
     float: right;
     margin: 5px 0 0;
 }
 
-#header .wrap .logout a,
 #header .wrap .login a {
     color: #525252;
     font-size: 1.2rem;
@@ -88,7 +86,6 @@ a:hover {
     background: #f5f9fd;
 }
 
-#header .wrap .logout a:hover,
 #header .wrap .login a:hover {
     background: #218ce5;
     color: #FFF;
@@ -165,24 +162,26 @@ a:hover {
     width: 100%;
     height: 300px;
     overflow: hidden;
-    background: url(http://image.moerlong.com/upload/about/banner.jpg) no-repeat center;
+    background: url(../images/news-banner.png) no-repeat center;
     font-size: 0;
     color: transparent;
 }
 
 #content_nav {
-    width: 75rem;
+    /* width:100%; */
+    line-height: 44px;
     margin: 0 auto;
 }
 
 .breadcrumb {
     padding: 18px 0 5px;
+    /* margin:0 auto; */
 }
 
 .breadcrumb {
-    padding-left: 20px;
-    background: url(http://www.ppdaicdn.com/2014/img/myaccount/breadcrumb.png) no-repeat 0 18px;
-    width: 73.75rem;
+    padding-left: 23px;
+    background: url(../images/home.png) no-repeat -4px 27px;
+    width: 18%;
 }
 
 .breadcrumb li {
@@ -204,7 +203,7 @@ a:hover {
 }
 
 .a_lnav {
-    width: 14.375rem;
+    width: 20%;
     height: auto;
     float: left;
     display: block;
@@ -258,10 +257,10 @@ a:hover {
 }
 
 #content-right {
-    width: 56.25rem;
+    width: 76%;
     float: right;
     border: 2px solid #e0e0e0;
-    padding: 10px 20px;
+    padding: 0 20px 10px;
     /* margin-right:0; */
 }
 
@@ -270,9 +269,9 @@ a:hover {
     text-align: center;
     color: #666;
     background: #3ab5f4;
-    padding: 10px 10px 0px;
+    padding: 0 10px 0px;
     margin-bottom: 20px;
-    line-height: 3.1875rem;
+    line-height: 2.6;
     border-bottom: 1px solid #39A1EA;
 }
 
@@ -294,6 +293,7 @@ a:hover {
 
 .feature img {
     width: 100%;
+    height: 300px;
 }
 
 .feature p {
@@ -306,27 +306,15 @@ a:hover {
     padding-right: 10px;
 }
 
-
-/* 会员 */
-
-
-/* #content-right .content-vip p {
-    text-indent: 2em;
-    font-size: 0.875rem;
-    line-height: 32px;
-    margin-bottom: 20px;
-    text-align: justify;
-} */
-
 #content-right .content-vip img {
-    width: 56.25rem;
+    width: 100%;
+    height: 20rem;
 }
 
 
 /* 联系我们 */
 
 #content-right .content-tel p {
-    /* margin: 20px 0 30px; */
     line-height: 2.5rem;
     font-size: 1.125rem;
 }
@@ -334,24 +322,6 @@ a:hover {
 #content-right .content-tel p i {
     color: #fe6c00;
 }
-
-
-/* h1 {
-    border-bottom: 1px solid #55bdf4;
-}
-
-#content-right h1 {
-    height: 35px;
-    line-height: 30px;
-    background: #f6f6f6;
-    font-size: ;
-    text-indent: 2em;
-    border-bottom: 1px solid #0069ae;
-    font-weight: 500;
-} */
-
-
-/*  */
 
 #content-right ul li {
     padding: 5px 5px 5px 5px;
@@ -366,7 +336,6 @@ a:hover {
     text-overflow: ellipsis;
     content: "…";
     overflow: hidden;
-    /* list-style: circle; */
     /* transition: all 0.3s ease-in 0s;
     -moz-transition: all 0.3s ease-in 0s;
     -webkit-transition: all 0.3s ease-in 0s; */
@@ -386,17 +355,31 @@ a:hover {
     color: #FFFFFF;
 }
 
+#content-right ul {
+    margin-bottom: 30px;
+}
+
+#content-right {
+    margin-bottom: 20px;
+}
+
+#content-right ul.r li {
+    border-bottom: 1px dashed #e5e5e5;
+}
+
 #content-right ul li em {
-    width: 4px;
-    height: 4px;
+    width: 10px;
+    height: 10px;
     display: block;
     float: left;
     position: relative;
     top: 0.875rem;
+    margin-top: -3px;
 }
 
 #content-right ul li em {
-    background: url(../images/xtb.png) no-repeat -347px 0px;
+    background: url(../images/point.png) no-repeat;
+    /* line-height:30px; */
 }
 
 #content-right ul li span {
@@ -432,7 +415,7 @@ a:hover {
     margin: 0 20px;
 }
 
-.page a.onhover {
+.page a:hover {
     background: #3ab5f4;
     border: 1px solid #3ab5f4;
     color: #FFFFFF;
@@ -442,17 +425,24 @@ a:hover {
 /* 定位 */
 
 #menu {
+    display: none;
     position: fixed;
     width: 100%;
+    height: 70px;
     bottom: 0px;
     z-index: 999;
-    background: blue;
-    /* height:400px; */
-    /* display: none; */
+    background: white;
 }
 
 #menu ul {
     margin-top: 15px;
+}
+
+#menu ul li a span {
+    display: block;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
 }
 
 #menu ul li {
@@ -461,7 +451,59 @@ a:hover {
     text-align: center;
 }
 
+.index-item1 {
+    background: url(../images/home.png) no-repeat center center;
+}
+
+.index-item2 {
+    background: url(../images/index2.png) no-repeat center center;
+}
+
+.index-item3 {
+    background: url(../images/index.jpg) no-repeat center center;
+}
+
+.index-item4 {
+    background: url(../images/index4.png) no-repeat center center;
+}
+
 #menu ul li a {
-    font-size: 2rem;
+    display: block;
+    font-size: 1rem;
     text-align: center;
+}
+
+#menu ul li a:link {
+    color: #8f9397;
+}
+
+#menu ul li a:hover {
+    color: #8f9397;
+}
+
+.h {
+    display: none;
+    height: 70px;
+}
+
+
+/*底部 */
+
+.footer {
+    border-top: 1px solid #fff;
+    background: #666;
+    padding-top: 14px;
+    clear: both;
+    width: 100%;
+    margin-top: 30px;
+    background-color: #57626e;
+    color: #acafb3;
+}
+
+.footer p {
+    font-size: 0.875rem;
+    text-align: center;
+    height: 24px;
+    line-height: 24px;
+    color: #AEAEAE;
 }

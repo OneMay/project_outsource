@@ -25,6 +25,7 @@ $(function() {
                     var consignee = messageInfo.orderList[i].consignee;
                     var consigneePhone = messageInfo.orderList[i].consigneePhone;
                     var consigneeAddress = messageInfo.orderList[i].consigneeAddress;
+                    var address = consigneeAddress.substring(0, 7);
                     var integration = messageInfo.orderList[i].integration;
                     var fail = messageInfo.orderList[i].fail;
                     var isExamine = function() {
@@ -50,7 +51,7 @@ $(function() {
                         "<span class='count'>" + inventory + "</span>" +
                         "<span class='consignee'>" + consignee + "</span>" +
                         "<span class='consigneePhone'>" + consigneePhone + "</span>" +
-                        "<span class='consigneeAddress'>" + consigneeAddress + "</span>" +
+                        "<span class='consigneeAddress' title='" + consigneeAddress + "'>" + address + "</span>" +
                         "<span class='integration'>" + integration + "</span>" +
                         "<span class='isExamine'>" + isExamine() + " </span>" +
                         "<span class='Deliver_goods'>" + Deliver_goods() + "</span>" +

@@ -11,7 +11,10 @@ $(function () {
                 _this.find("a").removeClass("current");
        
         });
+    //  $(".a_lnav ul li").click(function(){
+    //      var _this = $(this);
 
-
+    //  })
+        
 
 })
