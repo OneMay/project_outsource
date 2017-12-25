@@ -1,7 +1,7 @@
 $(function() {
     //商品列表页
     $.ajax({
-            url: "http://localhost:9090/api/get/mallpageList",
+            url: "/api/get/mallpageList",
             type: 'GET',
             dataType: 'json',
             success: function(productList) {
@@ -30,7 +30,7 @@ $(function() {
     }
     var id = getUrlParam('_Id');
     $.ajax({
-        url: "http://localhost:9090/api/get/mallpageItem",
+        url: "/api/get/mallpageItem",
         type: 'post',
         dataType: 'json',
         data: { _id: id },
@@ -95,7 +95,7 @@ $(function() {
     //确定兑换
     $('#detail').find('.sure').click(function() {
         $.ajax({
-            url: "http://localhost:9090/api/user/member_mark",
+            url: "/api/user/member_mark",
             type: 'post',
             dataType: 'json',
             data: {
@@ -120,7 +120,7 @@ $(function() {
                 } else {
                     if (money < 0) {
                         $.ajax({
-                            url: "http://localhost:9090/api/set/shoppingCart",
+                            url: "/api/set/shoppingCart",
                             type: 'post',
                             dataType: 'json',
                             data: {
@@ -143,7 +143,7 @@ $(function() {
                         $('#detail').find('.czcg').click(function() {
                             $('#detail').find('.erweima').hide(300);
                             $.ajax({
-                                url: "http://localhost:9090/api/set/shoppingCart",
+                                url: "/api/set/shoppingCart",
                                 type: 'post',
                                 dataType: 'json',
                                 data: {

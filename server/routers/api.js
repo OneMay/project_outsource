@@ -295,7 +295,7 @@ router.get('/user/logout', function(req, res) {
         }
 
     })
-    //获取积分
+    //获取积分与推荐码
 router.post('/user/member_mark', function(req, res, next) {
         var _id = req.body._id;
         if (_id) {
@@ -307,7 +307,8 @@ router.post('/user/member_mark', function(req, res, next) {
                         userInfo: {
                             _id: userInfo._id,
                             username: userInfo.username,
-                            member_mark: userInfo.member_mark
+                            member_mark: userInfo.member_mark,
+                            invitation_code:userInfo.invitation_code
                         }
                     }
                     Object.assign(responseData, userInfoL);

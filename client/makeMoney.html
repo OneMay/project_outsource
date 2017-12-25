@@ -81,11 +81,43 @@
     </div>
     <script>
         $(function() {
-            $("#socialShare").socialShare({
-                content: '国兴惠普------我要赚钱',
-                url: '',
-                titile: '国兴惠普------我要赚钱'
-            });
+            (function cookies() {
+                var cookie = document.cookie;
+                var Userid;
+                var reg = /userInfo=(.+)}(.+)/;
+                if (reg.test(cookie)) {
+                    var User = reg.exec(cookie)[1] + '}';
+                    Userid = JSON.parse(User)._id;
+
+                } else if (/userInfo=(.+)/.test(cookie)) {
+                    var reg = /userInfo=(.+)/;
+                    var User = reg.exec(cookie)[1];
+                     Userid = JSON.parse(User)._id;
+                } else {
+                    window.location.href = '/login.html';
+                }
+                if(Userid){
+                    $.ajax({
+                        url:'/api/user/member_mark',
+                        type:'POST',
+                        dataType:'json',
+                        data:{
+                            _id:Userid
+                        },
+                        cache:false,
+                        success:function(data){
+                            if(data.code==200){
+                                $("#socialShare").socialShare({
+                                    content: '国兴惠普-推荐码'+data.userInfo.invitation_code,
+                                    url: 'http://47.92.6.118:8088/regist.html?'+data.userInfo.invitation_code,
+                                    titile: '国兴惠普------我要赚钱'
+                                });
+                            }
+                        }
+                    })
+                   
+                }
+            })();
 
         });
     </script>

@@ -12,7 +12,7 @@ $(function() {
         var name = obj.text();
         var money = parseFloat($(".wrap").find(".input-number").val());
         $.ajax({
-            url: "http://localhost:9090/api/set/loan",
+            url: "/api/set/loan",
             type: "post",
             dataType: "json",
             data: { _userId: userId, name: name, money: money },

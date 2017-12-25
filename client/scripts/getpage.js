@@ -29,7 +29,7 @@ $(function() {
 
     function getPage(currentPage) {
         $.ajax({
-            url: 'http://localhost:9090/api/get/membersDemeanorList',
+            url: '/api/get/membersDemeanorList',
             type: 'get',
             dataType: 'json',
             data: {
@@ -63,7 +63,7 @@ $(function() {
     }
     var id = getUrlParam('_id')
     $.ajax({
-        url: 'http://localhost:9090/api/get/membersDemeanorItem',
+        url: '/api/get/membersDemeanorItem',
         type: 'post',
         dataType: 'json',
         data: { _id: id },

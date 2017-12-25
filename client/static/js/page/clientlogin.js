@@ -73,7 +73,7 @@ function registSubmit() {
             $regist.find('.RePasswordWarning').html("");
             $.ajax({
                 type: "post",
-                url: "http://localhost:9090/api/user/register",
+                url: "/api/user/register",
                 dataType: "json",
                 data: {
                     username: $regist.find('#name').val(),
@@ -108,7 +108,7 @@ var url = document.referrer;
 function loginSubmit() {
     $.ajax({
         type: "post",
-        url: "http://localhost:9090/api/user/login",
+        url: "/api/user/login",
         datatype: "json",
         data: { phoneNumber: $login.find('#phone').val(), password: $login.find('#password').val() },
         success: function(messageInfo) {
@@ -132,7 +132,7 @@ function loginSubmit() {
 function logout() {
     $.ajax({
         type: "get",
-        url: "http://localhost:9090/api/user/logout",
+        url: "/api/user/logout",
         success: function() {
             window.location.reload();
             alert("退出成功");

@@ -7,7 +7,7 @@ $(function() {
     }
 
     $.ajax({
-        url: "http://localhost:9090/api/get/orderList",
+        url: "/api/get/orderList",
         type: "post",
         dataType: "json",
         data: { _userId: userId },
@@ -63,7 +63,7 @@ $(function() {
         }
     })
     $.ajax({
-        url: "http://localhost:9090/api/get/loanList",
+        url: "/api/get/loanList",
         type: "post",
         dataType: "json",
         data: { _userId: userId },
@@ -120,7 +120,7 @@ $(function() {
         }
     })
     $.ajax({
-        url: "http://localhost:9090/api/get/WithdrawalsList",
+        url: "/api/get/WithdrawalsList",
         type: "post",
         dataType: "json",
         data: { _userId: userId },
