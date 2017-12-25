@@ -35,11 +35,18 @@ $(function() {
         dataType: 'json',
         data: { _id: id },
         success: function(productListInfo) {
-            $('#detail').find('#img').attr("src", productListInfo.productList.productImageUrl);
-            $('#detail').find('.goodsName').html(productListInfo.productList.productName);
-            $('#detail').find('.describe').html(productListInfo.productList.productDescription);
-            $('#detail').find('.integral').html(productListInfo.productList.ProductIntegration);
-            $('#detail').find('.stock').html(productListInfo.productList.productInventory);
+            var productImageUrl = productListInfo.productList.productImageUrl;
+            var productName = productListInfo.productList.productName;
+            var productDescription = productListInfo.productList.productDescription;
+            var ProductIntegration = productListInfo.productList.ProductIntegration;
+            var productInventory = productListInfo.productList.productInventory;
+            var productdescribe = productDescription.substring(0, 10);
+            $('#detail').find('#img').attr("src", productImageUrl);
+            $('#detail').find('.describe').attr("title", productDescription)
+            $('#detail').find('.goodsName').html(productName);
+            $('#detail').find('.describe').html(productdescribe);
+            $('#detail').find('.integral').html(ProductIntegration);
+            $('#detail').find('.stock').html(productInventory);
         },
         error: function(productList) {
             console.log(productList)
@@ -123,7 +130,7 @@ $(function() {
                             success: function() {
                                 $('#detail').find('.warningMsg').html("兑换成功");
                                 setTimeout(() => {
-                                    window.location.reload()
+                                    window.location.href = 'dingdan.html'
                                 }, 2000);
                             },
                             error: function() {
@@ -146,7 +153,7 @@ $(function() {
                                 success: function() {
                                     $('#detail').find('.warningMsg').html("兑换成功");
                                     setTimeout(() => {
-                                        window.location.reload()
+                                        window.location.href = 'dingdan.html'
                                     }, 2000);
                                 },
                                 error: function() {
@@ -155,7 +162,7 @@ $(function() {
                             })
                             $('#detail').find('.warningMsg').html("请等待后台审核处理，处理完成后将会在订单里面显示信息");
                             setTimeout(() => {
-                                window.location.reload()
+                                window.location.href = 'dingdan.html'
                             }, 2000);
                         })
                         $('#detail').find('.out').click(function() {

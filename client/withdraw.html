@@ -5,89 +5,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="/static/js/lib/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery-3.1.1.min.js"></script>
     <!-- <script src="scripts/money.js"></script> -->
     <title>提现</title>
     <style>
         .wrap {
             font-size: 16px;
-            width: 1200px;
+            width: 100%;
             margin: 0 auto;
             background: white;
         }
         
         .wrap h2 {
-            font-size: 0.875rem;
+            width: 100%;
+            font-size: 1rem;
             text-align: center;
             height: 20px;
             line-height: 20px;
             border-bottom: 1px solid #fff;
         }
-        /* .wrap h2 span{
-        text-align: left;
-         padding-left:20px;
-         height:20px;
-        line-height: 20px;
-    } */
         
         .wrap .withdraw-number {
-            background: gray;
             width: 100%;
+            border: 1px solid #ccc;
         }
         
         .withdraw-number p {
             text-align: left;
-            /* 颜色问题 */
-            color: #fff;
             height: 20px;
             line-height: 20px;
-            /* font-size:0.875rem; */
+            font-size: 1rem;
             border: 1px solid #fff;
         }
         
         .withdraw-money input {
-            /* padding: 2% 2%; */
+            padding: 1% 1%;
             box-sizing: border-box;
-            background: #efeff0;
-            /* border: 0; */
-            border-radius: 5px;
             color: #595757;
-            width: 98.2%;
-            border: none;
+            width: 94.2%;
+            border: 0;
             border-bottom: 1px solid #ccc;
             outline: none;
             margin-bottom: 20px;
         }
-        /* .withdraw-money input:focus{
-        border:none;
-        border-bottom:1px solid #ccc;
-    } */
+        
+        .numberMoney {
+            color: black;
+            padding-left: 10px;
+            font-size: 1.2rem;
+            font-size: 18px;
+        }
         
         .withdraw-money {
-            background: #efeff0;
+            width: 100%;
+            /* background: #efeff0; */
             margin-top: 20px;
             border: 1px solid #ccc;
+            /* color: aqua; */
         }
         
         .withdraw-money form span {
             display: inline-block;
         }
         
-        .btn {
-            /* background: #8ec31f; */
+        #btn {
+            background: gray;
             /* color: #fff; */
             text-align: center;
-            border: 0;
+            border: none;
             border-radius: 10px;
             padding: 1%;
             width: 50%;
-            font-size: 16px;
+            font-size: 1rem;
             margin-left: 20%;
             margin-top: 20px;
-        }
-        
-        .active {
-            background-color: red;
         }
     </style>
 </head>
@@ -158,10 +149,10 @@
             var btn = document.getElementById("btn");
             validationNumber(money, 0)
             var m = money.value;
-            console.log(m);
+            // console.log(m);
             if (m < 500) {
                 btn.disabled = true;
-
+                btn.style.backgroundColor = 'gray';
             } else {
                 btn.disabled = false;
                 btn.style.backgroundColor = 'red';
@@ -176,14 +167,15 @@
 
         </div>
         <div class="withdraw-money">
-            <form>
-                <label for="提现金额"> 提现金额</label>
+            <form action="" method="post">
+                <label for="money">提现金额</label>
                 <br>
                 <span>￥</span>
                 <input type="text" name="money" id="money" oninput="draw()" value="">
+                <input type="button" id="btn" value="提现">
             </form>
         </div>
-        <input type="button" id="btn" value="提现">
+        <!-- <input type="button" id="btn"  value="提现"> -->
     </div>
 
 </body>

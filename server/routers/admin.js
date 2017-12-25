@@ -63,13 +63,15 @@ Date.prototype.Format = function(fmt) {
     return fmt;
 }
 router.use(function(req, res, next) {
-        var originalUrl = ['/user/login', 'user/logout']
+        var originalUrl = ['/user/login', '/user/logout']
         if (originalUrl.indexOf(req._parsedUrl.pathname) < 0) {
             if (req.session.adminuser_id) {
                 adminUser.findOne({
                     _id: req.session.adminuser_id
                 }).then(function(userInfo) {
                     if (userInfo) {
+                        req.session._garbage = Date();
+                        req.session.touch();
                         res.cookies.set('adminuserInfo', JSON.stringify({
                             _id: userInfo._id,
                             username: userInfo.username
