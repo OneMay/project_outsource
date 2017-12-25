@@ -27,7 +27,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
         secret: 'secret',
         resave: false,
-        cookie: { maxAge: 60 * 1000 * 30 } //设置过期时间
+        saveUninitialized: true,
+        cookie: { maxAge: 60 * 1000 * 180 } //设置过期时间
     }))
     //cookie
 app.use(function(req, res, next) {

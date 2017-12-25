@@ -70,6 +70,8 @@ router.use(function(req, res, next) {
                     _id: req.session.adminuser_id
                 }).then(function(userInfo) {
                     if (userInfo) {
+                        req.session._garbage = Date();
+                        req.session.touch();
                         res.cookies.set('adminuserInfo', JSON.stringify({
                             _id: userInfo._id,
                             username: userInfo.username
