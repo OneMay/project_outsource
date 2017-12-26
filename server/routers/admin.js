@@ -1199,6 +1199,12 @@ router.post('/set/setToDeliver', function(req, res, next) {
                     orderInfo.isExamine = true;
                     delete orderInfo._id;
                     Order.update({ _id: _id }, orderInfo, function(err) {});
+                    User.findOne({_id:orderInfo._userId}).then(function(userInfo){
+                        var _id = userInfo._id;
+                        userInfo.usedmoney=parseFloat(userInfo.usedmoney)+parseFloat(orderInfo.money)
+                        delete userInfo._id;
+                        User.update({ _id: _id }, userInfo, function(err) {});
+                    })
                     responseData.code = 200;
                     responseData.message = '修改成功';
                     return res.json(responseData);
