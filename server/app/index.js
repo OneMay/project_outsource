@@ -3,27 +3,35 @@ var http = require('http');
 var mongoose = require('mongoose');
 var debug = require('debug')('server:server');
 var port = normalizePort(process.env.PORT || '9090')
+//var mongodbUrl = 'mongodb://root:adminpwd@localhost:9000/project?authSource=admin';
 var mongodbUrl = 'mongodb://root:adminpwd@localhost:9000/project?authSource=admin';
 app.set('port', port);
 var server = http.createServer(app);
-mongoose.connect(mongodbUrl, function(err) {
-    if (err) {
-        console.log('数据库连接失败');
-    } else {
-        console.log('数据库连接成功');
-        server.listen(port);
-        server.on('error', onError);
-        server.on('listening', onListening);
-        console.log('started on port ' + port);
-
-    }
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+console.log('started on http://localhost:' + port);
+const options = {
+    useMongoClient: true,
+    reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+    reconnectInterval: 500, // Reconnect every 500ms
+    poolSize: 10, // Maintain up to 10 socket connections
+    // If not connected, return errors immediately rather than waiting for reconnect
+    bufferMaxEntries: 0
+};
+mongoose.Promise = global.Promise;
+mongoose.connect(mongodbUrl,options);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+    console.log("数据库成功连接");
 });
-/*var User = require('../models/adminuser');
- var user = new User({
-     username: 'adminuser',
-     password: 'adminpassword'
- });
- user.save();*/
+// var User = require('../models/adminuser');
+//  var user = new User({
+//      username: 'adminuser',
+//      password: 'adminpassword'
+//  });
+//  user.save();
 
 //对port进行一些处理，使之能用
 function normalizePort(val) {

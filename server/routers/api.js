@@ -53,7 +53,6 @@ Date.prototype.Format = function(fmt) {
     return fmt;
 }
 router.use(function(req, res, next) {
-        console.log(req._parsedUrl.pathname)
         var originalUrl = ['/user/member_mark', '/set/shoppingCart', '/get/orderList', '/set/loan', '/set/withdrawals', '/get/loanList', '/get/WithdrawalsList']
         if (originalUrl.indexOf(req._parsedUrl.pathname) >= 0) {
             if (req.session.user_id) {
@@ -61,7 +60,6 @@ router.use(function(req, res, next) {
                     _id: req.session.user_id
                 }).then(function(userInfo) {
                     if (userInfo) {
-                        console.log(userInfo)
                         res.cookies.set('userInfo', JSON.stringify({
                             _id: userInfo._id,
                             username: encodeURI(userInfo.username),
@@ -117,7 +115,7 @@ router.post('/user/register', function(req, res, next) {
         responseData.message = '填写内容不能为空！';
         res.json(responseData);
         return;
-    } else {
+    } else {       
         if (invitation_code_from_people) {
             if (reg1.test(invitation_code_from_people) || invitation_code_from_people == "tuijianinvitation001") {
                 //用户是否已经被注册
